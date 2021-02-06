@@ -1,0 +1,58 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: white;
+}
+
+main {
+  margin: 0 auto;
+  width: 100%;
+  height: auto;
+}
+
+/* 
+    Table of Contents
+        Yearly table
+*/
+/*------------------------------------*\
+  #Calendar Yearly
+\*------------------------------------*/
+.cal-year-container {
+  display: block;
+}
+
+.cal-year {
+  display: inline-block;
+}
+
+.cal-year.cal-year-days {
+  width: 450px;
+  height: auto;
+}
+
+.cal-year.cal-year-label {
+  width: 20px;
+  height: auto;
+}
+
+.cal-year tr {
+  width: 100%;
+  height: auto;
+}
+
+.cal-year th {
+  width: 25px;
+  height: 16px;
+}
+
+.cal-year.cal-year-days th {
+  background-color: green;
+}
+
+.cal-year p {
+  font-size: 12px;
+}
+/*# sourceMappingURL=heatmap.css.map */
