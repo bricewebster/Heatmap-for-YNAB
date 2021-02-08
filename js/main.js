@@ -4,8 +4,10 @@ async function main() {
   const accessToken = await getAccessToken();
   const mainBudgetID = await getBudgetID();
   const transactions = await getTransactions(accessToken, mainBudgetID);
-  console.log(transactions);
-  //storeTransactions();
+  var expenseTransactions = [];
+  var incomeTransactions = [];
+
+  storeTransactions(transactions);
 }  
 
 async function getAccessToken() {
@@ -20,17 +22,26 @@ async function getBudgetID() {
   return budgetID;
 }
 
-async function getTransactions (accessToken, mainBudgetID) {
+async function getTransactions(accessToken, mainBudgetID) {
   var ynab = window.ynab;
   const ynabAPI = new ynab.API(accessToken);
   const transactionResponse = await ynabAPI.transactions.getTransactions(mainBudgetID);
   return transactionResponse.data.transactions;
 }
 
-function storeTransactions () {
+function storeTransactions(transactions) {
   for(let transaction of transactions) {
     const amount = parseFloat($(transaction.amount));
-    (amount > 0 ? '$2.00' : '$10.00');
-    console.log(`Amount: ${transaction.amount}`);
+    const transactionIndex = daysIntoYear(Date.parse($(transactions.Date)));
+    (amount > 0 ? incomeTransactions[transactionIndex] = amount : expenseTransactions[transactionIndex] = amount);
+    //console.log(`Amount: ${transaction.amount}`);
   }
+}
+
+function listTransactions (){
+
+}
+
+function daysIntoYear(transactionDate){
+  return (Date.UTC(newtransactionDate.getFullYear(), transactionDate.getMonth(), transactionDate.getDate()) - Date.UTC(transactionDate.getFullYear(), 0, 0)) / 24 / 60 / 60 / 1000;
 }
