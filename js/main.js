@@ -43,17 +43,15 @@ async function getCurrencyDecimals(accessToken, mainBudgetID) {
 function storeTransactions(transactions, currencyDecimals) {
   for(let transaction of transactions) {
     const transactionDate = newNormalizedDate(transaction.date);
-    if(transactionDate.getFullYear() != yearChosen) {
+    if(transactionDate.getFullYear() != yearChosen || transaction.transfer_account_id != null) {
       continue;
     } else {
       const amount = ynab.utils.convertMilliUnitsToCurrencyAmount(transaction.amount, currencyDecimals); //converts to users currency in decimals
       const transactionIndex = daysIntoYear(transactionDate) - 1;
       if (amount > 0) {
-        (isNaN(incomeTransactions[transactionIndex]) ? incomeTransactions[transactionIndex] = 0 : incomeTransactions[transactionIndex]);
-        incomeTransactions[transactionIndex] += amount;
+        (isNaN(incomeTransactions[transactionIndex]) ? incomeTransactions[transactionIndex] = amount : incomeTransactions[transactionIndex] = parseFloat(incomeTransactions[transactionIndex] + amount).toFixed(currencyDecimals));
       } else { 
-        (isNaN(expenseTransactions[transactionIndex]) ? expenseTransactions[transactionIndex] = 0 : expenseTransactions[transactionIndex]);
-        expenseTransactions[transactionIndex] += amount;
+        (isNaN(expenseTransactions[transactionIndex]) ? expenseTransactions[transactionIndex] = amount: expenseTransactions[transactionIndex] = parseFloat(expenseTransactions[transactionIndex] + amount).toFixed(currencyDecimals));
       }
     }
   }
