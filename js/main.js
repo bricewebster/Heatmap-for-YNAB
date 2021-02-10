@@ -42,12 +42,12 @@ async function getCurrencyDecimals(accessToken, mainBudgetID) {
 
 function storeTransactions(transactions, currencyDecimals) {
   for(let transaction of transactions) {
-    const transactionDate = new Date(Date.parse(transaction.date));
+    const transactionDate = newNormalizedDate(transaction.date);
     if(transactionDate.getFullYear() != yearChosen) {
       continue;
     } else {
       const amount = ynab.utils.convertMilliUnitsToCurrencyAmount(transaction.amount, currencyDecimals); //converts to users currency in decimals
-      const transactionIndex = daysIntoYear(transactionDate);
+      const transactionIndex = daysIntoYear(transactionDate) - 1;
       if (amount > 0) {
         (isNaN(incomeTransactions[transactionIndex]) ? incomeTransactions[transactionIndex] = 0 : incomeTransactions[transactionIndex]);
         incomeTransactions[transactionIndex] += amount;
@@ -67,4 +67,8 @@ function listTransactions (){
 
 function daysIntoYear(transactionDate){
   return (Date.UTC(transactionDate.getFullYear(), transactionDate.getMonth(), transactionDate.getDate()) - Date.UTC(transactionDate.getFullYear(), 0, 0)) / 24 / 60 / 60 / 1000;
+}
+
+function newNormalizedDate(date){
+  return new Date(new Date(date).getTime() - new Date(date).getTimezoneOffset() * - 60000); //https://stackoverflow.com/a/14569783
 }
