@@ -61,12 +61,12 @@ function storeTransactions(transactions, currencyDecimals) {
 }
 
 function tooltipPopulate (){
-  for(transactionIndex = 0; 366; transactionIndex++) {
+  for(transactionIndex = 0; transactionIndex <= 365; transactionIndex++) {
     (incomeTransactions[transactionIndex] == undefined ? incomeTransactions[transactionIndex] = 0 : incomeTransactions[transactionIndex]);
     (expenseTransactions[transactionIndex] == undefined ? expenseTransactions[transactionIndex] = 0 : expenseTransactions[transactionIndex]);
-    // if (transactionDays[transactionIndex] == undefined) {
-    //   continue;
-    // }
+    if (transactionDays[transactionIndex] == undefined) {
+      continue;
+    }
     const dayID = "cal-year-".concat(transactionDays[transactionIndex].toString());
     const htmlInsert = "<div class=\"tooltip\"><span class=\"tooltiptext\">Income: ".concat(incomeTransactions[transactionIndex].toString(), "</br>", " Expense: ", expenseTransactions[transactionIndex].toString(), "</span></div>");
     //console.log(dayID);
