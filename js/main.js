@@ -1,5 +1,6 @@
 var expenseTransactions = new Array(366);
 var incomeTransactions = new Array(366);
+var transactionDays = new Array(366);
 var yearChosen = 2020;
 
 main()
@@ -11,7 +12,7 @@ async function main() {
   const currencyDecimals = await getCurrencyDecimals(accessToken, mainBudgetID);
   
   storeTransactions(transactions, currencyDecimals);
-  listTransactions();
+  tooltipPopulate();
 }  
 
 async function getAccessToken() {
@@ -48,6 +49,8 @@ function storeTransactions(transactions, currencyDecimals) {
     } else {
       const amount = ynab.utils.convertMilliUnitsToCurrencyAmount(transaction.amount, currencyDecimals); //converts to users currency in decimals
       const transactionIndex = daysIntoYear(transactionDate) - 1;
+      transactionDays[transactionIndex] = (transactionDate.getMonth() + 1).toString().concat("/",transactionDate.getDate().toString());
+      //console.log(transactionDays[transactionIndex]);
       if (amount > 0) {
         (isNaN(incomeTransactions[transactionIndex]) ? incomeTransactions[transactionIndex] = amount : incomeTransactions[transactionIndex] = parseFloat(incomeTransactions[transactionIndex] + amount).toFixed(currencyDecimals));
       } else { 
@@ -57,9 +60,19 @@ function storeTransactions(transactions, currencyDecimals) {
   }
 }
 
-function listTransactions (){
-  for(incomeIndex = 0; incomeIndex <= incomeTransactions.length; incomeIndex++) {
-    console.log(`Income Day: ${incomeIndex} , Income Amount: ${incomeTransactions[incomeIndex]}`);
+function tooltipPopulate (){
+  for(transactionIndex = 0; 366; transactionIndex++) {
+    (incomeTransactions[transactionIndex] == undefined ? incomeTransactions[transactionIndex] = 0 : incomeTransactions[transactionIndex]);
+    (expenseTransactions[transactionIndex] == undefined ? expenseTransactions[transactionIndex] = 0 : expenseTransactions[transactionIndex]);
+    // if (transactionDays[transactionIndex] == undefined) {
+    //   continue;
+    // }
+    const dayID = "cal-year-".concat(transactionDays[transactionIndex].toString());
+    const htmlInsert = "<div class=\"tooltip\"><span class=\"tooltiptext\">Income: ".concat(incomeTransactions[transactionIndex].toString(), "</br>", " Expense: ", expenseTransactions[transactionIndex].toString(), "</span></div>");
+    //console.log(dayID);
+    //console.log(htmlInsert);
+    document.getElementById(dayID).innerHTML += htmlInsert;
+    //console.log(`Income Day: ${incomeIndex} , Income Amount: ${incomeTransactions[incomeIndex]}`);
   }
 }
 
