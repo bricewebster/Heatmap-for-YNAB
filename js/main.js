@@ -12,7 +12,7 @@ async function main() {
   const currencyDecimals = await getCurrencyDecimals(accessToken, mainBudgetID);
   
   storeTransactions(transactions, currencyDecimals);
-  tooltipPopulate();
+  // calendarPopulate();
 }  
 
 async function getAccessToken() {
@@ -44,13 +44,12 @@ async function getCurrencyDecimals(accessToken, mainBudgetID) {
 function storeTransactions(transactions, currencyDecimals) {
   for(let transaction of transactions) {
     const transactionDate = newNormalizedDate(transaction.date);
-    if(transactionDate.getFullYear() != yearChosen || transaction.transfer_account_id != null) {
+    if (transactionDate.getFullYear() != yearChosen || transaction.transfer_account_id != null) {
       continue;
     } else {
       const amount = ynab.utils.convertMilliUnitsToCurrencyAmount(transaction.amount, currencyDecimals); //converts to users currency in decimals
       const transactionIndex = daysIntoYear(transactionDate) - 1;
       transactionDays[transactionIndex] = (transactionDate.getMonth() + 1).toString().concat("/",transactionDate.getDate().toString());
-      //console.log(transactionDays[transactionIndex]);
       if (amount > 0) {
         (isNaN(incomeTransactions[transactionIndex]) ? incomeTransactions[transactionIndex] = amount : incomeTransactions[transactionIndex] = parseFloat(incomeTransactions[transactionIndex] + amount).toFixed(currencyDecimals));
       } else { 
@@ -58,21 +57,46 @@ function storeTransactions(transactions, currencyDecimals) {
       }
     }
   }
+  document.getElementById("loadStatus").innerHTML = "Status: Done";
 }
 
-function tooltipPopulate (){
+function calendarPopulate(option){
+  var htmlInsert;
+  var dayID;
+  var dayColor;
+
+  resetDay();//Resets the day info and colors so that they don't show incorrectly
+
   for(transactionIndex = 0; transactionIndex <= 365; transactionIndex++) {
-    (incomeTransactions[transactionIndex] == undefined ? incomeTransactions[transactionIndex] = 0 : incomeTransactions[transactionIndex]);
-    (expenseTransactions[transactionIndex] == undefined ? expenseTransactions[transactionIndex] = 0 : expenseTransactions[transactionIndex]);
-    if (transactionDays[transactionIndex] == undefined) {
-      continue;
+    if (transactionDays[transactionIndex] == undefined) { continue;}
+
+    if(option === "income"){
+      if (incomeTransactions[transactionIndex] == undefined) { continue;}
+      htmlInsert = "<div class=\"tooltip\"><span class=\"tooltiptext\">Income: ".concat(incomeTransactions[transactionIndex].toString(), "</span></div>");
+      dayColor = "green";
+    } else if (option === "expense"){
+      if (expenseTransactions[transactionIndex] == undefined) { continue;}
+      htmlInsert = "<div class=\"tooltip\"><span class=\"tooltiptext\">Expense: ".concat(expenseTransactions[transactionIndex].toString(), "</span></div>");
+      dayColor = "red";
+    } else {
+      (incomeTransactions[transactionIndex] == undefined ? incomeTransactions[transactionIndex] = 0 : incomeTransactions[transactionIndex]);
+      (expenseTransactions[transactionIndex] == undefined ? expenseTransactions[transactionIndex] = 0 : expenseTransactions[transactionIndex]);
+      htmlInsert = "<div class=\"tooltip\"><span class=\"tooltiptext\">Income: ".concat(incomeTransactions[transactionIndex].toString(), "</br>", " Expense: ", expenseTransactions[transactionIndex].toString(), "</span></div>");
+      dayColor = "rgb(119, 119, 233)";
     }
-    const dayID = "cal-year-".concat(transactionDays[transactionIndex].toString());
-    const htmlInsert = "<div class=\"tooltip\"><span class=\"tooltiptext\">Income: ".concat(incomeTransactions[transactionIndex].toString(), "</br>", " Expense: ", expenseTransactions[transactionIndex].toString(), "</span></div>");
-    //console.log(dayID);
-    //console.log(htmlInsert);
-    document.getElementById(dayID).innerHTML += htmlInsert;
-    //console.log(`Income Day: ${incomeIndex} , Income Amount: ${incomeTransactions[incomeIndex]}`);
+
+    dayID = "cal-year-".concat(transactionDays[transactionIndex].toString());
+    document.getElementById(dayID).innerHTML = htmlInsert;
+    document.getElementById(dayID).style.background = dayColor;
+  }
+}
+
+function resetDay () {
+  for(transactionIndex = 0; transactionIndex <= 365; transactionIndex++) {
+    if (transactionDays[transactionIndex] == undefined) { continue;}
+    dayID = "cal-year-".concat(transactionDays[transactionIndex].toString());
+    document.getElementById(dayID).innerHTML = "";
+    document.getElementById(dayID).style.background = "grey";
   }
 }
 

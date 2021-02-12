@@ -45,11 +45,15 @@ main {
 
 .cal-year th {
   width: 25px;
-  height: 16px;
+  height: 18px;
 }
 
 .cal-year.cal-year-days th {
-  background-color: green;
+  background-color: gray;
+}
+
+.cal-year.cal-year-days th.cal-year-noday {
+  background-color: white;
 }
 
 .cal-year p {
