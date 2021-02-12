@@ -49,7 +49,7 @@ main {
 }
 
 .cal-year.cal-year-days th {
-  background-color: gray;
+  background-color: rgba(187, 167, 167, 0.842);
 }
 
 .cal-year.cal-year-days th.cal-year-noday {

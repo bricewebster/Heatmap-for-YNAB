@@ -2,17 +2,17 @@ var expenseTransactions = new Array(366);
 var incomeTransactions = new Array(366);
 var transactionDays = new Array(366);
 var yearChosen = 2020;
+var currencyDecimals;
 
-main()
+main();
 
 async function main() {
   const accessToken = await getAccessToken();
   const mainBudgetID = await getBudgetID();
   const transactions = await getTransactions(accessToken, mainBudgetID);
-  const currencyDecimals = await getCurrencyDecimals(accessToken, mainBudgetID);
+  currencyDecimals = await getCurrencyDecimals(accessToken, mainBudgetID);
   
   storeTransactions(transactions, currencyDecimals);
-  // calendarPopulate();
 }  
 
 async function getAccessToken() {
@@ -41,7 +41,7 @@ async function getCurrencyDecimals(accessToken, mainBudgetID) {
   return budgetResponse.data.settings.currency_format.decimal_digits;
 }
 
-function storeTransactions(transactions, currencyDecimals) {
+function storeTransactions(transactions) {
   for(let transaction of transactions) {
     const transactionDate = newNormalizedDate(transaction.date);
     if (transactionDate.getFullYear() != yearChosen || transaction.transfer_account_id != null) {
@@ -51,9 +51,9 @@ function storeTransactions(transactions, currencyDecimals) {
       const transactionIndex = daysIntoYear(transactionDate) - 1;
       transactionDays[transactionIndex] = (transactionDate.getMonth() + 1).toString().concat("/",transactionDate.getDate().toString());
       if (amount > 0) {
-        (isNaN(incomeTransactions[transactionIndex]) ? incomeTransactions[transactionIndex] = amount : incomeTransactions[transactionIndex] = parseFloat(incomeTransactions[transactionIndex] + amount).toFixed(currencyDecimals));
+        (isNaN(incomeTransactions[transactionIndex]) ? incomeTransactions[transactionIndex] = amount : incomeTransactions[transactionIndex] = (parseFloat(incomeTransactions[transactionIndex]) + (parseFloat(amount))).toFixed(currencyDecimals));
       } else { 
-        (isNaN(expenseTransactions[transactionIndex]) ? expenseTransactions[transactionIndex] = amount: expenseTransactions[transactionIndex] = parseFloat(expenseTransactions[transactionIndex] + amount).toFixed(currencyDecimals));
+        (isNaN(expenseTransactions[transactionIndex]) ? expenseTransactions[transactionIndex] = amount: expenseTransactions[transactionIndex] = (parseFloat(expenseTransactions[transactionIndex]) + (parseFloat(amount))).toFixed(currencyDecimals));
       }
     }
   }
@@ -64,26 +64,42 @@ function calendarPopulate(option){
   var htmlInsert;
   var dayID;
   var dayColor;
+  var incomeAmount;
+  var expenseAmount;
+  var netAmount;
 
   resetDay();//Resets the day info and colors so that they don't show incorrectly
 
   for(transactionIndex = 0; transactionIndex <= 365; transactionIndex++) {
     if (transactionDays[transactionIndex] == undefined) { continue;}
 
-    if(option === "income"){
+    if(option === "income") {
       if (incomeTransactions[transactionIndex] == undefined) { continue;}
+
       htmlInsert = "<div class=\"tooltip\"><span class=\"tooltiptext\">Income: ".concat(incomeTransactions[transactionIndex].toString(), "</span></div>");
       dayColor = "green";
-    } else if (option === "expense"){
+    } else if (option === "expense") {
       if (expenseTransactions[transactionIndex] == undefined) { continue;}
+
       htmlInsert = "<div class=\"tooltip\"><span class=\"tooltiptext\">Expense: ".concat(expenseTransactions[transactionIndex].toString(), "</span></div>");
       dayColor = "red";
-    } else {
-      (incomeTransactions[transactionIndex] == undefined ? incomeTransactions[transactionIndex] = 0 : incomeTransactions[transactionIndex]);
-      (expenseTransactions[transactionIndex] == undefined ? expenseTransactions[transactionIndex] = 0 : expenseTransactions[transactionIndex]);
-      htmlInsert = "<div class=\"tooltip\"><span class=\"tooltiptext\">Income: ".concat(incomeTransactions[transactionIndex].toString(), "</br>", " Expense: ", expenseTransactions[transactionIndex].toString(), "</span></div>");
-      dayColor = "rgb(119, 119, 233)";
-    }
+    } else if (option === "both" || option === "net") {
+      (incomeTransactions[transactionIndex] == undefined ? incomeAmount = 0 : incomeAmount = incomeTransactions[transactionIndex]);
+      (expenseTransactions[transactionIndex] == undefined ? expenseAmount = 0 : expenseAmount = expenseTransactions[transactionIndex]);
+
+      if (option === "both") {
+        htmlInsert = "<div class=\"tooltip\"><span class=\"tooltiptext\">Income: ".concat(incomeAmount.toString(), "</br>", " Expense: ", expenseAmount.toString(), "</span></div>");
+        dayColor = "rgb(119, 119, 233)";
+      } else {
+        netAmount =  (parseFloat(incomeAmount) + parseFloat(expenseAmount)).toFixed(currencyDecimals);
+        htmlInsert = "<div class=\"tooltip\"><span class=\"tooltiptext\">Net: ".concat(netAmount.toString(),"</span></div>");
+        if (netAmount >= 0) {
+          dayColor = "yellow";
+        } else {
+          dayColor = "orange";
+        }
+      }
+    } else {}
 
     dayID = "cal-year-".concat(transactionDays[transactionIndex].toString());
     document.getElementById(dayID).innerHTML = htmlInsert;
@@ -96,7 +112,7 @@ function resetDay () {
     if (transactionDays[transactionIndex] == undefined) { continue;}
     dayID = "cal-year-".concat(transactionDays[transactionIndex].toString());
     document.getElementById(dayID).innerHTML = "";
-    document.getElementById(dayID).style.background = "grey";
+    document.getElementById(dayID).style.background = "rgba(187, 167, 167, 0.842)";
   }
 }
 
