@@ -4,6 +4,7 @@ var transactionDays = new Array(366);
 var transactions;
 var currencyDecimals;
 var currentYear = 2020;
+var budgetOption;
 
 main();
 
@@ -43,12 +44,11 @@ async function getCurrencyDecimals(accessToken, mainBudgetID) {
   return budgetResponse.data.settings.currency_format.decimal_digits;
 }
 
-function storeTransactions(option) {
-  resetDays();
-  if (option === 'next') {
+function storeTransactions(yearOption) {
+  resetTransactions();
+  if (yearOption === 'next') {
     currentYear += 1;
-    console.log(currentYear);
-  } else if (option === 'previous') {
+  } else if (yearOption === 'previous') {
     currentYear -= 1;
   } else {}
   document.getElementById("currentYear").innerHTML = currentYear;
@@ -80,6 +80,8 @@ function calendarPopulate(option){
 
   resetDays();//Resets the day info and colors so that they don't show incorrectly
 
+  budgetOption = option;
+
   for(transactionIndex = 0; transactionIndex <= 365; transactionIndex++) {
     if (transactionDays[transactionIndex] == undefined) { continue;}
 
@@ -94,6 +96,7 @@ function calendarPopulate(option){
       htmlInsert = "<div class=\"tooltip\"><span class=\"tooltiptext\">Expense: ".concat(expenseTransactions[transactionIndex].toString(), "</span></div>");
       dayColor = "red";
     } else if (option === "both" || option === "net") {
+      if(incomeTransactions[transactionIndex] == undefined && expenseTransactions[transactionIndex] == undefined) {continue;}
       (incomeTransactions[transactionIndex] == undefined ? incomeAmount = 0 : incomeAmount = incomeTransactions[transactionIndex]);
       (expenseTransactions[transactionIndex] == undefined ? expenseAmount = 0 : expenseAmount = expenseTransactions[transactionIndex]);
 
@@ -124,6 +127,21 @@ function resetDays () {
     document.getElementById(dayID).innerHTML = "";
     document.getElementById(dayID).style.background = "rgba(187, 167, 167, 0.842)";
   }
+}
+
+function resetTransactions () {
+  for(transactionIndex = 0; transactionIndex <= 365; transactionIndex++) {
+    if (transactionDays[transactionIndex] == undefined) { continue;}
+    incomeTransactions[transactionIndex] = undefined;
+    expenseTransactions[transactionIndex] = undefined;
+  }
+}
+
+function yearChange (yearOption) {
+  resetDays();
+  resetTransactions();
+  storeTransactions(yearOption);
+  calendarPopulate(budgetOption);
 }
 
 function daysIntoYear(transactionDate){
