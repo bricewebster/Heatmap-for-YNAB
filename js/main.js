@@ -1,18 +1,19 @@
 var expenseTransactions = new Array(366);
 var incomeTransactions = new Array(366);
 var transactionDays = new Array(366);
-var yearChosen = 2020;
+var transactions;
 var currencyDecimals;
+var currentYear = 2020;
 
 main();
 
 async function main() {
   const accessToken = await getAccessToken();
   const mainBudgetID = await getBudgetID();
-  const transactions = await getTransactions(accessToken, mainBudgetID);
+  await getTransactions(accessToken, mainBudgetID);
   currencyDecimals = await getCurrencyDecimals(accessToken, mainBudgetID);
   
-  storeTransactions(transactions, currencyDecimals);
+  storeTransactions('dummy');
 }  
 
 async function getAccessToken() {
@@ -31,7 +32,8 @@ async function getTransactions(accessToken, mainBudgetID) {
   var ynab = window.ynab;
   const ynabAPI = new ynab.API(accessToken);
   const transactionResponse = await ynabAPI.transactions.getTransactions(mainBudgetID);
-  return transactionResponse.data.transactions;
+  transactions = transactionResponse.data.transactions;
+  return;
 }
 
 async function getCurrencyDecimals(accessToken, mainBudgetID) {
@@ -41,10 +43,18 @@ async function getCurrencyDecimals(accessToken, mainBudgetID) {
   return budgetResponse.data.settings.currency_format.decimal_digits;
 }
 
-function storeTransactions(transactions) {
+function storeTransactions(option) {
+  resetDays();
+  if (option === 'next') {
+    currentYear += 1;
+    console.log(currentYear);
+  } else if (option === 'previous') {
+    currentYear -= 1;
+  } else {}
+  document.getElementById("currentYear").innerHTML = currentYear;
   for(let transaction of transactions) {
     const transactionDate = newNormalizedDate(transaction.date);
-    if (transactionDate.getFullYear() != yearChosen || transaction.transfer_account_id != null) {
+    if (transactionDate.getFullYear() != currentYear || transaction.transfer_account_id != null) {
       continue;
     } else {
       const amount = ynab.utils.convertMilliUnitsToCurrencyAmount(transaction.amount, currencyDecimals); //converts to users currency in decimals
@@ -68,7 +78,7 @@ function calendarPopulate(option){
   var expenseAmount;
   var netAmount;
 
-  resetDay();//Resets the day info and colors so that they don't show incorrectly
+  resetDays();//Resets the day info and colors so that they don't show incorrectly
 
   for(transactionIndex = 0; transactionIndex <= 365; transactionIndex++) {
     if (transactionDays[transactionIndex] == undefined) { continue;}
@@ -107,7 +117,7 @@ function calendarPopulate(option){
   }
 }
 
-function resetDay () {
+function resetDays () {
   for(transactionIndex = 0; transactionIndex <= 365; transactionIndex++) {
     if (transactionDays[transactionIndex] == undefined) { continue;}
     dayID = "cal-year-".concat(transactionDays[transactionIndex].toString());

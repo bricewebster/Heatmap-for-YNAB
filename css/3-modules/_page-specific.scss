@@ -6,6 +6,9 @@
 /*------------------------------------*\
   #Calendar Yearly
 \*------------------------------------*/
+.cal-year-selector p{
+  display: inline-block;
+}
 .cal-year-container{
     display: block;
 }
