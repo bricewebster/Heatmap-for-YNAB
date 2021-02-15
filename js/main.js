@@ -11,32 +11,49 @@ main();
 async function main() {
   const accessToken = await getAccessToken();
   const mainBudgetID = await getBudgetID();
-  await getTransactions(accessToken, mainBudgetID);
+  transactions = await getTransactions(accessToken, mainBudgetID);
   currencyDecimals = await getCurrencyDecimals(accessToken, mainBudgetID);
   
   storeTransactions('dummy');
 }  
 
+/**
+ * Grabs personal access token for testing. (Will replace in the future)
+ */
 async function getAccessToken() {
   const response = await fetch('.vscode/accessToken.txt');
   const accessToken = await response.text();
   return accessToken;
 }
 
+/**
+ * Grabs personal main budget ID for testing. (Will replace in the future)
+ */
 async function getBudgetID() {
   const response = await fetch('.vscode/budgetID.txt');
   const budgetID = await response.text();
   return budgetID;
 }
 
+/**
+ * Fetches all transactions from the user's YNAB account
+ * @param {*} accessToken User's access token
+ * @param {*} mainBudgetID User's main budget ID(Might be replaced later)
+ * @returns {*} Transactions object
+ */
 async function getTransactions(accessToken, mainBudgetID) {
   var ynab = window.ynab;
   const ynabAPI = new ynab.API(accessToken);
   const transactionResponse = await ynabAPI.transactions.getTransactions(mainBudgetID);
-  transactions = transactionResponse.data.transactions;
-  return;
+  return transactionResponse.data.transactions;
 }
 
+/**
+ * Fetches the user's currency in decimals(Might expand to currency symbol later)
+ * @param {*} accessToken User's access token
+ * @param {*} mainBudgetID User's main budget ID(Might be replaced later)
+ * @returns {Number} The amount of decimals in the user's currency
+ */
 async function getCurrencyDecimals(accessToken, mainBudgetID) {
   var ynab = window.ynab;
   const ynabAPI = new ynab.API(accessToken);
@@ -44,6 +61,10 @@ async function getCurrencyDecimals(accessToken, mainBudgetID) {
   return budgetResponse.data.settings.currency_format.decimal_digits;
 }
 
+/**
+ * Stores the transactions into an array
+ * @param {String} yearOption Which button was clicked next to the year
+ */
 function storeTransactions(yearOption) {
   resetTransactions();
   if (yearOption === 'next') {
@@ -70,6 +91,10 @@ function storeTransactions(yearOption) {
   document.getElementById("loadStatus").innerHTML = "Status: Done";
 }
 
+/**
+ * Populates the color and data of each day on the calendar
+ * @param {String} option Option chosen by user such as income, expense, etc...
+ */
 function calendarPopulate(option){
   var htmlInsert;
   var dayID;
@@ -120,6 +145,9 @@ function calendarPopulate(option){
   }
 }
 
+/**
+ * Resets the color and day information for the calendar
+ */
 function resetDays () {
   for(transactionIndex = 0; transactionIndex <= 365; transactionIndex++) {
     if (transactionDays[transactionIndex] == undefined) { continue;}
@@ -129,6 +157,9 @@ function resetDays () {
   }
 }
 
+/**
+ * Resets the transactions arrays
+ */
 function resetTransactions () {
   for(transactionIndex = 0; transactionIndex <= 365; transactionIndex++) {
     if (transactionDays[transactionIndex] == undefined) { continue;}
@@ -137,6 +168,10 @@ function resetTransactions () {
   }
 }
 
+/**
+ * Sets up the calendar when the year is changed to clear out data, store the correct years transactions and populate the data
+ * @param {String} yearOption Which button was clicked next to the year
+ */
 function yearChange (yearOption) {
   resetDays();
   resetTransactions();
@@ -144,10 +179,20 @@ function yearChange (yearOption) {
   calendarPopulate(budgetOption);
 }
 
+/**
+ * Get the day of the year from the supplied date
+ * @param {*} transactionDate Date to get the day of the year from
+ * @returns Day of the year
+ */
 function daysIntoYear(transactionDate){
   return (Date.UTC(transactionDate.getFullYear(), transactionDate.getMonth(), transactionDate.getDate()) - Date.UTC(transactionDate.getFullYear(), 0, 0)) / 24 / 60 / 60 / 1000;
 }
 
+/**
+ * Normalize the supplied date so there isn't an offset issue with timezones
+ * @param {*} date The date being normalized
+ * @returns Normalized date
+ */
 function newNormalizedDate(date){
   return new Date(new Date(date).getTime() - new Date(date).getTimezoneOffset() * - 60000); //https://stackoverflow.com/a/14569783
 }
