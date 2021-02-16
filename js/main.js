@@ -1,9 +1,12 @@
 var expenseTransactions = new Array(366);
 var incomeTransactions = new Array(366);
 var transactionDays = new Array(366);
+var defaultBudgetID;
+var accounts;
+var selectedAccounts = new Array();
 var transactions;
 var currencyDecimals;
-var currentYear = 2020;
+var currentYear = new Date().getFullYear(); //Set default year as current year.
 var budgetOption;
 
 main();
@@ -11,6 +14,11 @@ main();
 async function main() {
   const accessToken = await getAccessToken();
   const mainBudgetID = await getBudgetID();
+  accounts = await getAccounts(accessToken, mainBudgetID);
+  initAccounts();
+  console.log("init done");
+  accountPopulate();
+  console.log("acctpop done");
   transactions = await getTransactions(accessToken, mainBudgetID);
   currencyDecimals = await getCurrencyDecimals(accessToken, mainBudgetID);
   
@@ -36,9 +44,22 @@ async function getBudgetID() {
 }
 
 /**
+ * Fetches all of the accounts fom the user's YNAB account
+ * @param {String} accessToken User's access token
+ * @param {String} mainBudgetID User's main budget ID(Might be replaced later)
+ * @returns {*} Accounts object
+ */
+async function getAccounts(accessToken, mainBudgetID) {
+  var ynab = window.ynab;
+  const ynabAPI = new ynab.API(accessToken);
+  const accountResponse = await ynabAPI.accounts.getAccounts(mainBudgetID);
+  return accountResponse.data.accounts;
+}
+
+/**
  * Fetches all transactions from the user's YNAB account
- * @param {*} accessToken User's access token
- * @param {*} mainBudgetID User's main budget ID(Might be replaced later)
+ * @param {String} accessToken User's access token
+ * @param {String} mainBudgetID User's main budget ID(Might be replaced later)
  * @returns {*} Transactions object
  */
 async function getTransactions(accessToken, mainBudgetID) {
@@ -59,6 +80,12 @@ async function getCurrencyDecimals(accessToken, mainBudgetID) {
   const ynabAPI = new ynab.API(accessToken);
   const budgetResponse = await ynabAPI.budgets.getBudgetSettingsById(mainBudgetID);
   return budgetResponse.data.settings.currency_format.decimal_digits;
+}
+
+function listAccounts () {
+  for (let account of accounts) {
+    console.log("account name: " + account.name);
+  }
 }
 
 /**
@@ -91,6 +118,30 @@ function storeTransactions(yearOption) {
   document.getElementById("loadStatus").innerHTML = "Status: Done";
 }
 
+function initAccounts() {
+  var initAccountIndex = 0;
+  for (let account of accounts) {
+    selectedAccounts[initAccountIndex++] = account.id;
+  }
+}
+
+// function storeAccounts() {
+//   for (let account of accounts)
+// }
+
+function accountPopulate() {
+  var htmlInsert;
+  for (let account of accounts) {
+    for(var accountIndex = 0; accountIndex <= accounts.length; accountIndex++) {
+      if (account.id === selectedAccounts[accountIndex]) {
+        htmlInsert =  "<input type=\"checkbox\" id=\"account-name-" + account.name + "\" name=\"" + account.name + "\" value=\"" + account.name + "\" checked=\"true\">" + "<label for=\"" + account.name + "\">" + account.name + "</label><br></br>";
+        document.getElementById("accounts-select").innerHTML += htmlInsert;
+        break;
+      }
+    }
+  }
+}
+
 /**
  * Populates the color and data of each day on the calendar
  * @param {String} option Option chosen by user such as income, expense, etc...
@@ -107,7 +158,7 @@ function calendarPopulate(option){
 
   budgetOption = option;
 
-  for(transactionIndex = 0; transactionIndex <= 365; transactionIndex++) {
+  for (transactionIndex = 0; transactionIndex <= 365; transactionIndex++) {
     if (transactionDays[transactionIndex] == undefined) { continue;}
 
     if(option === "income") {
