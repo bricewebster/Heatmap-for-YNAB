@@ -16,13 +16,11 @@ async function main() {
   const mainBudgetID = await getBudgetID();
   accounts = await getAccounts(accessToken, mainBudgetID);
   initAccounts();
-  console.log("init done");
-  accountPopulate();
-  console.log("acctpop done");
   transactions = await getTransactions(accessToken, mainBudgetID);
   currencyDecimals = await getCurrencyDecimals(accessToken, mainBudgetID);
   
   storeTransactions('dummy');
+  calendarPopulate("income");
 }  
 
 /**
@@ -82,12 +80,6 @@ async function getCurrencyDecimals(accessToken, mainBudgetID) {
   return budgetResponse.data.settings.currency_format.decimal_digits;
 }
 
-function listAccounts () {
-  for (let account of accounts) {
-    console.log("account name: " + account.name);
-  }
-}
-
 /**
  * Stores the transactions into an array
  * @param {String} yearOption Which button was clicked next to the year
@@ -102,7 +94,7 @@ function storeTransactions(yearOption) {
   document.getElementById("currentYear").innerHTML = currentYear;
   for(let transaction of transactions) {
     const transactionDate = newNormalizedDate(transaction.date);
-    if (transactionDate.getFullYear() != currentYear || transaction.transfer_account_id != null) {
+    if (transactionDate.getFullYear() != currentYear || transaction.transfer_account_id != null || selectedAccounts.indexOf(transaction.account_id) < 0) {
       continue;
     } else {
       const amount = ynab.utils.convertMilliUnitsToCurrencyAmount(transaction.amount, currencyDecimals); //converts to users currency in decimals
@@ -118,28 +110,27 @@ function storeTransactions(yearOption) {
   document.getElementById("loadStatus").innerHTML = "Status: Done";
 }
 
+/**
+ * Initialize the accounts list
+ */
 function initAccounts() {
   var initAccountIndex = 0;
   for (let account of accounts) {
     selectedAccounts[initAccountIndex++] = account.id;
+    htmlInsert =  "<input type=\"checkbox\" id=\"account-name-" + account.name + "\" name=\"" + account.name + "\" value=\"" + account.name + "\" checked=\"true\" onchange=\"toggleAccountCheckbox('" + account.id + "')\">" + "<label for=\"" + account.name + "\">" + account.name + "</label><br></br>";
+    document.getElementById("accounts-select").innerHTML += htmlInsert;
   }
 }
 
-// function storeAccounts() {
-//   for (let account of accounts)
-// }
-
-function accountPopulate() {
-  var htmlInsert;
-  for (let account of accounts) {
-    for(var accountIndex = 0; accountIndex <= accounts.length; accountIndex++) {
-      if (account.id === selectedAccounts[accountIndex]) {
-        htmlInsert =  "<input type=\"checkbox\" id=\"account-name-" + account.name + "\" name=\"" + account.name + "\" value=\"" + account.name + "\" checked=\"true\">" + "<label for=\"" + account.name + "\">" + account.name + "</label><br></br>";
-        document.getElementById("accounts-select").innerHTML += htmlInsert;
-        break;
-      }
-    }
-  }
+/**
+ * Update the account list when the account checkboxes are toggled.
+ * @param {String} accountCheckboxID The account ID of the checkbox that was toggled.
+ */
+function toggleAccountCheckbox(accountCheckboxID) {
+  const accountIndex = selectedAccounts.indexOf(accountCheckboxID);
+  accountIndex > -1 ? selectedAccounts.splice(accountIndex, 1) : selectedAccounts.push(accountCheckboxID);
+  storeTransactions('dummy');
+  calendarPopulate(budgetOption);
 }
 
 /**
