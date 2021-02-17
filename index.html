@@ -6,7 +6,7 @@
 </head>
 <body>
 <main>
-  <div class="cal-year-selector"><button onclick="yearChange('previous')">Previous</button><p id="currentYear">2020</p><button onclick="yearChange('next')">Next</button></div>
+  <div class="cal-year-selector"><button onclick="toggleYearChange('previous')">Previous</button><p id="currentYear">2020</p><button onclick="toggleYearChange('next')">Next</button></div>
   <table class = "cal-year">
     <tr><th><p>Days</p></th><th><p>Jan</p></th><th><p>Feb</p></th><th><p>Mar</p></th><th><p>Apr</p></th><th><p>May</p></th><th><p>Jun</p></th><th><p>Jul</p></th><th><p>Aug</p></th><th><p>Sep</p></th><th><p>Oct</p></th><th><p>Nov</p></th><th><p>Dec</p></th></tr>
   </table>
@@ -78,7 +78,7 @@
     <tr><th id="cal-year-1/31"></th><th id="cal-year-2/31" class="cal-year-noday"></th><th id="cal-year-3/31"></th><th id="cal-year-4/31" class="cal-year-noday"></th><th id="cal-year-5/31"></th><th id="cal-year-6/31" class="cal-year-noday"></th><th id="cal-year-7/31"></th><th id="cal-year-8/31"></th><th id="cal-year-9/31" class="cal-year-noday"></th><th id="cal-year-10/31"></th><th id="cal-year-11/31" class="cal-year-noday"></th><th id="cal-year-12/31"></th></tr>
   </table>
   </div>
-  <button onclick="calendarPopulate('income')">Income</button><button onclick="calendarPopulate('expense')">Expense</button><button onclick="calendarPopulate('both')">Both</button><button onclick="calendarPopulate('net')">Net</button><button onclick="resetDays()">Reset</button>
+  <button onclick="toggleBudgetOption('income')">Income</button><button onclick="toggleBudgetOption('expense')">Expense</button><button onclick="toggleBudgetOption('both')">Both</button><button onclick="toggleBudgetOption('net')">Net</button><button onclick="resetDays()">Reset</button>
   <p id="loadStatus">Status: Loading...</p>
   <div id="accounts-select"></div>
   </main>

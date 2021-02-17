@@ -19,7 +19,7 @@ async function main() {
   transactions = await getTransactions(accessToken, mainBudgetID);
   currencyDecimals = await getCurrencyDecimals(accessToken, mainBudgetID);
   
-  storeTransactions('dummy');
+  storeTransactions();
   calendarPopulate("income");
 }  
 
@@ -82,15 +82,8 @@ async function getCurrencyDecimals(accessToken, mainBudgetID) {
 
 /**
  * Stores the transactions into an array
- * @param {String} yearOption Which button was clicked next to the year
  */
-function storeTransactions(yearOption) {
-  resetTransactions();
-  if (yearOption === 'next') {
-    currentYear += 1;
-  } else if (yearOption === 'previous') {
-    currentYear -= 1;
-  } else {}
+function storeTransactions() {
   document.getElementById("currentYear").innerHTML = currentYear;
   for(let transaction of transactions) {
     const transactionDate = newNormalizedDate(transaction.date);
@@ -122,20 +115,10 @@ function initAccounts() {
   }
 }
 
-/**
- * Update the account list when the account checkboxes are toggled.
- * @param {String} accountCheckboxID The account ID of the checkbox that was toggled.
- */
-function toggleAccountCheckbox(accountCheckboxID) {
-  const accountIndex = selectedAccounts.indexOf(accountCheckboxID);
-  accountIndex > -1 ? selectedAccounts.splice(accountIndex, 1) : selectedAccounts.push(accountCheckboxID);
-  storeTransactions('dummy');
-  calendarPopulate(budgetOption);
-}
 
 /**
  * Populates the color and data of each day on the calendar
- * @param {String} option Option chosen by user such as income, expense, etc...
+ * @param {String} option 
  */
 function calendarPopulate(option){
   var htmlInsert;
@@ -144,10 +127,6 @@ function calendarPopulate(option){
   var incomeAmount;
   var expenseAmount;
   var netAmount;
-
-  resetDays();//Resets the day info and colors so that they don't show incorrectly
-
-  budgetOption = option;
 
   for (transactionIndex = 0; transactionIndex <= 365; transactionIndex++) {
     if (transactionDays[transactionIndex] == undefined) { continue;}
@@ -190,7 +169,7 @@ function calendarPopulate(option){
 /**
  * Resets the color and day information for the calendar
  */
-function resetDays () {
+function resetDays() {
   for(transactionIndex = 0; transactionIndex <= 365; transactionIndex++) {
     if (transactionDays[transactionIndex] == undefined) { continue;}
     dayID = "cal-year-".concat(transactionDays[transactionIndex].toString());
@@ -202,7 +181,7 @@ function resetDays () {
 /**
  * Resets the transactions arrays
  */
-function resetTransactions () {
+function resetTransactions() {
   for(transactionIndex = 0; transactionIndex <= 365; transactionIndex++) {
     if (transactionDays[transactionIndex] == undefined) { continue;}
     incomeTransactions[transactionIndex] = undefined;
@@ -211,13 +190,37 @@ function resetTransactions () {
 }
 
 /**
- * Sets up the calendar when the year is changed to clear out data, store the correct years transactions and populate the data
+ * Setup the calendar when the year is changed to clear out old data, store the correct years transactions and populate the new data
  * @param {String} yearOption Which button was clicked next to the year
  */
-function yearChange (yearOption) {
+function toggleYearChange(yearOption) {
   resetDays();
   resetTransactions();
-  storeTransactions(yearOption);
+  yearOption === 'next' ? currentYear +=1 : currentYear -=1;
+  storeTransactions();
+  calendarPopulate(budgetOption);
+}
+
+/**
+ * Setup the calendar when the budget option is changed to clear out old data and populate the new data
+ * @param {String} option Option chosen by user such as income, expense, etc...
+ */
+function toggleBudgetOption(option) {
+  budgetOption = option;
+  resetDays();
+  calendarPopulate(option);
+}
+
+/**
+ * Update the account list when the account checkboxes are toggled.
+ * @param {String} accountCheckboxID The account ID of the checkbox that was toggled.
+ */
+function toggleAccountCheckbox(accountCheckboxID) {
+  const accountIndex = selectedAccounts.indexOf(accountCheckboxID);
+  accountIndex > -1 ? selectedAccounts.splice(accountIndex, 1) : selectedAccounts.push(accountCheckboxID);
+  resetDays();
+  resetTransactions();
+  storeTransactions();
   calendarPopulate(budgetOption);
 }
 
