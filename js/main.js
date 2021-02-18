@@ -6,21 +6,22 @@ var accounts;
 var selectedAccounts = new Array();
 var transactions;
 var currencyDecimals;
-var currentYear = new Date().getFullYear(); //Set default year as current year.
-var budgetOption;
+var selectedYear = new Date().getFullYear(); //Set default year as current year.
+var budgetOption = "income";
 
 main();
 
 async function main() {
   const accessToken = await getAccessToken();
   const mainBudgetID = await getBudgetID();
+  document.getElementById("selectedYear").innerHTML = selectedYear;
   accounts = await getAccounts(accessToken, mainBudgetID);
   initAccounts();
   transactions = await getTransactions(accessToken, mainBudgetID);
   currencyDecimals = await getCurrencyDecimals(accessToken, mainBudgetID);
   
   storeTransactions();
-  calendarPopulate("income");
+  calendarPopulate(budgetOption);
 }  
 
 /**
@@ -84,10 +85,9 @@ async function getCurrencyDecimals(accessToken, mainBudgetID) {
  * Stores the transactions into an array
  */
 function storeTransactions() {
-  document.getElementById("currentYear").innerHTML = currentYear;
   for(let transaction of transactions) {
     const transactionDate = newNormalizedDate(transaction.date);
-    if (transactionDate.getFullYear() != currentYear || transaction.transfer_account_id != null || selectedAccounts.indexOf(transaction.account_id) < 0) {
+    if (transactionDate.getFullYear() != selectedYear || transaction.transfer_account_id != null || selectedAccounts.indexOf(transaction.account_id) < 0) {
       continue;
     } else {
       const amount = ynab.utils.convertMilliUnitsToCurrencyAmount(transaction.amount, currencyDecimals); //converts to users currency in decimals
@@ -190,15 +190,23 @@ function resetTransactions() {
 }
 
 /**
+ * Used when calendar needs refreshed with days & transactions reset and new values given.
+ */
+function refreshCalendar() {
+  resetDays();
+  resetTransactions();
+  storeTransactions();
+  calendarPopulate(budgetOption);
+}
+
+/**
  * Setup the calendar when the year is changed to clear out old data, store the correct years transactions and populate the new data
  * @param {String} yearOption Which button was clicked next to the year
  */
 function toggleYearChange(yearOption) {
-  resetDays();
-  resetTransactions();
-  yearOption === 'next' ? currentYear +=1 : currentYear -=1;
-  storeTransactions();
-  calendarPopulate(budgetOption);
+  yearOption === 'next' ? selectedYear +=1 : selectedYear -=1;
+  document.getElementById("selectedYear").innerHTML = selectedYear;
+  refreshCalendar();
 }
 
 /**
@@ -218,10 +226,7 @@ function toggleBudgetOption(option) {
 function toggleAccountCheckbox(accountCheckboxID) {
   const accountIndex = selectedAccounts.indexOf(accountCheckboxID);
   accountIndex > -1 ? selectedAccounts.splice(accountIndex, 1) : selectedAccounts.push(accountCheckboxID);
-  resetDays();
-  resetTransactions();
-  storeTransactions();
-  calendarPopulate(budgetOption);
+  refreshCalendar();
 }
 
 /**
