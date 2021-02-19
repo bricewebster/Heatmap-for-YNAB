@@ -16,6 +16,7 @@ async function main() {
   const mainBudgetID = await getBudgetID();
   document.getElementById("selectedYear").innerHTML = selectedYear;
   accounts = await getAccounts(accessToken, mainBudgetID);
+  listAccounts();
   initAccounts();
   transactions = await getTransactions(accessToken, mainBudgetID);
   currencyDecimals = await getCurrencyDecimals(accessToken, mainBudgetID);
@@ -23,6 +24,12 @@ async function main() {
   storeTransactions();
   calendarPopulate(budgetOption);
 }  
+
+function listAccounts(){
+  for(account of accounts){
+    console.log("account:" + account.name + " type: " + account.type);
+  }  
+}
 
 /**
  * Grabs personal access token for testing. (Will replace in the future)
@@ -108,10 +115,20 @@ function storeTransactions() {
  */
 function initAccounts() {
   var initAccountIndex = 0;
+  var accountID;
+  var accountAdd;
   for (let account of accounts) {
+    
     selectedAccounts[initAccountIndex++] = account.id;
+    if (account.type === 'otherLiability' ||account.type === 'otherAssest') {
+      accountID = 'accounts-select-tracking';
+    } else if (account.closed) {
+      accountID = 'accounts-select-closed'
+    } else {
+      accountID = 'accounts-select-budget'
+    }
     htmlInsert =  "<input type=\"checkbox\" id=\"account-name-" + account.name + "\" name=\"" + account.name + "\" value=\"" + account.name + "\" checked=\"true\" onchange=\"toggleAccountCheckbox('" + account.id + "')\">" + "<label for=\"" + account.name + "\">" + account.name + "</label><br></br>";
-    document.getElementById("accounts-select").innerHTML += htmlInsert;
+    document.getElementById(accountID).innerHTML += htmlInsert;
   }
 }
 
@@ -229,6 +246,13 @@ function toggleAccountCheckbox(accountCheckboxID) {
   refreshCalendar();
 }
 
+
+function toggleAccountCheckboxSection(accountSection) {
+  for (var accountIndex = 0; accountIndex > selectedAccounts.length; accountIndex++) {
+    if (accountSection)
+  }
+}
+
 /**
  * Get the day of the year from the supplied date
  * @param {*} transactionDate Date to get the day of the year from
@@ -245,4 +269,11 @@ function daysIntoYear(transactionDate){
  */
 function newNormalizedDate(date){
   return new Date(new Date(date).getTime() - new Date(date).getTimezoneOffset() * - 60000); //https://stackoverflow.com/a/14569783
+}
+
+function Account(id, name, type, closed) {
+  this.id = id;
+  this.name = name;
+  this.type = type;
+  this.closed = closed;
 }

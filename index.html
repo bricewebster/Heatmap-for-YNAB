@@ -80,7 +80,17 @@
   </div>
   <button onclick="toggleBudgetOption('income')">Income</button><button onclick="toggleBudgetOption('expense')">Expense</button><button onclick="toggleBudgetOption('both')">Both</button><button onclick="toggleBudgetOption('net')">Net</button><button onclick="resetDays()">Reset</button>
   <p id="loadStatus">Status: Loading...</p>
-  <div id="accounts-select"></div>
+  <div id="accounts-select">
+    <input type="checkbox" id="accounts-budget" name="accounts-budget" value="accounts-budget" checked=true onchange="toggleAccountCheckbox()">
+    <label for="accounts-budget">Budget Accounts</label><br></br>
+    <div id="accounts-select-budget"></div>
+    <input type="checkbox" id="accounts-tracking" name="accounts-tracking" value="accounts-tracking" checked=true onchange="toggleAccountCheckbox()">
+    <label for="accounts-tracking">Tracking Accounts</label><br></br>
+    <div id="accounts-select-tracking"></div>
+    <input type="checkbox" id="accounts-closed" name="accounts-closed" value="accounts-closed" checked=true onchange="toggleAccountCheckbox()">
+    <label for="accounts-closed">Closed Accounts</label><br></br>
+    <div id="accounts-select-closed"></div>
+  </div>
   </main>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://unpkg.com/ynab@1.21.0/dist/browser/ynab.js" async></script>
