@@ -2,8 +2,8 @@ var expenseTransactions = new Array(366);
 var incomeTransactions = new Array(366);
 var transactionDays = new Array(366);
 var defaultBudgetID;
-var accounts;
-var selectedAccounts = new Array();
+var accountsFetched;
+var ynabAccounts = new Array();
 var transactions;
 var currencyDecimals;
 var selectedYear = new Date().getFullYear(); //Set default year as current year.
@@ -15,9 +15,9 @@ async function main() {
   const accessToken = await getAccessToken();
   const mainBudgetID = await getBudgetID();
   document.getElementById("selectedYear").innerHTML = selectedYear;
-  accounts = await getAccounts(accessToken, mainBudgetID);
-  listAccounts();
+  accountsFetched = await getAccounts(accessToken, mainBudgetID);
   initAccounts();
+  listAccounts();
   transactions = await getTransactions(accessToken, mainBudgetID);
   currencyDecimals = await getCurrencyDecimals(accessToken, mainBudgetID);
   
@@ -26,9 +26,9 @@ async function main() {
 }  
 
 function listAccounts(){
-  for(account of accounts){
-    console.log("account:" + account.name + " type: " + account.type);
-  }  
+ // console.log(ynabAccounts.findIndex(ynabAccounts => ynabAccounts.id === "0fce183c-c062-495b-80e8-669f92144c3c"))
+  console.log(ynabAccounts[ynabAccounts.findIndex(ynabAccounts => ynabAccounts.id === "0fce183c-c062-495b-80e8-669f92144c3c")].selected)
+  console.log(ynabAccounts[1])
 }
 
 /**
@@ -93,8 +93,8 @@ async function getCurrencyDecimals(accessToken, mainBudgetID) {
  */
 function storeTransactions() {
   for(let transaction of transactions) {
-    const transactionDate = newNormalizedDate(transaction.date);
-    if (transactionDate.getFullYear() != selectedYear || transaction.transfer_account_id != null || selectedAccounts.indexOf(transaction.account_id) < 0) {
+    const transactionDate = newNormalizedDate(transaction.date);transaction.account_id
+    if (transactionDate.getFullYear() != selectedYear || transaction.transfer_account_id != null || !ynabAccounts[ynabAccounts.findIndex(ynabAccounts => ynabAccounts.id === transaction.account_id)].selected) {
       continue;
     } else {
       const amount = ynab.utils.convertMilliUnitsToCurrencyAmount(transaction.amount, currencyDecimals); //converts to users currency in decimals
@@ -116,10 +116,7 @@ function storeTransactions() {
 function initAccounts() {
   var initAccountIndex = 0;
   var accountID;
-  var accountAdd;
-  for (let account of accounts) {
-    
-    selectedAccounts[initAccountIndex++] = account.id;
+  for (let account of accountsFetched) {
     if (account.type === 'otherLiability' ||account.type === 'otherAssest') {
       accountID = 'accounts-select-tracking';
     } else if (account.closed) {
@@ -129,6 +126,7 @@ function initAccounts() {
     }
     htmlInsert =  "<input type=\"checkbox\" id=\"account-name-" + account.name + "\" name=\"" + account.name + "\" value=\"" + account.name + "\" checked=\"true\" onchange=\"toggleAccountCheckbox('" + account.id + "')\">" + "<label for=\"" + account.name + "\">" + account.name + "</label><br></br>";
     document.getElementById(accountID).innerHTML += htmlInsert;
+    ynabAccounts[initAccountIndex++] = new Account(account.id, account.name, accountID, account.closed, true);
   }
 }
 
@@ -248,9 +246,14 @@ function toggleAccountCheckbox(accountCheckboxID) {
 
 
 function toggleAccountCheckboxSection(accountSection) {
-  for (var accountIndex = 0; accountIndex > selectedAccounts.length; accountIndex++) {
-    if (accountSection)
+  for (let account of accounts) {
+    if (accountSection === account.type) {
+      !(account.selected)
+    } else {
+      continue;
+    }
   }
+  refreshCalendar();
 }
 
 /**
@@ -271,9 +274,10 @@ function newNormalizedDate(date){
   return new Date(new Date(date).getTime() - new Date(date).getTimezoneOffset() * - 60000); //https://stackoverflow.com/a/14569783
 }
 
-function Account(id, name, type, closed) {
+function Account(id, name, type, closed, selected) {
   this.id = id;
   this.name = name;
   this.type = type;
   this.closed = closed;
+  this.selected = selected;
 }
