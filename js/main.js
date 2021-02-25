@@ -17,19 +17,12 @@ async function main() {
   document.getElementById("selectedYear").innerHTML = selectedYear;
   accountsFetched = await getAccounts(accessToken, mainBudgetID);
   initAccounts();
-  listAccounts();
   transactions = await getTransactions(accessToken, mainBudgetID);
   currencyDecimals = await getCurrencyDecimals(accessToken, mainBudgetID);
   
   storeTransactions();
   calendarPopulate(budgetOption);
 }  
-
-function listAccounts(){
- // console.log(ynabAccounts.findIndex(ynabAccounts => ynabAccounts.id === "0fce183c-c062-495b-80e8-669f92144c3c"))
-  console.log(ynabAccounts[ynabAccounts.findIndex(ynabAccounts => ynabAccounts.id === "0fce183c-c062-495b-80e8-669f92144c3c")].selected)
-  console.log(ynabAccounts[1])
-}
 
 /**
  * Grabs personal access token for testing. (Will replace in the future)
@@ -124,7 +117,7 @@ function initAccounts() {
     } else {
       accountID = 'accounts-select-budget'
     }
-    htmlInsert =  "<input type=\"checkbox\" id=\"account-name-" + account.name + "\" name=\"" + account.name + "\" value=\"" + account.name + "\" checked=\"true\" onchange=\"toggleAccountCheckbox('" + account.id + "')\">" + "<label for=\"" + account.name + "\">" + account.name + "</label><br></br>";
+    htmlInsert =  "<input type=\"checkbox\" id=\"" + account.id + "\" name=\"" + account.name + "\" value=\"" + account.name + "\" checked=\"true\" onchange=\"toggleAccountCheckbox(this.id)\">" + "<label for=\"" + account.name + "\">" + account.name + "</label><br></br>";
     document.getElementById(accountID).innerHTML += htmlInsert;
     ynabAccounts[initAccountIndex++] = new Account(account.id, account.name, accountID, account.closed, true);
   }
@@ -235,25 +228,28 @@ function toggleBudgetOption(option) {
 }
 
 /**
- * Update the account list when the account checkboxes are toggled.
+ * Update the calendar when the account checkboxes are toggled.
  * @param {String} accountCheckboxID The account ID of the checkbox that was toggled.
  */
 function toggleAccountCheckbox(accountCheckboxID) {
-  const accountIndex = selectedAccounts.indexOf(accountCheckboxID);
-  accountIndex > -1 ? selectedAccounts.splice(accountIndex, 1) : selectedAccounts.push(accountCheckboxID);
+  const accountIndex = ynabAccounts.findIndex(ynabAccounts => ynabAccounts.id === accountCheckboxID);
+  console.log('account: ' + accountCheckboxID);
+  ynabAccounts[accountIndex].selected = !ynabAccounts[accountIndex].selected;
+  
   refreshCalendar();
 }
 
 
 function toggleAccountCheckboxSection(accountSection) {
-  for (let account of accounts) {
+  for (let account of ynabAccounts) {
     if (accountSection === account.type) {
-      !(account.selected)
+      //!(account.selected);
+      document.getElementById(account.id).click();
     } else {
       continue;
     }
   }
-  refreshCalendar();
+  //refreshCalendar();
 }
 
 /**
