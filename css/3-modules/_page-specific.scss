@@ -101,3 +101,19 @@
   display: block;
   margin-left: 10px;
 }
+
+/*------------------------------------*\
+  #Categories Select
+\*------------------------------------*/
+#categories-select {
+  display: block;
+  width:  250px;
+  height: 100px;
+
+  overflow: scroll;
+}
+
+#categories-select div {
+  display: block;
+  margin-left: 10px;
+}

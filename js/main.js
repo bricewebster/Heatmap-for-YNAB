@@ -4,11 +4,13 @@ var transactionDays = new Array(366);
 var defaultBudgetID;
 var accountsFetched;
 var ynabAccounts = new Array();
+var categoriesFetched;
+var ynabCategories = new Array();
 var transactions;
 var currencyDecimals;
 var selectedYear = new Date().getFullYear(); //Set default year as current year.
 var budgetOption = "income";
-var accountSectionFlag = 0;
+var sectionFlag = 0;
 
 main();
 
@@ -18,11 +20,14 @@ async function main() {
   document.getElementById("selectedYear").innerHTML = selectedYear;
   accountsFetched = await getAccounts(accessToken, mainBudgetID);
   initAccounts();
-  transactions = await getTransactions(accessToken, mainBudgetID);
-  currencyDecimals = await getCurrencyDecimals(accessToken, mainBudgetID);
+  categoriesFetched = await getCategories(accessToken, mainBudgetID);
+ // listCategories();
+  initCategories();
+  // transactions = await getTransactions(accessToken, mainBudgetID);
+  // currencyDecimals = await getCurrencyDecimals(accessToken, mainBudgetID);
   
-  storeTransactions();
-  calendarPopulate(budgetOption);
+  // storeTransactions();
+  // calendarPopulate(budgetOption);
 }  
 
 /**
@@ -54,6 +59,14 @@ async function getAccounts(accessToken, mainBudgetID) {
   const ynabAPI = new ynab.API(accessToken);
   const accountResponse = await ynabAPI.accounts.getAccounts(mainBudgetID);
   return accountResponse.data.accounts;
+}
+
+async function getCategories(accessToken, mainBudgetID) {
+  var ynab = window.ynab;
+  const ynabAPI = new ynab.API(accessToken);
+  const categoryResponse = await ynabAPI.categories.getCategories(mainBudgetID);
+  console.log(categoryResponse);
+  return categoryResponse.data.category_groups;
 }
 
 /**
@@ -110,6 +123,7 @@ function storeTransactions() {
 function initAccounts() {
   var initAccountIndex = 0;
   var accountID;
+  var htmlInsert;
   for (let account of accountsFetched) {
     if (account.type === 'otherLiability' ||account.type === 'otherAssest') {
       accountID = 'accounts-select-tracking';
@@ -124,6 +138,20 @@ function initAccounts() {
   }
 }
 
+/**
+ * Initialize the categories list
+ */
+function initCategories() {
+  for(let category of categoriesFetched){
+    if (category.name === 'Internal Master Category') { continue;}
+    htmlInsert =  "<input type=\"checkbox\" id=\"" + category.id + "\" name=\"" + category.name + "\" value=\"" + category.name + "\" checked=\"true\" onchange=\"toggleAccountCheckbox(this.id)\">" + "<label for=\"" + category.name + "\">" + category.name + "</label><br></br>" + "<div id='cat-" + category.id + "'></div>";
+    document.getElementById('categories-select').innerHTML += htmlInsert;
+    for(let subcategory of category.categories) {
+      htmlInsert =  "<input type=\"checkbox\" id=\"" + subcategory.id + "\" name=\"" + subcategory.name + "\" value=\"" + subcategory.name + "\" checked=\"true\" onchange=\"toggleCategoryCheckbox(this.id)\">" + "<label for=\"" + subcategory.name + "\">" + subcategory.name + "</label><br></br>";
+      document.getElementById('cat-' + category.id).innerHTML += htmlInsert;
+    }
+  }
+}
 
 /**
  * Populates the color and data of each day on the calendar
@@ -234,11 +262,10 @@ function toggleBudgetOption(option) {
  */
 function toggleAccountCheckbox(accountCheckboxID) {
   const accountIndex = ynabAccounts.findIndex(ynabAccounts => ynabAccounts.id === accountCheckboxID);
-  console.log('account: ' + accountCheckboxID);
   ynabAccounts[accountIndex].selected = !ynabAccounts[accountIndex].selected;
-  if (accountSectionFlag = true) {
+  if (sectionFlag = true) {
     refreshCalendar();
-    accountSectionFlag = false;
+    sectionFlag = false;
   }
 }
 
@@ -256,6 +283,15 @@ function toggleAccountCheckboxSection(accountSection) {
     }
   }
   refreshCalendar();
+}
+
+function toggleCategoryCheckbox(accountCheckboxID) {
+  const categoryIndex = ynabCategories.findIndex(ynabCategories => ynabCategories.id === accountCheckboxID);
+  ynabCategories[categoryIndex].selected = !ynabCategories[categoryIndex].selected;
+  if (sectionFlag = true) {
+    refreshCalendar();
+    sectionFlag = false;
+  }
 }
 
 /**
@@ -281,5 +317,11 @@ function Account(id, name, type, closed, selected) {
   this.name = name;
   this.type = type;
   this.closed = closed;
+  this.selected = selected;
+}
+
+function Categories(id, name, selected) {
+  this.id = id;
+  this.name = name;
   this.selected = selected;
 }
