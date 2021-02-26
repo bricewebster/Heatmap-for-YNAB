@@ -8,6 +8,7 @@ var transactions;
 var currencyDecimals;
 var selectedYear = new Date().getFullYear(); //Set default year as current year.
 var budgetOption = "income";
+var accountSectionFlag = 0;
 
 main();
 
@@ -235,21 +236,26 @@ function toggleAccountCheckbox(accountCheckboxID) {
   const accountIndex = ynabAccounts.findIndex(ynabAccounts => ynabAccounts.id === accountCheckboxID);
   console.log('account: ' + accountCheckboxID);
   ynabAccounts[accountIndex].selected = !ynabAccounts[accountIndex].selected;
-  
-  refreshCalendar();
+  if (accountSectionFlag = true) {
+    refreshCalendar();
+    accountSectionFlag = false;
+  }
 }
 
-
+/**
+ * Update the calendar when an acount checkbox is toggled
+ * @param {string} accountSection The section that was clicked
+ */
 function toggleAccountCheckboxSection(accountSection) {
+  accountSectionFlag = true;
   for (let account of ynabAccounts) {
     if (accountSection === account.type) {
-      //!(account.selected);
       document.getElementById(account.id).click();
     } else {
       continue;
     }
   }
-  //refreshCalendar();
+  refreshCalendar();
 }
 
 /**
