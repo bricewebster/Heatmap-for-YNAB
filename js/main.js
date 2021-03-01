@@ -10,7 +10,7 @@ var transactions;
 var currencyDecimals;
 var selectedYear = new Date().getFullYear(); //Set default year as current year.
 var budgetOption = "income";
-var sectionFlag = 0;
+var sectionFlag = false;
 
 main();
 
@@ -21,14 +21,22 @@ async function main() {
   accountsFetched = await getAccounts(accessToken, mainBudgetID);
   initAccounts();
   categoriesFetched = await getCategories(accessToken, mainBudgetID);
- // listCategories();
+ 
   initCategories();
-  // transactions = await getTransactions(accessToken, mainBudgetID);
+ 
+  transactions = await getTransactions(accessToken, mainBudgetID);
+  listCategories();
   // currencyDecimals = await getCurrencyDecimals(accessToken, mainBudgetID);
   
   // storeTransactions();
   // calendarPopulate(budgetOption);
 }  
+
+function listCategories() {
+  for(let transaction of transactions) {
+    console.log('date: ' + transaction.date + 'amount: ' + transaction.amount + 'amountid: ' + transaction.amount_id + 'aname: ' + transaction.account_name + 'cname: ' + transaction.category_name + 'catid: ' + transaction.category_id);
+  }
+}
 
 /**
  * Grabs personal access token for testing. (Will replace in the future)
@@ -101,7 +109,9 @@ async function getCurrencyDecimals(accessToken, mainBudgetID) {
 function storeTransactions() {
   for(let transaction of transactions) {
     const transactionDate = newNormalizedDate(transaction.date);transaction.account_id
-    if (transactionDate.getFullYear() != selectedYear || transaction.transfer_account_id != null || !ynabAccounts[ynabAccounts.findIndex(ynabAccounts => ynabAccounts.id === transaction.account_id)].selected) {
+    console.log('date: ' + transaction.date + ' amount: ' + transaction.amount +'catid: ' + transaction.category_id + ' acountid: ' + transaction.transfer_account_id );
+    console.log('index: ' + ynabCategories.findIndex(ynabCategories => ynabCategories.id === transaction.category_id));
+    if (transactionDate.getFullYear() != selectedYear || transaction.transfer_account_id !== null || !ynabAccounts[ynabAccounts.findIndex(ynabAccounts => ynabAccounts.id === transaction.account_id)].selected || (transaction.category_id !== null ? !ynabCategories[ynabCategories.findIndex(ynabCategories => ynabCategories.id === transaction.category_id)].selected : false)) {
       continue;
     } else {
       const amount = ynab.utils.convertMilliUnitsToCurrencyAmount(transaction.amount, currencyDecimals); //converts to users currency in decimals
@@ -142,13 +152,18 @@ function initAccounts() {
  * Initialize the categories list
  */
 function initCategories() {
+  var initCategoryIndex = 0;
+  var htmlInsert;
   for(let category of categoriesFetched){
-    if (category.name === 'Internal Master Category') { continue;}
+    // if (category.name === 'Internal Master Category') { continue;}
     htmlInsert =  "<input type=\"checkbox\" id=\"" + category.id + "\" name=\"" + category.name + "\" value=\"" + category.name + "\" checked=\"true\" onchange=\"toggleAccountCheckbox(this.id)\">" + "<label for=\"" + category.name + "\">" + category.name + "</label><br></br>" + "<div id='cat-" + category.id + "'></div>";
     document.getElementById('categories-select').innerHTML += htmlInsert;
+    console.log('Cat:' + category.name + 'id: ' + category.id);
     for(let subcategory of category.categories) {
+      console.log('name: ' + subcategory.name + 'id: ' + subcategory.id);
       htmlInsert =  "<input type=\"checkbox\" id=\"" + subcategory.id + "\" name=\"" + subcategory.name + "\" value=\"" + subcategory.name + "\" checked=\"true\" onchange=\"toggleCategoryCheckbox(this.id)\">" + "<label for=\"" + subcategory.name + "\">" + subcategory.name + "</label><br></br>";
       document.getElementById('cat-' + category.id).innerHTML += htmlInsert;
+      ynabCategories[initCategoryIndex++] = new Category(subcategory.id, subcategory.name, true);
     }
   }
 }
@@ -263,9 +278,8 @@ function toggleBudgetOption(option) {
 function toggleAccountCheckbox(accountCheckboxID) {
   const accountIndex = ynabAccounts.findIndex(ynabAccounts => ynabAccounts.id === accountCheckboxID);
   ynabAccounts[accountIndex].selected = !ynabAccounts[accountIndex].selected;
-  if (sectionFlag = true) {
+  if (sectionFlag != true) {
     refreshCalendar();
-    sectionFlag = false;
   }
 }
 
@@ -274,7 +288,7 @@ function toggleAccountCheckbox(accountCheckboxID) {
  * @param {string} accountSection The section that was clicked
  */
 function toggleAccountCheckboxSection(accountSection) {
-  accountSectionFlag = true;
+  sectionFlag = true;
   for (let account of ynabAccounts) {
     if (accountSection === account.type) {
       document.getElementById(account.id).click();
@@ -282,11 +296,14 @@ function toggleAccountCheckboxSection(accountSection) {
       continue;
     }
   }
+  sectionFlag = false;
   refreshCalendar();
 }
 
-function toggleCategoryCheckbox(accountCheckboxID) {
-  const categoryIndex = ynabCategories.findIndex(ynabCategories => ynabCategories.id === accountCheckboxID);
+function toggleCategoryCheckbox(categoryCheckboxID) {
+  const categoryIndex = ynabCategories.findIndex(ynabCategories => ynabCategories.id === categoryCheckboxID);
+  console.log('cat-index: ' + categoryIndex);
+  console.log('checkboxid: ' + categoryCheckboxID);
   ynabCategories[categoryIndex].selected = !ynabCategories[categoryIndex].selected;
   if (sectionFlag = true) {
     refreshCalendar();
@@ -320,7 +337,7 @@ function Account(id, name, type, closed, selected) {
   this.selected = selected;
 }
 
-function Categories(id, name, selected) {
+function Category(id, name, selected) {
   this.id = id;
   this.name = name;
   this.selected = selected;
