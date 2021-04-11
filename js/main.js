@@ -25,18 +25,18 @@ async function main() {
   initCategories();
  
   transactions = await getTransactions(accessToken, mainBudgetID);
-  listCategories();
-  // currencyDecimals = await getCurrencyDecimals(accessToken, mainBudgetID);
+  // listCategories();
+  currencyDecimals = await getCurrencyDecimals(accessToken, mainBudgetID);
   
-  // storeTransactions();
-  // calendarPopulate(budgetOption);
+  storeTransactionsMain();
+  calendarPopulate(budgetOption);
 }  
 
-function listCategories() {
-  for(let transaction of transactions) {
-    console.log('date: ' + transaction.date + 'amount: ' + transaction.amount + 'amountid: ' + transaction.amount_id + 'aname: ' + transaction.account_name + 'cname: ' + transaction.category_name + 'catid: ' + transaction.category_id);
-  }
-}
+// function listCategories() {
+//   for(let transaction of transactions) {
+//     console.log('date: ' + transaction.date + 'amount: ' + transaction.amount + 'amountid: ' + transaction.amount_id + 'aname: ' + transaction.account_name + 'cname: ' + transaction.category_name + 'catid: ' + transaction.category_id);
+//   }
+// }
 
 /**
  * Grabs personal access token for testing. (Will replace in the future)
@@ -73,7 +73,6 @@ async function getCategories(accessToken, mainBudgetID) {
   var ynab = window.ynab;
   const ynabAPI = new ynab.API(accessToken);
   const categoryResponse = await ynabAPI.categories.getCategories(mainBudgetID);
-  console.log(categoryResponse);
   return categoryResponse.data.category_groups;
 }
 
@@ -104,27 +103,45 @@ async function getCurrencyDecimals(accessToken, mainBudgetID) {
 }
 
 /**
- * Stores the transactions into an array
+ * Main function for storing transactions. Used mostly to loop through the subtransactions if there are any.
  */
-function storeTransactions() {
+function storeTransactionsMain() {
   for(let transaction of transactions) {
-    const transactionDate = newNormalizedDate(transaction.date);transaction.account_id
-    console.log('date: ' + transaction.date + ' amount: ' + transaction.amount +'catid: ' + transaction.category_id + ' acountid: ' + transaction.transfer_account_id );
-    console.log('index: ' + ynabCategories.findIndex(ynabCategories => ynabCategories.id === transaction.category_id));
-    if (transactionDate.getFullYear() != selectedYear || transaction.transfer_account_id !== null || !ynabAccounts[ynabAccounts.findIndex(ynabAccounts => ynabAccounts.id === transaction.account_id)].selected || (transaction.category_id !== null ? !ynabCategories[ynabCategories.findIndex(ynabCategories => ynabCategories.id === transaction.category_id)].selected : false)) {
-      continue;
-    } else {
-      const amount = ynab.utils.convertMilliUnitsToCurrencyAmount(transaction.amount, currencyDecimals); //converts to users currency in decimals
-      const transactionIndex = daysIntoYear(transactionDate) - 1;
-      transactionDays[transactionIndex] = (transactionDate.getMonth() + 1).toString().concat("/",transactionDate.getDate().toString());
-      if (amount > 0) {
-        (isNaN(incomeTransactions[transactionIndex]) ? incomeTransactions[transactionIndex] = amount : incomeTransactions[transactionIndex] = (parseFloat(incomeTransactions[transactionIndex]) + (parseFloat(amount))).toFixed(currencyDecimals));
-      } else { 
-        (isNaN(expenseTransactions[transactionIndex]) ? expenseTransactions[transactionIndex] = amount: expenseTransactions[transactionIndex] = (parseFloat(expenseTransactions[transactionIndex]) + (parseFloat(amount))).toFixed(currencyDecimals));
+    //If there are subtransctions(which are just split transactions) then it loops through those
+    if(transaction.subtransactions.length > 0) {
+      for(let subtransaction of transaction.subtransactions) {
+        storeTransactions(subtransaction);
       }
+    } else { 
+      storeTransactions(transaction);
     }
   }
   document.getElementById("loadStatus").innerHTML = "Status: Done";
+}
+
+/**
+ * Stores the transactions into an array
+ * @param {Object} transaction The transaction being stored.
+ * @returns nothing
+ */
+function storeTransactions(transaction) {
+  const transactionDate = newNormalizedDate(transaction.date);
+  
+  //If transaction isn't on selected year, is a transfer transaction, not a selected account, or not a selected category then it skips storing it
+  if (transactionDate.getFullYear() != selectedYear || transaction.transfer_account_id !== null ||
+      !ynabAccounts[ynabAccounts.findIndex(ynabAccounts => ynabAccounts.id === transaction.account_id)].selected || 
+      (transaction.category_id !== null ? !ynabCategories[ynabCategories.findIndex(ynabCategories => ynabCategories.id === transaction.category_id)].selected : false)) {
+    return;
+  } else {
+    const amount = ynab.utils.convertMilliUnitsToCurrencyAmount(transaction.amount, currencyDecimals); //converts to users currency in decimals
+    const transactionIndex = daysIntoYear(transactionDate) - 1;
+    transactionDays[transactionIndex] = (transactionDate.getMonth() + 1).toString().concat("/",transactionDate.getDate().toString());
+    if (amount > 0) {
+      (isNaN(incomeTransactions[transactionIndex]) ? incomeTransactions[transactionIndex] = amount : incomeTransactions[transactionIndex] = (parseFloat(incomeTransactions[transactionIndex]) + (parseFloat(amount))).toFixed(currencyDecimals));
+    } else { 
+      (isNaN(expenseTransactions[transactionIndex]) ? expenseTransactions[transactionIndex] = amount: expenseTransactions[transactionIndex] = (parseFloat(expenseTransactions[transactionIndex]) + (parseFloat(amount))).toFixed(currencyDecimals));
+    }
+  }
 }
 
 /**
@@ -156,11 +173,11 @@ function initCategories() {
   var htmlInsert;
   for(let category of categoriesFetched){
     // if (category.name === 'Internal Master Category') { continue;}
-    htmlInsert =  "<input type=\"checkbox\" id=\"" + category.id + "\" name=\"" + category.name + "\" value=\"" + category.name + "\" checked=\"true\" onchange=\"toggleAccountCheckbox(this.id)\">" + "<label for=\"" + category.name + "\">" + category.name + "</label><br></br>" + "<div id='cat-" + category.id + "'></div>";
+    htmlInsert =  "<input type=\"checkbox\" id=\"" + category.id + "\" name=\"" + category.name + "\" value=\"" + category.name + "\" checked=\"true\" onchange=\"toggleCategoryCheckbox(this.id)\">" + "<label for=\"" + category.name + "\">" + category.name + "</label><br></br>" + "<div id='cat-" + category.id + "'></div>";
     document.getElementById('categories-select').innerHTML += htmlInsert;
-    console.log('Cat:' + category.name + 'id: ' + category.id);
+    //console.log('Cat:' + category.name + 'id: ' + category.id);
     for(let subcategory of category.categories) {
-      console.log('name: ' + subcategory.name + 'id: ' + subcategory.id);
+      //console.log('name: ' + subcategory.name + 'id: ' + subcategory.id);
       htmlInsert =  "<input type=\"checkbox\" id=\"" + subcategory.id + "\" name=\"" + subcategory.name + "\" value=\"" + subcategory.name + "\" checked=\"true\" onchange=\"toggleCategoryCheckbox(this.id)\">" + "<label for=\"" + subcategory.name + "\">" + subcategory.name + "</label><br></br>";
       document.getElementById('cat-' + category.id).innerHTML += htmlInsert;
       ynabCategories[initCategoryIndex++] = new Category(subcategory.id, subcategory.name, true);
@@ -247,7 +264,7 @@ function resetTransactions() {
 function refreshCalendar() {
   resetDays();
   resetTransactions();
-  storeTransactions();
+  storeTransactionsMain();
   calendarPopulate(budgetOption);
 }
 
@@ -302,8 +319,6 @@ function toggleAccountCheckboxSection(accountSection) {
 
 function toggleCategoryCheckbox(categoryCheckboxID) {
   const categoryIndex = ynabCategories.findIndex(ynabCategories => ynabCategories.id === categoryCheckboxID);
-  console.log('cat-index: ' + categoryIndex);
-  console.log('checkboxid: ' + categoryCheckboxID);
   ynabCategories[categoryIndex].selected = !ynabCategories[categoryIndex].selected;
   if (sectionFlag = true) {
     refreshCalendar();
