@@ -172,15 +172,13 @@ function initCategories() {
   var initCategoryIndex = 0;
   var htmlInsert;
   for(let category of categoriesFetched){
-    // if (category.name === 'Internal Master Category') { continue;}
-    htmlInsert =  "<input type=\"checkbox\" id=\"" + category.id + "\" name=\"" + category.name + "\" value=\"" + category.name + "\" checked=\"true\" onchange=\"toggleCategoryCheckbox(this.id)\">" + "<label for=\"" + category.name + "\">" + category.name + "</label><br></br>" + "<div id='cat-" + category.id + "'></div>";
+    if (category.name === 'Internal Master Category') { continue;}
+    htmlInsert =  "<input type=\"checkbox\" id=\"" + category.id + "\" name=\"" + category.name + "\" value=\"" + category.name + "\" checked=\"true\" onchange=\"toggleCategoryCheckboxSection(this.id)\">" + "<label for=\"" + category.name + "\">" + category.name + "</label><br></br>" + "<div id='cat-" + category.id + "'></div>";
     document.getElementById('categories-select').innerHTML += htmlInsert;
-    //console.log('Cat:' + category.name + 'id: ' + category.id);
     for(let subcategory of category.categories) {
-      //console.log('name: ' + subcategory.name + 'id: ' + subcategory.id);
       htmlInsert =  "<input type=\"checkbox\" id=\"" + subcategory.id + "\" name=\"" + subcategory.name + "\" value=\"" + subcategory.name + "\" checked=\"true\" onchange=\"toggleCategoryCheckbox(this.id)\">" + "<label for=\"" + subcategory.name + "\">" + subcategory.name + "</label><br></br>";
       document.getElementById('cat-' + category.id).innerHTML += htmlInsert;
-      ynabCategories[initCategoryIndex++] = new Category(subcategory.id, subcategory.name, true);
+      ynabCategories[initCategoryIndex++] = new Category(subcategory.id, subcategory.name, category.id, true);
     }
   }
 }
@@ -301,7 +299,7 @@ function toggleAccountCheckbox(accountCheckboxID) {
 }
 
 /**
- * Update the calendar when an acount checkbox is toggled
+ * Update the calendar when an account checkbox section is toggled
  * @param {string} accountSection The section that was clicked
  */
 function toggleAccountCheckboxSection(accountSection) {
@@ -324,6 +322,19 @@ function toggleCategoryCheckbox(categoryCheckboxID) {
     refreshCalendar();
     sectionFlag = false;
   }
+}
+
+function toggleCategoryCheckboxSection(categorySection) {
+  sectionFlag = true;
+  for (let category of ynabCategories) {
+    if (categorySection === category.type) {
+      document.getElementById(category.id).click();
+    } else {
+      continue;
+    }
+  }
+  sectionFlag = false;
+  refreshCalendar();
 }
 
 /**
@@ -352,8 +363,9 @@ function Account(id, name, type, closed, selected) {
   this.selected = selected;
 }
 
-function Category(id, name, selected) {
+function Category(id, name, type, selected) {
   this.id = id;
   this.name = name;
+  this.type = type;
   this.selected = selected;
 }
