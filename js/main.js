@@ -133,9 +133,10 @@ function storeTransactions(transaction) {
       (transaction.category_id !== null ? !ynabCategories[ynabCategories.findIndex(ynabCategories => ynabCategories.id === transaction.category_id)].selected : false)) {
     return;
   } else {
-    const amount = ynab.utils.convertMilliUnitsToCurrencyAmount(transaction.amount, currencyDecimals); //converts to users currency in decimals
-    const transactionIndex = daysIntoYear(transactionDate) - 1;
-    transactionDays[transactionIndex] = (transactionDate.getMonth() + 1).toString().concat("/",transactionDate.getDate().toString());
+    const amount = ynab.utils.convertMilliUnitsToCurrencyAmount(transaction.amount, currencyDecimals); //Converts to users currency in decimals
+    const transactionIndex = daysIntoYear(transactionDate) - 1; //Gets the index of which day to store the transaction.
+    transactionDays[transactionIndex] = (transactionDate.getMonth() + 1).toString().concat("/",transactionDate.getDate().toString()); //
+
     if (amount > 0) {
       (isNaN(incomeTransactions[transactionIndex]) ? incomeTransactions[transactionIndex] = amount : incomeTransactions[transactionIndex] = (parseFloat(incomeTransactions[transactionIndex]) + (parseFloat(amount))).toFixed(currencyDecimals));
     } else { 
@@ -172,7 +173,7 @@ function initCategories() {
   var initCategoryIndex = 0;
   var htmlInsert;
   for(let category of categoriesFetched){
-    if (category.name === 'Internal Master Category') { continue;}
+    //if (category.name === 'Internal Master Category') { continue;}
     htmlInsert =  "<input type=\"checkbox\" id=\"" + category.id + "\" name=\"" + category.name + "\" value=\"" + category.name + "\" checked=\"true\" onchange=\"toggleCategoryCheckboxSection(this.id)\">" + "<label for=\"" + category.name + "\">" + category.name + "</label><br></br>" + "<div id='cat-" + category.id + "'></div>";
     document.getElementById('categories-select').innerHTML += htmlInsert;
     for(let subcategory of category.categories) {
@@ -194,6 +195,8 @@ function calendarPopulate(option){
   var incomeAmount;
   var expenseAmount;
   var netAmount;
+
+  //console.log(incomeTransactions.filter(word => word.length > 0).length)
 
   for (transactionIndex = 0; transactionIndex <= 365; transactionIndex++) {
     if (transactionDays[transactionIndex] == undefined) { continue;}
