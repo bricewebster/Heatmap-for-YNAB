@@ -25,7 +25,7 @@ async function main() {
   initCategories();
  
   transactions = await getTransactions(accessToken, mainBudgetID);
-  // listCategories();
+  //listCategories();
   currencyDecimals = await getCurrencyDecimals(accessToken, mainBudgetID);
   
   storeTransactionsMain();
@@ -110,10 +110,10 @@ function storeTransactionsMain() {
     //If there are subtransctions(which are just split transactions) then it loops through those
     if(transaction.subtransactions.length > 0) {
       for(let subtransaction of transaction.subtransactions) {
-        storeTransactions(subtransaction);
+        storeTransactions(subtransaction, transaction.account_id);
       }
     } else { 
-      storeTransactions(transaction);
+      storeTransactions(transaction, transaction.account_id);
     }
   }
   document.getElementById("loadStatus").innerHTML = "Status: Done";
@@ -124,13 +124,14 @@ function storeTransactionsMain() {
  * @param {Object} transaction The transaction being stored.
  * @returns nothing
  */
-function storeTransactions(transaction) {
+function storeTransactions(transaction, transactionAccountID) {
   const transactionDate = newNormalizedDate(transaction.date);
-  
+  if(transaction.category_name === 'Inflow: Ready to Assign') {
+    console.log(transaction)
+    console.log('date: ' + transaction.date + ' account: ' + transaction.account_name + ' amount: ' + transaction.amount)
+  }
   //If transaction isn't on selected year, is a transfer transaction, not a selected account, or not a selected category then it skips storing it
-  if (transactionDate.getFullYear() != selectedYear || transaction.transfer_account_id !== null ||
-      !ynabAccounts[ynabAccounts.findIndex(ynabAccounts => ynabAccounts.id === transaction.account_id)].selected || 
-      (transaction.category_id !== null ? !ynabCategories[ynabCategories.findIndex(ynabCategories => ynabCategories.id === transaction.category_id)].selected : false)) {
+  if (transactionSkipCheck(transaction, transactionDate, transactionAccountID)) {
     return;
   } else {
     const amount = ynab.utils.convertMilliUnitsToCurrencyAmount(transaction.amount, currencyDecimals); //Converts to users currency in decimals
@@ -142,6 +143,31 @@ function storeTransactions(transaction) {
     } else { 
       (isNaN(expenseTransactions[transactionIndex]) ? expenseTransactions[transactionIndex] = amount: expenseTransactions[transactionIndex] = (parseFloat(expenseTransactions[transactionIndex]) + (parseFloat(amount))).toFixed(currencyDecimals));
     }
+  }
+}
+
+function transactionSkipCheck(transaction, transactionDate, transactionAccountID) {
+  let withinYearCheck = transactionDate.getFullYear() !== selectedYear;
+  let transferAccountCheck = transaction.transfer_account_id !== null;
+  let accountSelectedCheck = !ynabAccounts[ynabAccounts.findIndex(ynabAccounts => ynabAccounts.id === transactionAccountID)].selected;
+  if (withinYearCheck || transferAccountCheck || accountSelectedCheck || categorySelectedCheck(transaction)) {
+    //console.log('with: ' + withinYearCheck + ' transaccount: ' + transferAccountCheck + ' accountSelected: ' + accountSelectedCheck + 'category: ' + categorySelectedCheck(transaction))
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function categorySelectedCheck(transaction) {
+  if (transaction.category_id !== null) {
+    let categoryIndex = ynabCategories.findIndex(ynabCategories => ynabCategories.id === transaction.category_id);
+    if (categoryIndex !== -1) {
+      return !ynabCategories[categoryIndex].selected;
+    } else {
+      return true;
+    }
+  } else {
+    return true;
   }
 }
 
@@ -173,7 +199,7 @@ function initCategories() {
   var initCategoryIndex = 0;
   var htmlInsert;
   for(let category of categoriesFetched){
-    //if (category.name === 'Internal Master Category') { continue;}
+    //if (category.name === 'Internal Master Category') { continue;}// May revisit but leaving on for now.
     htmlInsert =  "<input type=\"checkbox\" id=\"" + category.id + "\" name=\"" + category.name + "\" value=\"" + category.name + "\" checked=\"true\" onchange=\"toggleCategoryCheckboxSection(this.id)\">" + "<label for=\"" + category.name + "\">" + category.name + "</label><br></br>" + "<div id='cat-" + category.id + "'></div>";
     document.getElementById('categories-select').innerHTML += htmlInsert;
     for(let subcategory of category.categories) {
