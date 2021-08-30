@@ -11,6 +11,7 @@ main {
   margin: 0 auto;
   width: 100%;
   height: auto;
+  /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; */
 }
 
 /* 
@@ -137,5 +138,73 @@ main {
 #categories-select div {
   display: block;
   margin-left: 10px;
+}
+
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: local("Material Icons"), url(/modules/googleicons/MaterialIcons-Regular.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: 'Material Icons Round';
+  font-style: normal;
+  font-weight: 400;
+  src: local("Material Icons Round"), url(/modules/googleicons/MaterialIconsRound-Regular.otf) format("truetype");
+}
+
+@font-face {
+  font-family: 'Material Icons Outlined';
+  font-style: normal;
+  font-weight: 400;
+  src: local("Material Icons Outlined"), url(/modules/googleicons/MaterialIconsOutlined-Regular.otf) format("truetype");
+}
+
+.material-icons, .material-icons-round, .material-icons-outlined {
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+  /* Support for IE. */
+  -webkit-font-feature-settings: 'liga';
+          font-feature-settings: 'liga';
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+}
+
+.material-icons-round {
+  font-family: 'Material Icons Round';
+}
+
+.material-icons-outlined {
+  font-family: 'Material Icons Outlined';
+}
+
+.material-icons.md-24, .material-icons-round.md-24, .material-icons-outlined.md-24 {
+  font-size: 1.5em;
+}
+
+.material-icons.md-36, .material-icons-round.md-36, .material-icons-outlined.md-36 {
+  font-size: 2.25em;
+}
+
+.material-icons.md-48, .material-icons-round.md-48, .material-icons-outlined.md-48 {
+  font-size: 3em;
 }
 /*# sourceMappingURL=heatmap.css.map */
