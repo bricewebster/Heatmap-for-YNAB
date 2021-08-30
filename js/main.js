@@ -18,6 +18,7 @@ async function main() {
   const accessToken = await getAccessToken();
   const mainBudgetID = await getBudgetID();
   document.getElementById("selectedYear").innerHTML = selectedYear;
+  leapYearCheck();
   accountsFetched = await getAccounts(accessToken, mainBudgetID);
   initAccounts();
   categoriesFetched = await getCategories(accessToken, mainBudgetID);
@@ -126,10 +127,6 @@ function storeTransactionsMain() {
  */
 function storeTransactions(transaction, transactionAccountID) {
   const transactionDate = newNormalizedDate(transaction.date);
-  if(transaction.category_name === 'Inflow: Ready to Assign') {
-    console.log(transaction)
-    console.log('date: ' + transaction.date + ' account: ' + transaction.account_name + ' amount: ' + transaction.amount)
-  }
   //If transaction isn't on selected year, is a transfer transaction, not a selected account, or not a selected category then it skips storing it
   if (transactionSkipCheck(transaction, transactionDate, transactionAccountID)) {
     return;
@@ -302,6 +299,7 @@ function refreshCalendar() {
 function toggleYearChange(yearOption) {
   yearOption === 'next' ? selectedYear +=1 : selectedYear -=1;
   document.getElementById("selectedYear").innerHTML = selectedYear;
+  leapYearCheck();
   refreshCalendar();
 }
 
@@ -382,6 +380,22 @@ function daysIntoYear(transactionDate){
  */
 function newNormalizedDate(date){
   return new Date(new Date(date).getTime() - new Date(date).getTimezoneOffset() * - 60000); //https://stackoverflow.com/a/14569783
+}
+
+/**
+ * Used to determine if the current selected year is a leap year and if so it hides the 29th of Feb.
+ */
+function leapYearCheck() {
+  isleapYear(selectedYear) ? document.getElementById("cal-year-2/29").style.visibility = "inherit" : document.getElementById("cal-year-2/29").style.visibility = "hidden";
+}
+
+/**
+ * Calculates year provided to see if its a leap year and returns true or false.
+ * @param {} year the year calculated
+ * @returns true if it is a leap year else false.
+ */
+function isleapYear(year){
+  return (year % 100 === 0) ? (year % 400 === 0) : (year % 4 === 0);
 }
 
 function Account(id, name, type, closed, selected) {
