@@ -12,12 +12,24 @@ main {
   width: 100%;
   height: auto;
   /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; */
+  font-family: Lato,Helvetica Neue,Helvetica,Arial,sans-serif;
+}
+
+h1 {
+  text-align: center;
+  padding-top: 10px;
+  font-size: 1.75em;
 }
 
 /* 
     Table of Contents
         Yearly table
 */
+.cal-types button {
+  margin-left: 20px;
+  font-size: 1.2em;
+}
+
 /*------------------------------------*\
   #Calendar Yearly
 \*------------------------------------*/

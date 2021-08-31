@@ -259,6 +259,10 @@ function calendarPopulate(option){
   }
 }
 
+function heatMapColorPopulate() {
+  //TODO: Decide on which options to use. So far its simple - only show days that have transactions, range - smallest to largest broken up by around 20 segments or so, transactions - same as range but with number of transactions
+}
+
 /**
  * Resets the color and day information for the calendar
  */

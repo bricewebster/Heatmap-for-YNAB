@@ -6,15 +6,21 @@
 </head>
 <body>
 <main>
+  <h1>Heatmap for YNAB</h1>
+  <div class="cal-types">
+    <button>Yearly</button>
+    <button>Monthly</button>
+    <button>Daily</button>
+  </div>
+  <div class="cal-filters">
+    <button>All Accounts</button>
+    <button>All Categories</button>
+    <button>All Sources</button>
+  </div>
   <div class="cal-year-selector">
     <button class="link-button" onclick="toggleYearChange('previous')"><span class="material-icons-outlined md-24">chevron_left</span></button>
     <p id="selectedYear"></p>
     <button class="link-button" onclick="toggleYearChange('next')"><span class="material-icons-outlined md-24">chevron_right</span></button>
-  </div>
-  <div class="cal-style">
-    <button>None</button>
-    <button>Simple</button>
-    <button>Smallest to Largest</button>
   </div>
   <table class = "cal-year">
     <tr><th><p>Days</p></th><th><p>Jan</p></th><th><p>Feb</p></th><th><p>Mar</p></th><th><p>Apr</p></th><th><p>May</p></th><th><p>Jun</p></th><th><p>Jul</p></th><th><p>Aug</p></th><th><p>Sep</p></th><th><p>Oct</p></th><th><p>Nov</p></th><th><p>Dec</p></th></tr>
@@ -89,6 +95,11 @@
   </div>
   <button onclick="toggleBudgetOption('income')">Income</button><button onclick="toggleBudgetOption('expense')">Expense</button><button onclick="toggleBudgetOption('both')">Both</button><button onclick="toggleBudgetOption('net')">Net</button><button onclick="resetDays()">Reset</button>
   <p id="loadStatus">Status: Loading...</p>
+  <div class="cal-style">
+    <button>Simple</button>
+    <button>Range</button>
+    <button>Transactions</button>
+  </div>
   <div id="accounts-select">
     <input type="checkbox" id="accounts-budget" name="accounts-budget" value="accounts-budget" checked=true onchange="toggleAccountCheckboxSection('accounts-select-budget')">
     <label for="accounts-budget">Budget Accounts</label><br></br>
