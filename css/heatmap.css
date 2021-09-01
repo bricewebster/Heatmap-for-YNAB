@@ -17,20 +17,17 @@ main {
 
 h1 {
   padding-top: 10px;
-  background: #009cc2;
   text-align: center;
   font-size: 1.75em;
   color: white;
 }
 
-/* 
-    Table of Contents
-        Yearly table
-*/
-.cal-types {
-  margin-bottom: 20px;
-  border-bottom: 5px solid #003440;
+nav {
   background-color: #009cc2;
+}
+
+.cal-types {
+  display: inline-block;
 }
 
 .cal-types button {
@@ -48,18 +45,63 @@ h1 {
 }
 
 .cal-types button:focus {
+  padding-bottom: 5px;
   background: white;
   border: 5px solid #003440;
-  border-bottom: none;
+  border-bottom: 5px solid white;
   border-radius: 5px;
   color: #003440;
+}
+
+.cal-filters {
+  float: right;
+  margin-right: 100px;
+}
+
+.cal-filters button {
+  margin-right: 40px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+/* 
+    Table of Contents
+        Yearly table
+*/
+.cal-container {
+  width: 100%;
+  border-top: 5px solid #003440;
+  z-index: -1;
+}
+
+.cal-subcontainer {
+  margin: 0 auto;
+  padding-top: 15px;
+  width: 490px;
+}
+
+button.cal-year-button {
+  background: none;
+  border: none;
+  border-radius: 5px;
+  -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+          box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  cursor: pointer;
 }
 
 /*------------------------------------*\
   #Calendar Yearly
 \*------------------------------------*/
+.cal-year-selector {
+  margin-left: 120px;
+  width: 150px;
+}
+
 .cal-year-selector p {
   display: inline-block;
+  font-size: 2.2em;
 }
 
 .cal-year-container {
@@ -151,7 +193,7 @@ h1 {
   #Account Select
 \*------------------------------------*/
 #accounts-select {
-  display: block;
+  display: none;
   width: 200px;
   height: 100px;
   overflow: scroll;
@@ -166,7 +208,7 @@ h1 {
   #Categories Select
 \*------------------------------------*/
 #categories-select {
-  display: block;
+  display: none;
   width: 250px;
   height: 100px;
   overflow: scroll;

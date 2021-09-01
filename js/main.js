@@ -228,12 +228,12 @@ function calendarPopulate(option){
       if (incomeTransactions[transactionIndex] == undefined) { continue;}
 
       htmlInsert = "<div class=\"tooltip\"><span class=\"tooltiptext\">Income: ".concat(incomeTransactions[transactionIndex].toString(), "</span></div>");
-      dayColor = "green";
+      dayColor = "#00a567";
     } else if (option === "expense") {
       if (expenseTransactions[transactionIndex] == undefined) { continue;}
 
       htmlInsert = "<div class=\"tooltip\"><span class=\"tooltiptext\">Expense: ".concat(expenseTransactions[transactionIndex].toString(), "</span></div>");
-      dayColor = "red";
+      dayColor = "#de5d83";
     } else if (option === "both" || option === "net") {
       if(incomeTransactions[transactionIndex] == undefined && expenseTransactions[transactionIndex] == undefined) {continue;}
       (incomeTransactions[transactionIndex] == undefined ? incomeAmount = 0 : incomeAmount = incomeTransactions[transactionIndex]);
@@ -241,14 +241,14 @@ function calendarPopulate(option){
 
       if (option === "both") {
         htmlInsert = "<div class=\"tooltip\"><span class=\"tooltiptext\">Income: ".concat(incomeAmount.toString(), "</br>", " Expense: ", expenseAmount.toString(), "</span></div>");
-        dayColor = "rgb(119, 119, 233)";
+        dayColor = "#1962b1";
       } else {
         netAmount =  (parseFloat(incomeAmount) + parseFloat(expenseAmount)).toFixed(currencyDecimals);
         htmlInsert = "<div class=\"tooltip\"><span class=\"tooltiptext\">Net: ".concat(netAmount.toString(),"</span></div>");
         if (netAmount >= 0) {
-          dayColor = "yellow";
+          dayColor = "#FDFD96";
         } else {
-          dayColor = "orange";
+          dayColor = "#ffb347";
         }
       }
     } else {}

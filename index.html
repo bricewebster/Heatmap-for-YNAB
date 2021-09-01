@@ -1,117 +1,123 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>YNAB Heatmap</title>
+    <title>Heatmap for YNAB</title>
     <link href="/css/heatmap.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <main>
-  <h1>Heatmap for YNAB</h1>
-  <div class="cal-types">
-    <button>Yearly</button>
-    <button>Monthly</button>
-    <button>Daily</button>
+  <nav>
+    <h1>Heatmap for YNAB</h1>
+    <div class="cal-types">
+      <button>Yearly</button>
+      <button>Monthly</button>
+      <button>Daily</button>
+    </div>
+    <div class="cal-filters">
+      <button>All Accounts</button>
+      <button>All Categories</button>
+      <button>All Sources</button>
+    </div>
+  </nav>
+  <div class="cal-container">
+    <div class="cal-subcontainer">
+    <div class="cal-year-selector">
+      <button class="cal-year-button" onclick="toggleYearChange('previous')"><span class="material-icons-outlined md-36">chevron_left</span></button>
+      <p id="selectedYear"></p>
+      <button class="cal-year-button" onclick="toggleYearChange('next')"><span class="material-icons-outlined md-36">chevron_right</span></button>
+    </div>
+    <table class = "cal-year">
+      <tr><th><p>Days</p></th><th><p>Jan</p></th><th><p>Feb</p></th><th><p>Mar</p></th><th><p>Apr</p></th><th><p>May</p></th><th><p>Jun</p></th><th><p>Jul</p></th><th><p>Aug</p></th><th><p>Sep</p></th><th><p>Oct</p></th><th><p>Nov</p></th><th><p>Dec</p></th></tr>
+    </table>
+    <div class = "cal-year-container">
+    <table class = "cal-year">
+      <tr><th><p>1</p></th></tr>
+      <tr><th><p>2</p></th></tr>
+      <tr><th><p>3</p></th></tr>
+      <tr><th><p>4</p></th></tr>
+      <tr><th><p>5</p></th></tr>
+      <tr><th><p>6</p></th></tr>
+      <tr><th><p>7</p></th></tr>
+      <tr><th><p>8</p></th></tr>
+      <tr><th><p>9</p></th></tr>
+      <tr><th><p>10</p></th></tr>
+      <tr><th><p>11</p></th></tr>
+      <tr><th><p>12</p></th></tr>
+      <tr><th><p>13</p></th></tr>
+      <tr><th><p>14</p></th></tr>
+      <tr><th><p>15</p></th></tr>
+      <tr><th><p>16</p></th></tr>
+      <tr><th><p>17</p></th></tr>
+      <tr><th><p>18</p></th></tr>
+      <tr><th><p>19</p></th></tr>
+      <tr><th><p>20</p></th></tr>
+      <tr><th><p>21</p></th></tr>
+      <tr><th><p>22</p></th></tr>
+      <tr><th><p>23</p></th></tr>
+      <tr><th><p>24</p></th></tr>
+      <tr><th><p>25</p></th></tr>
+      <tr><th><p>26</p></th></tr>
+      <tr><th><p>27</p></th></tr>
+      <tr><th><p>28</p></th></tr>
+      <tr><th><p>29</p></th></tr>
+      <tr><th><p>30</p></th></tr>
+      <tr><th><p>31</p></th></tr>
+    </table>
+    <table class = "cal-year cal-year-days">
+      <tr><th id="cal-year-1/1"></th><th id="cal-year-2/1"></th><th id="cal-year-3/1"></th><th id="cal-year-4/1"></th><th id="cal-year-5/1"></th><th id="cal-year-6/1"></th><th id="cal-year-7/1"></th><th id="cal-year-8/1"></th><th id="cal-year-9/1"></th><th id="cal-year-10/1"></th><th id="cal-year-11/1"></th><th id="cal-year-12/1"></th></tr>
+      <tr><th id="cal-year-1/2"></th><th id="cal-year-2/2"></th><th id="cal-year-3/2"></th><th id="cal-year-4/2"></th><th id="cal-year-5/2"></th><th id="cal-year-6/2"></th><th id="cal-year-7/2"></th><th id="cal-year-8/2"></th><th id="cal-year-9/2"></th><th id="cal-year-10/2"></th><th id="cal-year-11/2"></th><th id="cal-year-12/2"></th></tr>
+      <tr><th id="cal-year-1/3"></th><th id="cal-year-2/3"></th><th id="cal-year-3/3"></th><th id="cal-year-4/3"></th><th id="cal-year-5/3"></th><th id="cal-year-6/3"></th><th id="cal-year-7/3"></th><th id="cal-year-8/3"></th><th id="cal-year-9/3"></th><th id="cal-year-10/3"></th><th id="cal-year-11/3"></th><th id="cal-year-12/3"></th></tr>
+      <tr><th id="cal-year-1/4"></th><th id="cal-year-2/4"></th><th id="cal-year-3/4"></th><th id="cal-year-4/4"></th><th id="cal-year-5/4"></th><th id="cal-year-6/4"></th><th id="cal-year-7/4"></th><th id="cal-year-8/4"></th><th id="cal-year-9/4"></th><th id="cal-year-10/4"></th><th id="cal-year-11/4"></th><th id="cal-year-12/4"></th></tr>
+      <tr><th id="cal-year-1/5"></th><th id="cal-year-2/5"></th><th id="cal-year-3/5"></th><th id="cal-year-4/5"></th><th id="cal-year-5/5"></th><th id="cal-year-6/5"></th><th id="cal-year-7/5"></th><th id="cal-year-8/5"></th><th id="cal-year-9/5"></th><th id="cal-year-10/5"></th><th id="cal-year-11/5"></th><th id="cal-year-12/5"></th></tr>
+      <tr><th id="cal-year-1/6"></th><th id="cal-year-2/6"></th><th id="cal-year-3/6"></th><th id="cal-year-4/6"></th><th id="cal-year-5/6"></th><th id="cal-year-6/6"></th><th id="cal-year-7/6"></th><th id="cal-year-8/6"></th><th id="cal-year-9/6"></th><th id="cal-year-10/6"></th><th id="cal-year-11/6"></th><th id="cal-year-12/6"></th></tr>
+      <tr><th id="cal-year-1/7"></th><th id="cal-year-2/7"></th><th id="cal-year-3/7"></th><th id="cal-year-4/7"></th><th id="cal-year-5/7"></th><th id="cal-year-6/7"></th><th id="cal-year-7/7"></th><th id="cal-year-8/7"></th><th id="cal-year-9/7"></th><th id="cal-year-10/7"></th><th id="cal-year-11/7"></th><th id="cal-year-12/7"></th></tr>
+      <tr><th id="cal-year-1/8"></th><th id="cal-year-2/8"></th><th id="cal-year-3/8"></th><th id="cal-year-4/8"></th><th id="cal-year-5/8"></th><th id="cal-year-6/8"></th><th id="cal-year-7/8"></th><th id="cal-year-8/8"></th><th id="cal-year-9/8"></th><th id="cal-year-10/8"></th><th id="cal-year-11/8"></th><th id="cal-year-12/8"></th></tr>
+      <tr><th id="cal-year-1/9"></th><th id="cal-year-2/9"></th><th id="cal-year-3/9"></th><th id="cal-year-4/9"></th><th id="cal-year-5/9"></th><th id="cal-year-6/9"></th><th id="cal-year-7/9"></th><th id="cal-year-8/9"></th><th id="cal-year-9/9"></th><th id="cal-year-10/9"></th><th id="cal-year-11/9"></th><th id="cal-year-12/9"></th></tr>
+      <tr><th id="cal-year-1/10"></th><th id="cal-year-2/10"></th><th id="cal-year-3/10"></th><th id="cal-year-4/10"></th><th id="cal-year-5/10"></th><th id="cal-year-6/10"></th><th id="cal-year-7/10"></th><th id="cal-year-8/10"></th><th id="cal-year-9/10"></th><th id="cal-year-10/10"></th><th id="cal-year-11/10"></th><th id="cal-year-12/10"></th></tr>
+      <tr><th id="cal-year-1/11"></th><th id="cal-year-2/11"></th><th id="cal-year-3/11"></th><th id="cal-year-4/11"></th><th id="cal-year-5/11"></th><th id="cal-year-6/11"></th><th id="cal-year-7/11"></th><th id="cal-year-8/11"></th><th id="cal-year-9/11"></th><th id="cal-year-10/11"></th><th id="cal-year-11/11"></th><th id="cal-year-12/11"></th></tr>
+      <tr><th id="cal-year-1/12"></th><th id="cal-year-2/12"></th><th id="cal-year-3/12"></th><th id="cal-year-4/12"></th><th id="cal-year-5/12"></th><th id="cal-year-6/12"></th><th id="cal-year-7/12"></th><th id="cal-year-8/12"></th><th id="cal-year-9/12"></th><th id="cal-year-10/12"></th><th id="cal-year-11/12"></th><th id="cal-year-12/12"></th></tr>
+      <tr><th id="cal-year-1/13"></th><th id="cal-year-2/13"></th><th id="cal-year-3/13"></th><th id="cal-year-4/13"></th><th id="cal-year-5/13"></th><th id="cal-year-6/13"></th><th id="cal-year-7/13"></th><th id="cal-year-8/13"></th><th id="cal-year-9/13"></th><th id="cal-year-10/13"></th><th id="cal-year-11/13"></th><th id="cal-year-12/13"></th></tr>
+      <tr><th id="cal-year-1/14"></th><th id="cal-year-2/14"></th><th id="cal-year-3/14"></th><th id="cal-year-4/14"></th><th id="cal-year-5/14"></th><th id="cal-year-6/14"></th><th id="cal-year-7/14"></th><th id="cal-year-8/14"></th><th id="cal-year-9/14"></th><th id="cal-year-10/14"></th><th id="cal-year-11/14"></th><th id="cal-year-12/14"></th></tr>
+      <tr><th id="cal-year-1/15"></th><th id="cal-year-2/15"></th><th id="cal-year-3/15"></th><th id="cal-year-4/15"></th><th id="cal-year-5/15"></th><th id="cal-year-6/15"></th><th id="cal-year-7/15"></th><th id="cal-year-8/15"></th><th id="cal-year-9/15"></th><th id="cal-year-10/15"></th><th id="cal-year-11/15"></th><th id="cal-year-12/15"></th></tr>
+      <tr><th id="cal-year-1/16"></th><th id="cal-year-2/16"></th><th id="cal-year-3/16"></th><th id="cal-year-4/16"></th><th id="cal-year-5/16"></th><th id="cal-year-6/16"></th><th id="cal-year-7/16"></th><th id="cal-year-8/16"></th><th id="cal-year-9/16"></th><th id="cal-year-10/16"></th><th id="cal-year-11/16"></th><th id="cal-year-12/16"></th></tr>
+      <tr><th id="cal-year-1/17"></th><th id="cal-year-2/17"></th><th id="cal-year-3/17"></th><th id="cal-year-4/17"></th><th id="cal-year-5/17"></th><th id="cal-year-6/17"></th><th id="cal-year-7/17"></th><th id="cal-year-8/17"></th><th id="cal-year-9/17"></th><th id="cal-year-10/17"></th><th id="cal-year-11/17"></th><th id="cal-year-12/17"></th></tr>
+      <tr><th id="cal-year-1/18"></th><th id="cal-year-2/18"></th><th id="cal-year-3/18"></th><th id="cal-year-4/18"></th><th id="cal-year-5/18"></th><th id="cal-year-6/18"></th><th id="cal-year-7/18"></th><th id="cal-year-8/18"></th><th id="cal-year-9/18"></th><th id="cal-year-10/18"></th><th id="cal-year-11/18"></th><th id="cal-year-12/18"></th></tr>
+      <tr><th id="cal-year-1/19"></th><th id="cal-year-2/19"></th><th id="cal-year-3/19"></th><th id="cal-year-4/19"></th><th id="cal-year-5/19"></th><th id="cal-year-6/19"></th><th id="cal-year-7/19"></th><th id="cal-year-8/19"></th><th id="cal-year-9/19"></th><th id="cal-year-10/19"></th><th id="cal-year-11/19"></th><th id="cal-year-12/19"></th></tr>
+      <tr><th id="cal-year-1/20"></th><th id="cal-year-2/20"></th><th id="cal-year-3/20"></th><th id="cal-year-4/20"></th><th id="cal-year-5/20"></th><th id="cal-year-6/20"></th><th id="cal-year-7/20"></th><th id="cal-year-8/20"></th><th id="cal-year-9/20"></th><th id="cal-year-10/20"></th><th id="cal-year-11/20"></th><th id="cal-year-12/20"></th></tr>
+      <tr><th id="cal-year-1/21"></th><th id="cal-year-2/21"></th><th id="cal-year-3/21"></th><th id="cal-year-4/21"></th><th id="cal-year-5/21"></th><th id="cal-year-6/21"></th><th id="cal-year-7/21"></th><th id="cal-year-8/21"></th><th id="cal-year-9/21"></th><th id="cal-year-10/21"></th><th id="cal-year-11/21"></th><th id="cal-year-12/21"></th></tr>
+      <tr><th id="cal-year-1/22"></th><th id="cal-year-2/22"></th><th id="cal-year-3/22"></th><th id="cal-year-4/22"></th><th id="cal-year-5/22"></th><th id="cal-year-6/22"></th><th id="cal-year-7/22"></th><th id="cal-year-8/22"></th><th id="cal-year-9/22"></th><th id="cal-year-10/22"></th><th id="cal-year-11/22"></th><th id="cal-year-12/22"></th></tr>
+      <tr><th id="cal-year-1/23"></th><th id="cal-year-2/23"></th><th id="cal-year-3/23"></th><th id="cal-year-4/23"></th><th id="cal-year-5/23"></th><th id="cal-year-6/23"></th><th id="cal-year-7/23"></th><th id="cal-year-8/23"></th><th id="cal-year-9/23"></th><th id="cal-year-10/23"></th><th id="cal-year-11/23"></th><th id="cal-year-12/23"></th></tr>
+      <tr><th id="cal-year-1/24"></th><th id="cal-year-2/24"></th><th id="cal-year-3/24"></th><th id="cal-year-4/24"></th><th id="cal-year-5/24"></th><th id="cal-year-6/24"></th><th id="cal-year-7/24"></th><th id="cal-year-8/24"></th><th id="cal-year-9/24"></th><th id="cal-year-10/24"></th><th id="cal-year-11/24"></th><th id="cal-year-12/24"></th></tr>
+      <tr><th id="cal-year-1/25"></th><th id="cal-year-2/25"></th><th id="cal-year-3/25"></th><th id="cal-year-4/25"></th><th id="cal-year-5/25"></th><th id="cal-year-6/25"></th><th id="cal-year-7/25"></th><th id="cal-year-8/25"></th><th id="cal-year-9/25"></th><th id="cal-year-10/25"></th><th id="cal-year-11/25"></th><th id="cal-year-12/25"></th></tr>
+      <tr><th id="cal-year-1/26"></th><th id="cal-year-2/26"></th><th id="cal-year-3/26"></th><th id="cal-year-4/26"></th><th id="cal-year-5/26"></th><th id="cal-year-6/26"></th><th id="cal-year-7/26"></th><th id="cal-year-8/26"></th><th id="cal-year-9/26"></th><th id="cal-year-10/26"></th><th id="cal-year-11/26"></th><th id="cal-year-12/26"></th></tr>
+      <tr><th id="cal-year-1/27"></th><th id="cal-year-2/27"></th><th id="cal-year-3/27"></th><th id="cal-year-4/27"></th><th id="cal-year-5/27"></th><th id="cal-year-6/27"></th><th id="cal-year-7/27"></th><th id="cal-year-8/27"></th><th id="cal-year-9/27"></th><th id="cal-year-10/27"></th><th id="cal-year-11/27"></th><th id="cal-year-12/27"></th></tr>
+      <tr><th id="cal-year-1/28"></th><th id="cal-year-2/28"></th><th id="cal-year-3/28"></th><th id="cal-year-4/28"></th><th id="cal-year-5/28"></th><th id="cal-year-6/28"></th><th id="cal-year-7/28"></th><th id="cal-year-8/28"></th><th id="cal-year-9/28"></th><th id="cal-year-10/28"></th><th id="cal-year-11/28"></th><th id="cal-year-12/28"></th></tr>
+      <tr><th id="cal-year-1/29"></th><th id="cal-year-2/29"></th><th id="cal-year-3/29"></th><th id="cal-year-4/29"></th><th id="cal-year-5/29"></th><th id="cal-year-6/29"></th><th id="cal-year-7/29"></th><th id="cal-year-8/29"></th><th id="cal-year-9/29"></th><th id="cal-year-10/29"></th><th id="cal-year-11/29"></th><th id="cal-year-12/29"></th></tr>
+      <tr><th id="cal-year-1/30"></th><th id="cal-year-2/30" class="cal-year-noday"></th><th id="cal-year-3/30"></th><th id="cal-year-4/30"></th><th id="cal-year-5/30"></th><th id="cal-year-6/30"></th><th id="cal-year-7/30"></th><th id="cal-year-8/30"></th><th id="cal-year-9/30"></th><th id="cal-year-10/30"></th><th id="cal-year-11/30"></th><th id="cal-year-12/30"></th></tr>
+      <tr><th id="cal-year-1/31"></th><th id="cal-year-2/31" class="cal-year-noday"></th><th id="cal-year-3/31"></th><th id="cal-year-4/31" class="cal-year-noday"></th><th id="cal-year-5/31"></th><th id="cal-year-6/31" class="cal-year-noday"></th><th id="cal-year-7/31"></th><th id="cal-year-8/31"></th><th id="cal-year-9/31" class="cal-year-noday"></th><th id="cal-year-10/31"></th><th id="cal-year-11/31" class="cal-year-noday"></th><th id="cal-year-12/31"></th></tr>
+    </table>
+    </div>
+    <button onclick="toggleBudgetOption('income')">Income</button><button onclick="toggleBudgetOption('expense')">Expense</button><button onclick="toggleBudgetOption('both')">Both</button><button onclick="toggleBudgetOption('net')">Net</button><button onclick="resetDays()">Reset</button>
+    <p id="loadStatus">Status: Loading...</p>
+    <div class="cal-style">
+      <button>Simple</button>
+      <button>Range</button>
+      <button>Transactions</button>
+    </div>
+    <div id="accounts-select">
+      <input type="checkbox" id="accounts-budget" name="accounts-budget" value="accounts-budget" checked=true onchange="toggleAccountCheckboxSection('accounts-select-budget')">
+      <label for="accounts-budget">Budget Accounts</label><br></br>
+      <div id="accounts-select-budget"></div>
+      <input type="checkbox" id="accounts-tracking" name="accounts-tracking" value="accounts-tracking" checked=true onchange="toggleAccountCheckboxSection('accounts-select-tracking')">
+      <label for="accounts-tracking">Tracking Accounts</label><br></br>
+      <div id="accounts-select-tracking"></div>
+      <input type="checkbox" id="accounts-closed" name="accounts-closed" value="accounts-closed" checked=true onchange="toggleAccountCheckboxSection('accounts-select-closed')">
+      <label for="accounts-closed">Closed Accounts</label><br></br>
+      <div id="accounts-select-closed"></div>
+    </div>
+    <div id="categories-select"></div>
+    </div>
   </div>
-  <div class="cal-filters">
-    <button>All Accounts</button>
-    <button>All Categories</button>
-    <button>All Sources</button>
-  </div>
-  <div class="cal-year-selector">
-    <button class="link-button" onclick="toggleYearChange('previous')"><span class="material-icons-outlined md-24">chevron_left</span></button>
-    <p id="selectedYear"></p>
-    <button class="link-button" onclick="toggleYearChange('next')"><span class="material-icons-outlined md-24">chevron_right</span></button>
-  </div>
-  <table class = "cal-year">
-    <tr><th><p>Days</p></th><th><p>Jan</p></th><th><p>Feb</p></th><th><p>Mar</p></th><th><p>Apr</p></th><th><p>May</p></th><th><p>Jun</p></th><th><p>Jul</p></th><th><p>Aug</p></th><th><p>Sep</p></th><th><p>Oct</p></th><th><p>Nov</p></th><th><p>Dec</p></th></tr>
-  </table>
-  <div class = "cal-year-container">
-  <table class = "cal-year">
-    <tr><th><p>1</p></th></tr>
-    <tr><th><p>2</p></th></tr>
-    <tr><th><p>3</p></th></tr>
-    <tr><th><p>4</p></th></tr>
-    <tr><th><p>5</p></th></tr>
-    <tr><th><p>6</p></th></tr>
-    <tr><th><p>7</p></th></tr>
-    <tr><th><p>8</p></th></tr>
-    <tr><th><p>9</p></th></tr>
-    <tr><th><p>10</p></th></tr>
-    <tr><th><p>11</p></th></tr>
-    <tr><th><p>12</p></th></tr>
-    <tr><th><p>13</p></th></tr>
-    <tr><th><p>14</p></th></tr>
-    <tr><th><p>15</p></th></tr>
-    <tr><th><p>16</p></th></tr>
-    <tr><th><p>17</p></th></tr>
-    <tr><th><p>18</p></th></tr>
-    <tr><th><p>19</p></th></tr>
-    <tr><th><p>20</p></th></tr>
-    <tr><th><p>21</p></th></tr>
-    <tr><th><p>22</p></th></tr>
-    <tr><th><p>23</p></th></tr>
-    <tr><th><p>24</p></th></tr>
-    <tr><th><p>25</p></th></tr>
-    <tr><th><p>26</p></th></tr>
-    <tr><th><p>27</p></th></tr>
-    <tr><th><p>28</p></th></tr>
-    <tr><th><p>29</p></th></tr>
-    <tr><th><p>30</p></th></tr>
-    <tr><th><p>31</p></th></tr>
-  </table>
-  <table class = "cal-year cal-year-days">
-    <tr><th id="cal-year-1/1"></th><th id="cal-year-2/1"></th><th id="cal-year-3/1"></th><th id="cal-year-4/1"></th><th id="cal-year-5/1"></th><th id="cal-year-6/1"></th><th id="cal-year-7/1"></th><th id="cal-year-8/1"></th><th id="cal-year-9/1"></th><th id="cal-year-10/1"></th><th id="cal-year-11/1"></th><th id="cal-year-12/1"></th></tr>
-    <tr><th id="cal-year-1/2"></th><th id="cal-year-2/2"></th><th id="cal-year-3/2"></th><th id="cal-year-4/2"></th><th id="cal-year-5/2"></th><th id="cal-year-6/2"></th><th id="cal-year-7/2"></th><th id="cal-year-8/2"></th><th id="cal-year-9/2"></th><th id="cal-year-10/2"></th><th id="cal-year-11/2"></th><th id="cal-year-12/2"></th></tr>
-    <tr><th id="cal-year-1/3"></th><th id="cal-year-2/3"></th><th id="cal-year-3/3"></th><th id="cal-year-4/3"></th><th id="cal-year-5/3"></th><th id="cal-year-6/3"></th><th id="cal-year-7/3"></th><th id="cal-year-8/3"></th><th id="cal-year-9/3"></th><th id="cal-year-10/3"></th><th id="cal-year-11/3"></th><th id="cal-year-12/3"></th></tr>
-    <tr><th id="cal-year-1/4"></th><th id="cal-year-2/4"></th><th id="cal-year-3/4"></th><th id="cal-year-4/4"></th><th id="cal-year-5/4"></th><th id="cal-year-6/4"></th><th id="cal-year-7/4"></th><th id="cal-year-8/4"></th><th id="cal-year-9/4"></th><th id="cal-year-10/4"></th><th id="cal-year-11/4"></th><th id="cal-year-12/4"></th></tr>
-    <tr><th id="cal-year-1/5"></th><th id="cal-year-2/5"></th><th id="cal-year-3/5"></th><th id="cal-year-4/5"></th><th id="cal-year-5/5"></th><th id="cal-year-6/5"></th><th id="cal-year-7/5"></th><th id="cal-year-8/5"></th><th id="cal-year-9/5"></th><th id="cal-year-10/5"></th><th id="cal-year-11/5"></th><th id="cal-year-12/5"></th></tr>
-    <tr><th id="cal-year-1/6"></th><th id="cal-year-2/6"></th><th id="cal-year-3/6"></th><th id="cal-year-4/6"></th><th id="cal-year-5/6"></th><th id="cal-year-6/6"></th><th id="cal-year-7/6"></th><th id="cal-year-8/6"></th><th id="cal-year-9/6"></th><th id="cal-year-10/6"></th><th id="cal-year-11/6"></th><th id="cal-year-12/6"></th></tr>
-    <tr><th id="cal-year-1/7"></th><th id="cal-year-2/7"></th><th id="cal-year-3/7"></th><th id="cal-year-4/7"></th><th id="cal-year-5/7"></th><th id="cal-year-6/7"></th><th id="cal-year-7/7"></th><th id="cal-year-8/7"></th><th id="cal-year-9/7"></th><th id="cal-year-10/7"></th><th id="cal-year-11/7"></th><th id="cal-year-12/7"></th></tr>
-    <tr><th id="cal-year-1/8"></th><th id="cal-year-2/8"></th><th id="cal-year-3/8"></th><th id="cal-year-4/8"></th><th id="cal-year-5/8"></th><th id="cal-year-6/8"></th><th id="cal-year-7/8"></th><th id="cal-year-8/8"></th><th id="cal-year-9/8"></th><th id="cal-year-10/8"></th><th id="cal-year-11/8"></th><th id="cal-year-12/8"></th></tr>
-    <tr><th id="cal-year-1/9"></th><th id="cal-year-2/9"></th><th id="cal-year-3/9"></th><th id="cal-year-4/9"></th><th id="cal-year-5/9"></th><th id="cal-year-6/9"></th><th id="cal-year-7/9"></th><th id="cal-year-8/9"></th><th id="cal-year-9/9"></th><th id="cal-year-10/9"></th><th id="cal-year-11/9"></th><th id="cal-year-12/9"></th></tr>
-    <tr><th id="cal-year-1/10"></th><th id="cal-year-2/10"></th><th id="cal-year-3/10"></th><th id="cal-year-4/10"></th><th id="cal-year-5/10"></th><th id="cal-year-6/10"></th><th id="cal-year-7/10"></th><th id="cal-year-8/10"></th><th id="cal-year-9/10"></th><th id="cal-year-10/10"></th><th id="cal-year-11/10"></th><th id="cal-year-12/10"></th></tr>
-    <tr><th id="cal-year-1/11"></th><th id="cal-year-2/11"></th><th id="cal-year-3/11"></th><th id="cal-year-4/11"></th><th id="cal-year-5/11"></th><th id="cal-year-6/11"></th><th id="cal-year-7/11"></th><th id="cal-year-8/11"></th><th id="cal-year-9/11"></th><th id="cal-year-10/11"></th><th id="cal-year-11/11"></th><th id="cal-year-12/11"></th></tr>
-    <tr><th id="cal-year-1/12"></th><th id="cal-year-2/12"></th><th id="cal-year-3/12"></th><th id="cal-year-4/12"></th><th id="cal-year-5/12"></th><th id="cal-year-6/12"></th><th id="cal-year-7/12"></th><th id="cal-year-8/12"></th><th id="cal-year-9/12"></th><th id="cal-year-10/12"></th><th id="cal-year-11/12"></th><th id="cal-year-12/12"></th></tr>
-    <tr><th id="cal-year-1/13"></th><th id="cal-year-2/13"></th><th id="cal-year-3/13"></th><th id="cal-year-4/13"></th><th id="cal-year-5/13"></th><th id="cal-year-6/13"></th><th id="cal-year-7/13"></th><th id="cal-year-8/13"></th><th id="cal-year-9/13"></th><th id="cal-year-10/13"></th><th id="cal-year-11/13"></th><th id="cal-year-12/13"></th></tr>
-    <tr><th id="cal-year-1/14"></th><th id="cal-year-2/14"></th><th id="cal-year-3/14"></th><th id="cal-year-4/14"></th><th id="cal-year-5/14"></th><th id="cal-year-6/14"></th><th id="cal-year-7/14"></th><th id="cal-year-8/14"></th><th id="cal-year-9/14"></th><th id="cal-year-10/14"></th><th id="cal-year-11/14"></th><th id="cal-year-12/14"></th></tr>
-    <tr><th id="cal-year-1/15"></th><th id="cal-year-2/15"></th><th id="cal-year-3/15"></th><th id="cal-year-4/15"></th><th id="cal-year-5/15"></th><th id="cal-year-6/15"></th><th id="cal-year-7/15"></th><th id="cal-year-8/15"></th><th id="cal-year-9/15"></th><th id="cal-year-10/15"></th><th id="cal-year-11/15"></th><th id="cal-year-12/15"></th></tr>
-    <tr><th id="cal-year-1/16"></th><th id="cal-year-2/16"></th><th id="cal-year-3/16"></th><th id="cal-year-4/16"></th><th id="cal-year-5/16"></th><th id="cal-year-6/16"></th><th id="cal-year-7/16"></th><th id="cal-year-8/16"></th><th id="cal-year-9/16"></th><th id="cal-year-10/16"></th><th id="cal-year-11/16"></th><th id="cal-year-12/16"></th></tr>
-    <tr><th id="cal-year-1/17"></th><th id="cal-year-2/17"></th><th id="cal-year-3/17"></th><th id="cal-year-4/17"></th><th id="cal-year-5/17"></th><th id="cal-year-6/17"></th><th id="cal-year-7/17"></th><th id="cal-year-8/17"></th><th id="cal-year-9/17"></th><th id="cal-year-10/17"></th><th id="cal-year-11/17"></th><th id="cal-year-12/17"></th></tr>
-    <tr><th id="cal-year-1/18"></th><th id="cal-year-2/18"></th><th id="cal-year-3/18"></th><th id="cal-year-4/18"></th><th id="cal-year-5/18"></th><th id="cal-year-6/18"></th><th id="cal-year-7/18"></th><th id="cal-year-8/18"></th><th id="cal-year-9/18"></th><th id="cal-year-10/18"></th><th id="cal-year-11/18"></th><th id="cal-year-12/18"></th></tr>
-    <tr><th id="cal-year-1/19"></th><th id="cal-year-2/19"></th><th id="cal-year-3/19"></th><th id="cal-year-4/19"></th><th id="cal-year-5/19"></th><th id="cal-year-6/19"></th><th id="cal-year-7/19"></th><th id="cal-year-8/19"></th><th id="cal-year-9/19"></th><th id="cal-year-10/19"></th><th id="cal-year-11/19"></th><th id="cal-year-12/19"></th></tr>
-    <tr><th id="cal-year-1/20"></th><th id="cal-year-2/20"></th><th id="cal-year-3/20"></th><th id="cal-year-4/20"></th><th id="cal-year-5/20"></th><th id="cal-year-6/20"></th><th id="cal-year-7/20"></th><th id="cal-year-8/20"></th><th id="cal-year-9/20"></th><th id="cal-year-10/20"></th><th id="cal-year-11/20"></th><th id="cal-year-12/20"></th></tr>
-    <tr><th id="cal-year-1/21"></th><th id="cal-year-2/21"></th><th id="cal-year-3/21"></th><th id="cal-year-4/21"></th><th id="cal-year-5/21"></th><th id="cal-year-6/21"></th><th id="cal-year-7/21"></th><th id="cal-year-8/21"></th><th id="cal-year-9/21"></th><th id="cal-year-10/21"></th><th id="cal-year-11/21"></th><th id="cal-year-12/21"></th></tr>
-    <tr><th id="cal-year-1/22"></th><th id="cal-year-2/22"></th><th id="cal-year-3/22"></th><th id="cal-year-4/22"></th><th id="cal-year-5/22"></th><th id="cal-year-6/22"></th><th id="cal-year-7/22"></th><th id="cal-year-8/22"></th><th id="cal-year-9/22"></th><th id="cal-year-10/22"></th><th id="cal-year-11/22"></th><th id="cal-year-12/22"></th></tr>
-    <tr><th id="cal-year-1/23"></th><th id="cal-year-2/23"></th><th id="cal-year-3/23"></th><th id="cal-year-4/23"></th><th id="cal-year-5/23"></th><th id="cal-year-6/23"></th><th id="cal-year-7/23"></th><th id="cal-year-8/23"></th><th id="cal-year-9/23"></th><th id="cal-year-10/23"></th><th id="cal-year-11/23"></th><th id="cal-year-12/23"></th></tr>
-    <tr><th id="cal-year-1/24"></th><th id="cal-year-2/24"></th><th id="cal-year-3/24"></th><th id="cal-year-4/24"></th><th id="cal-year-5/24"></th><th id="cal-year-6/24"></th><th id="cal-year-7/24"></th><th id="cal-year-8/24"></th><th id="cal-year-9/24"></th><th id="cal-year-10/24"></th><th id="cal-year-11/24"></th><th id="cal-year-12/24"></th></tr>
-    <tr><th id="cal-year-1/25"></th><th id="cal-year-2/25"></th><th id="cal-year-3/25"></th><th id="cal-year-4/25"></th><th id="cal-year-5/25"></th><th id="cal-year-6/25"></th><th id="cal-year-7/25"></th><th id="cal-year-8/25"></th><th id="cal-year-9/25"></th><th id="cal-year-10/25"></th><th id="cal-year-11/25"></th><th id="cal-year-12/25"></th></tr>
-    <tr><th id="cal-year-1/26"></th><th id="cal-year-2/26"></th><th id="cal-year-3/26"></th><th id="cal-year-4/26"></th><th id="cal-year-5/26"></th><th id="cal-year-6/26"></th><th id="cal-year-7/26"></th><th id="cal-year-8/26"></th><th id="cal-year-9/26"></th><th id="cal-year-10/26"></th><th id="cal-year-11/26"></th><th id="cal-year-12/26"></th></tr>
-    <tr><th id="cal-year-1/27"></th><th id="cal-year-2/27"></th><th id="cal-year-3/27"></th><th id="cal-year-4/27"></th><th id="cal-year-5/27"></th><th id="cal-year-6/27"></th><th id="cal-year-7/27"></th><th id="cal-year-8/27"></th><th id="cal-year-9/27"></th><th id="cal-year-10/27"></th><th id="cal-year-11/27"></th><th id="cal-year-12/27"></th></tr>
-    <tr><th id="cal-year-1/28"></th><th id="cal-year-2/28"></th><th id="cal-year-3/28"></th><th id="cal-year-4/28"></th><th id="cal-year-5/28"></th><th id="cal-year-6/28"></th><th id="cal-year-7/28"></th><th id="cal-year-8/28"></th><th id="cal-year-9/28"></th><th id="cal-year-10/28"></th><th id="cal-year-11/28"></th><th id="cal-year-12/28"></th></tr>
-    <tr><th id="cal-year-1/29"></th><th id="cal-year-2/29"></th><th id="cal-year-3/29"></th><th id="cal-year-4/29"></th><th id="cal-year-5/29"></th><th id="cal-year-6/29"></th><th id="cal-year-7/29"></th><th id="cal-year-8/29"></th><th id="cal-year-9/29"></th><th id="cal-year-10/29"></th><th id="cal-year-11/29"></th><th id="cal-year-12/29"></th></tr>
-    <tr><th id="cal-year-1/30"></th><th id="cal-year-2/30" class="cal-year-noday"></th><th id="cal-year-3/30"></th><th id="cal-year-4/30"></th><th id="cal-year-5/30"></th><th id="cal-year-6/30"></th><th id="cal-year-7/30"></th><th id="cal-year-8/30"></th><th id="cal-year-9/30"></th><th id="cal-year-10/30"></th><th id="cal-year-11/30"></th><th id="cal-year-12/30"></th></tr>
-    <tr><th id="cal-year-1/31"></th><th id="cal-year-2/31" class="cal-year-noday"></th><th id="cal-year-3/31"></th><th id="cal-year-4/31" class="cal-year-noday"></th><th id="cal-year-5/31"></th><th id="cal-year-6/31" class="cal-year-noday"></th><th id="cal-year-7/31"></th><th id="cal-year-8/31"></th><th id="cal-year-9/31" class="cal-year-noday"></th><th id="cal-year-10/31"></th><th id="cal-year-11/31" class="cal-year-noday"></th><th id="cal-year-12/31"></th></tr>
-  </table>
-  </div>
-  <button onclick="toggleBudgetOption('income')">Income</button><button onclick="toggleBudgetOption('expense')">Expense</button><button onclick="toggleBudgetOption('both')">Both</button><button onclick="toggleBudgetOption('net')">Net</button><button onclick="resetDays()">Reset</button>
-  <p id="loadStatus">Status: Loading...</p>
-  <div class="cal-style">
-    <button>Simple</button>
-    <button>Range</button>
-    <button>Transactions</button>
-  </div>
-  <div id="accounts-select">
-    <input type="checkbox" id="accounts-budget" name="accounts-budget" value="accounts-budget" checked=true onchange="toggleAccountCheckboxSection('accounts-select-budget')">
-    <label for="accounts-budget">Budget Accounts</label><br></br>
-    <div id="accounts-select-budget"></div>
-    <input type="checkbox" id="accounts-tracking" name="accounts-tracking" value="accounts-tracking" checked=true onchange="toggleAccountCheckboxSection('accounts-select-tracking')">
-    <label for="accounts-tracking">Tracking Accounts</label><br></br>
-    <div id="accounts-select-tracking"></div>
-    <input type="checkbox" id="accounts-closed" name="accounts-closed" value="accounts-closed" checked=true onchange="toggleAccountCheckboxSection('accounts-select-closed')">
-    <label for="accounts-closed">Closed Accounts</label><br></br>
-    <div id="accounts-select-closed"></div>
-  </div>
-  <div id="categories-select"></div>
   </main>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://unpkg.com/ynab@1.21.0/dist/browser/ynab.js" async></script>

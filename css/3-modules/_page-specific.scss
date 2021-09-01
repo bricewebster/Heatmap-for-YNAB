@@ -3,45 +3,40 @@
         Yearly table
 */
 
-.cal-types {
 
-  margin-bottom: 20px;
+.cal-container {
+  width: 100%;
+
+  border-top: 5px solid $ynab-dark-green;
   
-  border-bottom: 5px solid $ynab-dark-green;
-  background-color: $ynab-light-green;
-  
-  & button {
-    margin-left: 20px;
-    padding: 8px 5px 5px 5px;
+  z-index: -1;
+}
+.cal-subcontainer {
+  margin: 0 auto;
+  padding-top: 15px;
+  width: 490px;
+}
 
-    background: none;
-    border: none;
+button.cal-year-button{
+  background: none;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 
-    font-size: 1.2em;
-    color: white;
-
-    cursor: pointer;
-
-    &:hover {
-      color: $ynab-dark-green;
-    }
-    
-    &:focus {
-      background: white;
-      border: 5px solid $ynab-dark-green;
-      border-bottom: none;
-      border-radius: 5px;
-
-      color: $ynab-dark-green;
-    }
-  }
+  cursor: pointer;
 }
 
 /*------------------------------------*\
   #Calendar Yearly
 \*------------------------------------*/
+.cal-year-selector {
+  margin-left: 120px;
+  width: 150px;
+}
 .cal-year-selector p{
   display: inline-block;
+
+  font-size: 2.2em;
 }
 .cal-year-container{
     display: block;
@@ -124,7 +119,7 @@
   #Account Select
 \*------------------------------------*/
 #accounts-select {
-  display: block;
+  display: none;
   width:  200px;
   height: 100px;
 
@@ -140,7 +135,7 @@
   #Categories Select
 \*------------------------------------*/
 #categories-select {
-  display: block;
+  display: none;
   width:  250px;
   height: 100px;
 

@@ -1,0 +1,50 @@
+nav {
+    background-color: $ynab-light-green;
+}
+.cal-types {
+    display: inline-block;
+    & button {
+      margin-left: 20px;
+      padding: 8px 5px 5px 5px;
+  
+      background: none;
+      border: none;
+  
+      font-size: 1.2em;
+      color: white;
+  
+      cursor: pointer;
+  
+      &:hover {
+        color: $ynab-dark-green;
+      }
+      
+      &:focus {
+        padding-bottom: 5px;
+  
+        background: white;
+        border: 5px solid $ynab-dark-green;
+        border-bottom: 5px solid white;
+        border-radius: 5px;
+  
+        color: $ynab-dark-green;
+      }
+    }
+}
+
+.cal-filters {
+    float: right;
+
+    margin-right: 100px;
+
+    & button {
+        margin-right: 40px;
+
+        background: none;
+        border: none;
+
+        color: white;
+
+        cursor: pointer;
+    }
+}
