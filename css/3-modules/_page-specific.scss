@@ -4,10 +4,36 @@
 */
 
 .cal-types {
+
+  margin-bottom: 20px;
+  
+  border-bottom: 5px solid $ynab-dark-green;
+  background-color: $ynab-light-green;
   
   & button {
     margin-left: 20px;
+    padding: 8px 5px 5px 5px;
+
+    background: none;
+    border: none;
+
     font-size: 1.2em;
+    color: white;
+
+    cursor: pointer;
+
+    &:hover {
+      color: $ynab-dark-green;
+    }
+    
+    &:focus {
+      background: white;
+      border: 5px solid $ynab-dark-green;
+      border-bottom: none;
+      border-radius: 5px;
+
+      color: $ynab-dark-green;
+    }
   }
 }
 

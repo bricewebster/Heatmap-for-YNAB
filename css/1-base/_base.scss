@@ -11,7 +11,11 @@
     font-family: Lato,Helvetica Neue,Helvetica,Arial,sans-serif;
   }
   h1 {
-    text-align: center;
     padding-top: 10px;
+
+    background: $ynab-light-green;
+
+    text-align: center;
     font-size: 1.75em;
+    color: white;
   }

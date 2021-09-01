@@ -16,18 +16,43 @@ main {
 }
 
 h1 {
-  text-align: center;
   padding-top: 10px;
+  background: #009cc2;
+  text-align: center;
   font-size: 1.75em;
+  color: white;
 }
 
 /* 
     Table of Contents
         Yearly table
 */
+.cal-types {
+  margin-bottom: 20px;
+  border-bottom: 5px solid #003440;
+  background-color: #009cc2;
+}
+
 .cal-types button {
   margin-left: 20px;
+  padding: 8px 5px 5px 5px;
+  background: none;
+  border: none;
   font-size: 1.2em;
+  color: white;
+  cursor: pointer;
+}
+
+.cal-types button:hover {
+  color: #003440;
+}
+
+.cal-types button:focus {
+  background: white;
+  border: 5px solid #003440;
+  border-bottom: none;
+  border-radius: 5px;
+  color: #003440;
 }
 
 /*------------------------------------*\
