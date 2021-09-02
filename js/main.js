@@ -19,15 +19,15 @@ async function main() {
   const mainBudgetID = await getBudgetID();
   document.getElementById("selectedYear").innerHTML = selectedYear;
   leapYearCheck();
-  accountsFetched = await getAccounts(accessToken, mainBudgetID);
-  initAccounts();
-  categoriesFetched = await getCategories(accessToken, mainBudgetID);
+ // accountsFetched = await getAccounts(accessToken, mainBudgetID);
+ // initAccounts();
+ // categoriesFetched = await getCategories(accessToken, mainBudgetID);
  
   initCategories();
  
-  transactions = await getTransactions(accessToken, mainBudgetID);
+  //transactions = await getTransactions(accessToken, mainBudgetID);
   //listCategories();
-  currencyDecimals = await getCurrencyDecimals(accessToken, mainBudgetID);
+  //currencyDecimals = await getCurrencyDecimals(accessToken, mainBudgetID);
   
   storeTransactionsMain();
   calendarPopulate(budgetOption);
@@ -294,6 +294,12 @@ function refreshCalendar() {
   resetTransactions();
   storeTransactionsMain();
   calendarPopulate(budgetOption);
+}
+
+function toggleCalendarType(calendarTypeElement, removeClassElements) {
+  calendarTypeElement.className = "focus";
+  document.getElementById(removeClassElements[0]).className = "";
+  document.getElementById(removeClassElements[1]).className = "";
 }
 
 /**

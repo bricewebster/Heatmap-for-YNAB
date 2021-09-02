@@ -9,9 +9,9 @@
   <nav>
     <h1>Heatmap for YNAB</h1>
     <div class="cal-types">
-      <button>Yearly</button>
-      <button>Monthly</button>
-      <button>Daily</button>
+      <button id="cal-type-year" class="focus" onclick="toggleCalendarType(this, ['cal-type-month', 'cal-type-day'])">Yearly</button>
+      <button id="cal-type-month" onclick="toggleCalendarType(this, ['cal-type-year', 'cal-type-day'])">Monthly</button>
+      <button id="cal-type-day" onclick="toggleCalendarType(this, ['cal-type-year', 'cal-type-month'])">Daily</button>
     </div>
     <div class="cal-filters">
       <button>All Accounts</button>

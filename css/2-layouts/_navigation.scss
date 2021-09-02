@@ -1,8 +1,14 @@
 nav {
-    background-color: $ynab-light-green;
+  position: relative;
+
+  height: 82.25px;
+
+  background-color: $ynab-light-green;
 }
 .cal-types {
     display: inline-block;
+    position: absolute;
+
     & button {
       margin-left: 20px;
       padding: 8px 5px 5px 5px;
@@ -19,13 +25,14 @@ nav {
         color: $ynab-dark-green;
       }
       
-      &:focus {
+      &.focus {
         padding-bottom: 5px;
   
         background: white;
         border: 5px solid $ynab-dark-green;
-        border-bottom: 5px solid white;
-        border-radius: 5px;
+        border-bottom: 5px solid transparent;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
   
         color: $ynab-dark-green;
       }
