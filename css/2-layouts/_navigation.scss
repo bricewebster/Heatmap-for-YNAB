@@ -20,14 +20,14 @@ nav {
       color: white;
   
       cursor: pointer;
-  
+
       &:hover {
         color: $ynab-dark-green;
+
+        transition: all 250ms ease-in;
       }
       
       &.focus {
-        padding-bottom: 5px;
-  
         background: white;
         border: 5px solid $ynab-dark-green;
         border-bottom: 5px solid transparent;
@@ -35,16 +35,22 @@ nav {
         border-top-right-radius: 5px;
   
         color: $ynab-dark-green;
+        transition: background 250ms ease-out;
+        
       }
     }
 }
 
 .cal-filters {
+    display: flex;
     float: right;
 
     margin-right: 100px;
 
     & button {
+        display: flex;
+        align-items: center;
+       
         margin-right: 40px;
 
         background: none;
@@ -53,5 +59,11 @@ nav {
         color: white;
 
         cursor: pointer;
+      
+      &:hover {
+        color: $ynab-dark-green;
+
+        transition: all 250ms ease-in;
+      }
     }
 }

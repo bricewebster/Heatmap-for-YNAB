@@ -45,29 +45,47 @@ nav {
 
 .cal-types button:hover {
   color: #003440;
+  -webkit-transition: all 250ms ease-in;
+  transition: all 250ms ease-in;
 }
 
 .cal-types button.focus {
-  padding-bottom: 5px;
   background: white;
   border: 5px solid #003440;
   border-bottom: 5px solid transparent;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   color: #003440;
+  -webkit-transition: background 250ms ease-out;
+  transition: background 250ms ease-out;
 }
 
 .cal-filters {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
   float: right;
   margin-right: 100px;
 }
 
 .cal-filters button {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   margin-right: 40px;
   background: none;
   border: none;
   color: white;
   cursor: pointer;
+}
+
+.cal-filters button:hover {
+  color: #003440;
+  -webkit-transition: all 250ms ease-in;
+  transition: all 250ms ease-in;
 }
 
 /* 
@@ -193,13 +211,36 @@ button.cal-year-button {
   border-color: black transparent transparent transparent;
 }
 
-/*------------------------------------*\
-  #Account Select
-\*------------------------------------*/
-#accounts-select {
-  display: none;
+.popup-select {
+  padding: 10px;
   width: 200px;
-  height: 100px;
+  height: 350px;
+  -webkit-box-shadow: 0 16px 64px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 16px 64px rgba(0, 0, 0, 0.2);
+}
+
+#account-select-container::after {
+  content: " ";
+  position: absolute;
+  bottom: 100%;
+  /* At the bottom of the tooltip */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 15px;
+  border-style: solid;
+  border-color: transparent transparent white transparent;
+}
+
+#account-select-container {
+  position: absolute;
+  top: 105px;
+  right: 400px;
+}
+
+#accounts-select {
+  width: 200px;
+  height: 200px;
+  border-radius: 5px;
   overflow: scroll;
 }
 
@@ -208,6 +249,9 @@ button.cal-year-button {
   margin-left: 10px;
 }
 
+/*------------------------------------*\
+  #Account Select
+\*------------------------------------*/
 /*------------------------------------*\
   #Categories Select
 \*------------------------------------*/

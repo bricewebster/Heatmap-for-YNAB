@@ -115,13 +115,41 @@ button.cal-year-button{
     border-color: black transparent transparent transparent;
   }
 
-/*------------------------------------*\
-  #Account Select
-\*------------------------------------*/
-#accounts-select {
-  display: none;
+
+  .popup-select {
+    padding: 10px;
+
+    width:  200px;
+    height: 350px;
+
+    box-shadow: 0 16px 64px rgba(0, 0, 0, 0.2);
+  }
+
+  #account-select-container::after {
+    content: " ";
+    position: absolute;
+    bottom: 100%; /* At the bottom of the tooltip */
+    left: 50%;
+    margin-left: -5px;
+    border-width: 15px;
+    border-style: solid;
+    border-color: transparent transparent white transparent;
+  }
+
+ #account-select-container {
+   position: absolute;
+  
+   top: 105px;
+   right: 400px;
+   
+
+ }
+
+ #accounts-select {
   width:  200px;
-  height: 100px;
+  height: 200px;
+
+  border-radius: 5px;
 
   overflow: scroll;
 }
@@ -130,6 +158,10 @@ button.cal-year-button{
   display: block;
   margin-left: 10px;
 }
+
+/*------------------------------------*\
+  #Account Select
+\*------------------------------------*/
 
 /*------------------------------------*\
   #Categories Select
