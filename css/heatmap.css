@@ -1,6 +1,79 @@
-* {
+/* Box sizing rules */
+*,
+*::before,
+*::after {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+/* Remove default margin */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
   margin: 0;
-  padding: 0;
+}
+
+/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+}
+
+/* Set core root defaults */
+html:focus-within {
+  scroll-behavior: smooth;
+}
+
+/* Set core body defaults */
+body {
+  min-height: 100vh;
+  text-rendering: optimizeSpeed;
+  line-height: 1.5;
+}
+
+/* A elements that don't have a class get default styles */
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+}
+
+/* Make images easier to work with */
+img,
+picture {
+  max-width: 100%;
+  display: block;
+}
+
+/* Inherit fonts for inputs and buttons */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Remove all animations and transitions for people that prefer not to see them */
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    -webkit-animation-duration: 0.01ms !important;
+            animation-duration: 0.01ms !important;
+    -webkit-animation-iteration-count: 1 !important;
+            animation-iteration-count: 1 !important;
+    -webkit-transition-duration: 0.01ms !important;
+            transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 body {
@@ -24,7 +97,7 @@ h1 {
 
 nav {
   position: relative;
-  height: 82.25px;
+  height: 90px;
   background-color: #009cc2;
 }
 
@@ -35,7 +108,7 @@ nav {
 
 .cal-types button {
   margin-left: 20px;
-  padding: 8px 5px 5px 5px;
+  padding: 0px 5px 5px 5px;
   background: none;
   border: none;
   font-size: 1.2em;
@@ -95,6 +168,7 @@ nav {
 .cal-container {
   width: 100%;
   border-top: 5px solid #003440;
+  line-height: normal;
   z-index: -1;
 }
 
@@ -118,7 +192,7 @@ button.cal-year-button {
 \*------------------------------------*/
 .cal-year-selector {
   margin-left: 120px;
-  width: 150px;
+  width: 190px;
 }
 
 .cal-year-selector p {
@@ -211,12 +285,90 @@ button.cal-year-button {
   border-color: black transparent transparent transparent;
 }
 
-.popup-select {
-  padding: 10px;
-  width: 200px;
+.popup {
+  margin-top: 30px;
+  width: 250px;
   height: 350px;
+  border-radius: 5px;
   -webkit-box-shadow: 0 16px 64px rgba(0, 0, 0, 0.2);
           box-shadow: 0 16px 64px rgba(0, 0, 0, 0.2);
+}
+
+.popup-title {
+  margin: 15px 0 5px 15px;
+  font-size: 1em;
+  font-weight: 700;
+  color: #383e41;
+}
+
+.popup-select {
+  margin: 5px 15px 0 15px;
+  height: 35px;
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.popup-select button {
+  margin: 5px 5px 0 5px;
+  background: none;
+  border: none;
+  font-size: 13.5px;
+  color: #4495d7;
+}
+
+.popup-select button:hover {
+  color: #003440;
+  cursor: pointer;
+}
+
+.select-scroll {
+  margin: 15px 0 0 15px;
+  width: 220px;
+  height: 200px;
+  font-size: .9rem;
+  overflow-y: scroll;
+}
+
+.select-buttons {
+  float: right;
+  margin: 15px 10px 0 0;
+  width: 140px;
+}
+
+.select-buttons button {
+  padding: .3em .6em;
+  border-radius: .4em;
+  line-height: 1em;
+}
+
+.select-buttons button.cancel {
+  padding: .3em .6em;
+  border: 2px solid #dee3e8;
+  background-color: transparent;
+  color: #009cc2;
+}
+
+.select-buttons button.cancel:hover {
+  border-color: #00596f;
+  background-color: #00596f;
+  color: white;
+}
+
+.select-buttons button.done {
+  border: 2px solid transparent;
+  background-color: #009cc2;
+  color: white;
+}
+
+.select-buttons button.done:hover {
+  border-color: #00596f;
+  background-color: #00596f;
+}
+
+#account-select-container {
+  position: absolute;
+  top: 95px;
+  right: 465px;
 }
 
 #account-select-container::after {
@@ -229,19 +381,6 @@ button.cal-year-button {
   border-width: 15px;
   border-style: solid;
   border-color: transparent transparent white transparent;
-}
-
-#account-select-container {
-  position: absolute;
-  top: 105px;
-  right: 400px;
-}
-
-#accounts-select {
-  width: 200px;
-  height: 200px;
-  border-radius: 5px;
-  overflow: scroll;
 }
 
 #accounts-select div {
