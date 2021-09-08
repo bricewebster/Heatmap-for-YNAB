@@ -14,31 +14,31 @@
       <button id="cal-type-day" onclick="toggleCalendarType(this, ['cal-type-year', 'cal-type-month'])">Daily</button>
     </div>
     <div class="cal-filters">
-      <button>All Accounts<span class="material-icons-round md-36">arrow_drop_down</span></button>
-      <button>All Categories<span class="material-icons-round md-36">arrow_drop_down</span></button>
-      <button>All Sources<span class="material-icons-round md-36">arrow_drop_down</span></button>
-    </div>
-    <div id="account-select-container" class="popup">
-      <p class="popup-title">Accounts</p>
-      <div class="popup-select">
-        <button>Select All</button>
-        <button>Select None</button>
+      <button id="cal-filter-account" class="filter-button" onclick="testclick()">All Accounts<span class="material-icons-round md-36">arrow_drop_down</span></button>
+      <div id="account-select-container" class="popup" tabindex="0">
+        <p class="popup-title">Accounts</p>
+        <div class="popup-select">
+          <button>Select All</button>
+          <button>Select None</button>
+        </div>
+        <div class="select-scroll">
+          <input type="checkbox" id="accounts-budget" name="accounts-budget" value="accounts-budget" checked=true onchange="toggleAccountCheckboxSection('accounts-select-budget')">
+          <label for="accounts-budget">Budget Accounts</label><br></br>
+          <div id="accounts-select-budget"></div>
+          <input type="checkbox" id="accounts-tracking" name="accounts-tracking" value="accounts-tracking" checked=true onchange="toggleAccountCheckboxSection('accounts-select-tracking')">
+          <label for="accounts-tracking">Tracking Accounts</label><br></br>
+          <div id="accounts-select-tracking"></div>
+          <input type="checkbox" id="accounts-closed" name="accounts-closed" value="accounts-closed" checked=true onchange="toggleAccountCheckboxSection('accounts-select-closed')">
+          <label for="accounts-closed">Closed Accounts</label><br></br>
+          <div id="accounts-select-closed"></div>
+        </div>
+        <div class="select-buttons">
+          <button class="cancel">Cancel</button>
+          <button class="done">Done</button>
+        </div>
       </div>
-      <div class="select-scroll">
-        <input type="checkbox" id="accounts-budget" name="accounts-budget" value="accounts-budget" checked=true onchange="toggleAccountCheckboxSection('accounts-select-budget')">
-        <label for="accounts-budget">Budget Accounts</label><br></br>
-        <div id="accounts-select-budget"></div>
-        <input type="checkbox" id="accounts-tracking" name="accounts-tracking" value="accounts-tracking" checked=true onchange="toggleAccountCheckboxSection('accounts-select-tracking')">
-        <label for="accounts-tracking">Tracking Accounts</label><br></br>
-        <div id="accounts-select-tracking"></div>
-        <input type="checkbox" id="accounts-closed" name="accounts-closed" value="accounts-closed" checked=true onchange="toggleAccountCheckboxSection('accounts-select-closed')">
-        <label for="accounts-closed">Closed Accounts</label><br></br>
-        <div id="accounts-select-closed"></div>
-      </div>
-      <div class="select-buttons">
-        <button class="cancel">Cancel</button>
-        <button class="done">Done</button>
-      </div>
+      <button id="cal-filter-category" class="filter-button">All Categories<span class="material-icons-round md-36">arrow_drop_down</span></button>
+      <button id="cal-filter-source" class="filter-button">All Sources<span class="material-icons-round md-36">arrow_drop_down</span></button>
     </div>
   </nav>
   <div class="cal-container">

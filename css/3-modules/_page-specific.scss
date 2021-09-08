@@ -144,6 +144,7 @@ button.cal-year-button{
     border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 
     & button {
+      display: inline-block;
       margin: 5px 5px 0 5px;
       background: none;
       border: none;
@@ -218,6 +219,7 @@ button.cal-year-button{
    top: 95px;
    right: 465px;
 
+   opacity: 0;
  }
 
 #account-select-container::after {

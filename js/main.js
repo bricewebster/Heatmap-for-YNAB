@@ -1,3 +1,14 @@
+
+function testclick(){
+  document.getElementById('account-select-container').style.opacity = "1";
+}
+
+$(document).on("click", function(event){
+  if(!$(event.target).closest(".cal-filters").length){
+      $("#account-select-container").css('opacity', '0');
+  }
+});
+
 var expenseTransactions = new Array(366);
 var incomeTransactions = new Array(366);
 var transactionDays = new Array(366);

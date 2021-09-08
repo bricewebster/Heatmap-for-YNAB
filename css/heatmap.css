@@ -141,7 +141,7 @@ nav {
   margin-right: 100px;
 }
 
-.cal-filters button {
+.cal-filters button.filter-button {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -155,7 +155,7 @@ nav {
   cursor: pointer;
 }
 
-.cal-filters button:hover {
+.cal-filters button.filter-button:hover {
   color: #003440;
   -webkit-transition: all 250ms ease-in;
   transition: all 250ms ease-in;
@@ -309,6 +309,7 @@ button.cal-year-button {
 }
 
 .popup-select button {
+  display: inline-block;
   margin: 5px 5px 0 5px;
   background: none;
   border: none;
@@ -369,6 +370,7 @@ button.cal-year-button {
   position: absolute;
   top: 95px;
   right: 465px;
+  opacity: 0;
 }
 
 #account-select-container::after {
