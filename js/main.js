@@ -3,6 +3,7 @@ function testclick(){
   document.getElementById('account-select-container').style.opacity = "1";
 }
 
+//TODO: Clean up and add other filter popups.
 $(document).on("click", function(event){
   if(!$(event.target).closest(".cal-filters").length){
       $("#account-select-container").css('opacity', '0');
@@ -22,6 +23,7 @@ var currencyDecimals;
 var selectedYear = new Date().getFullYear(); //Set default year as current year.
 var budgetOption = "income";
 var sectionFlag = false;
+var selectFlag = false;
 
 main();
 
@@ -360,6 +362,17 @@ function toggleAccountCheckboxSection(accountSection) {
     }
   }
   sectionFlag = false;
+  if(selectFlag != true) {
+    refreshCalendar();
+  }
+}
+
+function toggleAccountCheckboxSelectAll() {
+  selectFlag = true;
+  for (let account of ynabAccounts) {
+    toggleAccountCheckboxSection(account)
+  }
+  selectFlag = false;
   refreshCalendar();
 }
 
