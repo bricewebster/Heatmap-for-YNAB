@@ -1,30 +1,31 @@
 <script>
-	export let name;
+	import Navbar from "./components/Navbar.svelte";
+	import Content from "./components/Content.svelte";
+	
+	let activeTab = 'Yearly';
+
+	console.log(activeTab)
+
 </script>
 
 <main>
-	<h1>Hello {name}!</h1>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
+	<Navbar bind:activeTab = {activeTab} />
+	<Content {activeTab} />
 </main>
 
-<style>
+<style lang="scss">
+	:global(:root){
+		--ynab-dark-green: #003440;
+		--ynab-teal: #00596f;
+		--ynab-light-green: #009cc2;
+		--ynab-light-blue: #4495d7;
+	}
+
 	main {
-		text-align: center;
-		padding: 1em;
-		max-width: 240px;
 		margin: 0 auto;
+
+		width: 100%;
+		height: auto;
 	}
 
-	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 4em;
-		font-weight: 100;
-	}
-
-	@media (min-width: 640px) {
-		main {
-			max-width: none;
-		}
-	}
 </style>

@@ -1,63 +1,58 @@
-html, body {
-	position: relative;
-	width: 100%;
-	height: 100%;
-}
+main {
+    margin: 0 auto;
+    width: 100%;
+    height: auto;
+    /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; */
+    font-family: Lato,Helvetica Neue,Helvetica,Arial,sans-serif;
+  }
 
-body {
-	color: #333;
-	margin: 0;
-	padding: 8px;
-	box-sizing: border-box;
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Material Icons'),
+      url(/fonts/MaterialIcons-Regular.ttf) format('truetype');
 }
-
-a {
-	color: rgb(0,100,200);
-	text-decoration: none;
+@font-face {
+    font-family: 'Material Icons Round';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Material Icons Round'),
+      url(/fonts/MaterialIconsRound-Regular.otf) format('truetype');
 }
-
-a:hover {
-	text-decoration: underline;
+@font-face {
+    font-family: 'Material Icons Outlined';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Material Icons Outlined'),
+      url(/fonts/MaterialIconsOutlined-Regular.otf) format('truetype');
 }
-
-a:visited {
-	color: rgb(0,80,160);
+.material-icons, .material-icons-round, .material-icons-outlined {
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;  /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+  
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+  
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+  
+    /* Support for IE. */
+    font-feature-settings: 'liga';
 }
-
-label {
-	display: block;
-}
-
-input, button, select, textarea {
-	font-family: inherit;
-	font-size: inherit;
-	-webkit-padding: 0.4em 0;
-	padding: 0.4em;
-	margin: 0 0 0.5em 0;
-	box-sizing: border-box;
-	border: 1px solid #ccc;
-	border-radius: 2px;
-}
-
-input:disabled {
-	color: #ccc;
-}
-
-button {
-	color: #333;
-	background-color: #f4f4f4;
-	outline: none;
-}
-
-button:disabled {
-	color: #999;
-}
-
-button:not(:disabled):active {
-	background-color: #ddd;
-}
-
-button:focus {
-	border-color: #666;
-}
+.material-icons { font-family: 'Material Icons';}
+.material-icons-round { font-family: 'Material Icons Round';}
+.material-icons-outlined { font-family: 'Material Icons Outlined';}
+.material-icons.md-24, .material-icons-round.md-24, .material-icons-outlined.md-24 { font-size: 1.5em;}
+.material-icons.md-36, .material-icons-round.md-36, .material-icons-outlined.md-36 { font-size: 2.25em;}
+.material-icons.md-48, .material-icons-round.md-48, .material-icons-outlined.md-48 { font-size: 3em;}
