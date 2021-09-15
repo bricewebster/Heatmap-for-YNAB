@@ -1,10 +1,20 @@
 <script>
+    import Button from "./Button.svelte";
+    export let filter;
     export let selectedFilter;
+    $: showPopup = false;
+    const filterCheck = (selectedFilter, filter) => {
+   
+        return  selectedFilter === filter
+    }
+    const backdropCheck = () => {
+        
+    }
 </script>
 
-<div class="backdrop">
-    <div class="popup {selectedFilter}">
-        <p class="title">{selectedFilter}</p>
+<div class:backdrop={filterCheck(selectedFilter, filter)} on:click|self={() => backdropCheck()}>
+    <div class="popup {filter}" class:showpopup={filterCheck(selectedFilter, filter)}>
+        <p class="title">{filter}</p>
         <div class="selection">
             <ul>
                 <li>Select All</li>
@@ -14,10 +24,22 @@
         <div class="list">
             
         </div>
+        <div class="buttons">
+            <Button type="secondary">Cancel</Button>
+            <Button>Done</Button>
+        </div>
     </div>
 </div>
 
 <style lang="scss">
+    .backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        z-index: 10;
+    }
     .popup {
         position: absolute;
         right: 200px;
@@ -30,7 +52,7 @@
         border-radius: 5px;
         box-shadow: 0 16px 64px rgba(0, 0, 0, 0.2);
 
-        opacity: 1;
+        opacity: 0;
     }
     .title {
         margin: 15px 0 5px 15px;
@@ -48,18 +70,18 @@
         border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 
         & li {
-        display: inline-block;
-        margin: 5px 5px 0 10px;
-        background: none;
+            display: inline-block;
+            margin: 5px 5px 0 10px;
+            background: none;
 
-        font-size: 13.5px;
-        color: var(--ynab-light-blue);
+            font-size: 13.5px;
+            color: var(--ynab-light-blue);
 
-        &:hover {
-            color: var(--ynab-dark-green);
+            &:hover {
+                color: var(--ynab-dark-green);
 
-            cursor: pointer;
-        }
+                cursor: pointer;
+            }
         }
     }
   
@@ -73,68 +95,36 @@
         overflow-y: scroll;
     }
 
-  .select-buttons {
-    float: right;
+    .buttons {
+        float: right;
 
-    margin: 15px 10px 0 0;
-    width: 140px;
-
-    & button {
-      padding: .3em .6em;
-
-      border-radius: .4em;
-
-      line-height: 1em;
+        margin: 15px 10px 0 0;
+        width: 140px;
     }
 
-    & button.cancel {
-      padding: .3em .6em;
-   
-      border: 2px solid #dee3e8;
-      background-color: transparent;
-
-     // color: $ynab-light-green;
-
-      &:hover {
-          border-color: var(--ynab-teal);
-          background-color: var(--ynab-teal);
-          color: white;
-      }
+    .Categories {
+        top: 95px;
+        right: 455px;
     }
-
-    & button.done {
-      border: 2px solid transparent;
-      background-color: var(--ynab-light-green);
-
-      color: white;
-
-      &:hover {
-        border-color: var(--ynab-teal);
-        background-color: var(--ynab-teal);
-      }
+    .Accounts {
+        top: 95px;
+        right: 275px;
     }
+    .Sources {
+        top: 95px;
+        right: 105px;
     }
-
- .Categories {
-   top: 95px;
-   right: 455px;
- }
- .Accounts {
-    top: 95px;
-   right: 275px;
- }
- .Sources {
-    top: 95px;
-   right: 105px;
- }
-.Accounts::after, .Categories::after, .Sources::after {
-  content: " ";
-  position: absolute;
-  bottom: 100%; /* At the bottom of the tooltip */
-  left: 50%;
-  margin-left: -5px;
-  border-width: 15px;
-  border-style: solid;
-  border-color: transparent transparent white transparent;
-}
+    .Accounts::after, .Categories::after, .Sources::after {
+        content: " ";
+        position: absolute;
+        bottom: 100%; /* At the bottom of the tooltip */
+        left: 50%;
+        margin-left: -5px;
+        border-width: 15px;
+        border-style: solid;
+        border-color: transparent transparent white transparent;
+    }
+    .showpopup {
+        opacity: 1;
+    }
 </style>
