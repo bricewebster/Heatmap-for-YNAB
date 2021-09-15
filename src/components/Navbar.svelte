@@ -1,12 +1,12 @@
 <script>
     import Tabs from "./Tabs.svelte";
-    import Dropdowns from "./Dropdowns.svelte";
+    import Filters from "./Filters.svelte";
 
     let tabs = ['Yearly', 'Monthly', 'Daily'];
-    let dropdowns = ['All Categories', 'All Accounts', 'All Sources'];
+    let filters = ['Categories', 'Accounts', 'Sources'];
 
     export let activeTab;
-
+    
     const tabChange = (e) => {
         activeTab = e.detail;
     }
@@ -16,7 +16,7 @@
 <div class="navbar">
   <h1>Heatmap for YNAB</h1>
   <Tabs {activeTab} {tabs} on:tabChange={tabChange}/>
-  <Dropdowns {dropdowns}/>
+  <Filters {filters}/>
 </div>
 
 <style lang="scss">
