@@ -5,16 +5,22 @@
     let showFilter = false;
     export let filters;
 
-    const togglePopup = () => {
+    const togglePopup = (filter) => {
         showFilter = !showFilter;
+        selectedFilter = filter;
+        console.log('toggled')
     }
 </script>
 
 <div class="filters">
     <ul>
         {#each filters as filter}
-            <li on:click={() => selectedFilter = filter}>All {filter}<span class="material-icons-round md-36">arrow_drop_down</span></li>
-            <FilterPopup {filter} {selectedFilter}/>
+            <li on:click={() => togglePopup(filter)}>All {filter}<span class="material-icons-round md-36">arrow_drop_down</span></li>
+            {#if showFilter & filter === selectedFilter}
+                <div class="backdrop" on:click|self={() => togglePopup()}>
+                    <FilterPopup {filter} on:close{togglePopup} />
+                </div>
+            {/if}
         {/each}
     </ul>
 </div>
@@ -46,5 +52,13 @@
 
             transition: all 250ms ease-in;
         }
+    }
+    .backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        z-index: 10;
     }
 </style>

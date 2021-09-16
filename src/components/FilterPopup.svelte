@@ -1,45 +1,34 @@
 <script>
     import Button from "./Button.svelte";
+    import { createEventDispatcher } from 'svelte';
+
+    const dispatch = createEventDispatcher();
     export let filter;
-    export let selectedFilter;
-    $: showPopup = false;
-    const filterCheck = (selectedFilter, filter) => {
-   
-        return  selectedFilter === filter
+
+    const closePopup = () => {
+        dispatch('close', {});
     }
-    const backdropCheck = () => {
-        
-    }
+    
 </script>
 
-<div class:backdrop={filterCheck(selectedFilter, filter)} on:click|self={() => backdropCheck()}>
-    <div class="popup {filter}" class:showpopup={filterCheck(selectedFilter, filter)}>
-        <p class="title">{filter}</p>
-        <div class="selection">
-            <ul>
-                <li>Select All</li>
-                <li>Select None</li>
-            </ul>
-        </div>
-        <div class="list">
+<div class="popup {filter}">
+    <p class="title">{filter}</p>
+    <div class="selection">
+        <ul>
+            <li>Select All</li>
+            <li>Select None</li>
+        </ul>
+    </div>
+    <div class="list">
             
-        </div>
-        <div class="buttons">
-            <Button type="secondary">Cancel</Button>
-            <Button>Done</Button>
-        </div>
+    </div>
+    <div class="buttons">
+        <Button type="secondary" on:click={() => {closePopup}}>Cancel</Button>
+        <Button>Done</Button>
     </div>
 </div>
 
 <style lang="scss">
-    .backdrop {
-        position: fixed;
-        top: 0;
-        left: 0;
-        height: 100%;
-        width: 100%;
-        z-index: 10;
-    }
     .popup {
         position: absolute;
         right: 200px;
@@ -52,7 +41,7 @@
         border-radius: 5px;
         box-shadow: 0 16px 64px rgba(0, 0, 0, 0.2);
 
-        opacity: 0;
+        opacity: 1;
     }
     .title {
         margin: 15px 0 5px 15px;
