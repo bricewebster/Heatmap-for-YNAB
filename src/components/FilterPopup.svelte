@@ -1,13 +1,8 @@
 <script>
     import Button from "./Button.svelte";
-    import { createEventDispatcher } from 'svelte';
 
-    const dispatch = createEventDispatcher();
+    export let togglePopup = () => {};
     export let filter;
-
-    const closePopup = () => {
-        dispatch('close', {});
-    }
     
 </script>
 
@@ -23,7 +18,7 @@
             
     </div>
     <div class="buttons">
-        <Button type="secondary" on:click={() => {closePopup}}>Cancel</Button>
+        <Button type="secondary" on:click={togglePopup}>Cancel</Button>
         <Button>Done</Button>
     </div>
 </div>

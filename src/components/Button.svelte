@@ -1,8 +1,10 @@
 <script>
     export let type = 'primary';
+    $$restProps
+
 </script>
 
-<button class={type}>
+<button class={type} on:click on:mouseover on:focus on:mouseenter on:mouseleave	{...$$restProps}>
     <slot></slot>
 </button>
 

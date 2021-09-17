@@ -8,7 +8,6 @@
     const togglePopup = (filter) => {
         showFilter = !showFilter;
         selectedFilter = filter;
-        console.log('toggled')
     }
 </script>
 
@@ -18,7 +17,7 @@
             <li on:click={() => togglePopup(filter)}>All {filter}<span class="material-icons-round md-36">arrow_drop_down</span></li>
             {#if showFilter & filter === selectedFilter}
                 <div class="backdrop" on:click|self={() => togglePopup()}>
-                    <FilterPopup {filter} on:close{togglePopup} />
+                    <FilterPopup {filter} {togglePopup} />
                 </div>
             {/if}
         {/each}
@@ -46,6 +45,7 @@
         color: white;
         
         cursor: pointer;
+        transition: all 250ms ease-in;
 
         &:hover {
             color: var(--ynab-dark-green);
