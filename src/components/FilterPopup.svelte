@@ -1,6 +1,11 @@
 <script>
     import Button from "./Button.svelte";
+    import CategorySectionStore from '../stores/categorySectionStore';
+	import CategoryListStore from '../stores/categoryListStore';
+    import AccountSectionStore from '../stores/accountSectionStore';
+	import AccountListStore from '../stores/accountListStore';
 
+    console.log(AccountListStore)
     export let togglePopup = () => {};
     export let filter;
     
@@ -15,7 +20,29 @@
         </ul>
     </div>
     <div class="list">
-            
+            {#if filter === 'Categories'}
+                <ul>
+                {#each $CategorySectionStore as catSection}
+                    <li class="section">{catSection.Name}</li>
+                    {#each $CategoryListStore as catList}
+                        {#if catList.Id === catSection.Id}
+                            <li class="section-item">{catList.subName}</li>
+                        {/if}
+                    {/each}
+                {/each}
+                </ul>
+            #{:else if filter === 'Accounts'}
+                <ul>
+                {#each $AccountSectionStore as accountSection}
+                    <li class="section">{accountSection.Name}</li>
+                    {#each $AccountListStore as accountList}
+                         {#if accountList.Type === accountSection.Name}
+                             <li class="section-item">{accountList.Name}</li>
+                         {/if}}
+                    {/each}
+                {/each}
+                </ul>
+            {/if}
     </div>
     <div class="buttons">
         <Button type="secondary" on:click={togglePopup}>Cancel</Button>
@@ -68,7 +95,6 @@
             }
         }
     }
-  
     .list {
         margin: 15px 0 0 15px;
         width: 220px;
@@ -78,7 +104,12 @@
 
         overflow-y: scroll;
     }
-
+    .section {
+        font-weight: bold;
+    }
+    .section-item {
+        margin-left: 20px;
+    }
     .buttons {
         float: right;
 
