@@ -5,9 +5,41 @@
     import AccountSectionStore from '../stores/accountSectionStore';
 	import AccountListStore from '../stores/accountListStore';
     import PayeeListStore from '../stores/payeeListStore';
+    import { onDestroy } from 'svelte';
+
+    let categorySections = [];
+    let categoryLists = [];
+    
+    const unsubscribeCatSection = CategorySectionStore.subscribe(data => {
+        categorySections = data;
+    });
+
+    const unsubscribeCatList = CategoryListStore.subscribe(data => {
+        categoryLists = data;
+    });
+
+    let accountSections = [...$AccountSectionStore];
+    let accountLists = [...$AccountListStore];
+    let payeeLists = [...$PayeeListStore];
 
     export let togglePopup = () => {};
     export let filter;
+
+    const toggleCategoryGroup = (groupID) => {
+        for (let list of categoryLists) {
+           // console.log(list)
+           // console.log('gid: ' + groupID)
+            if (list.Id === groupID) {
+                list.Checked = !list.Checked;
+            }
+        }
+
+    }
+
+    onDestroy(() => {
+        unsubscribeCatSection();
+        unsubscribeCatList();
+	});
     
 </script>
 
@@ -22,30 +54,32 @@
     <div class="list">
             {#if filter === 'Categories'}
                 <ul>
-                {#each $CategorySectionStore as catSection}
-                    <li class="section">{catSection.Name}</li>
-                    {#each $CategoryListStore as catList}
+                {#each categorySections as catSection}
+                    <li class="section">
+                        <input type=checkbox group={catSection.Name} value={catSection.Name} checked={catSection.Checked} on:click={() => toggleCategoryGroup(catSection.Id)}>{catSection.Name}
+                    </li>
+                    {#each categoryLists as catList}
                         {#if catList.Id === catSection.Id}
-                            <li class="section-item">{catList.subName}</li>
+                            <li class="section-item"><input type=checkbox group={catSection.Name} value={catList.subName} checked={catList.Checked}>{catList.subName}</li>
                         {/if}
                     {/each}
                 {/each}
                 </ul>
             {:else if filter === 'Accounts'}
                 <ul>
-                {#each $AccountSectionStore as accountSection}
-                    <li class="section">{accountSection.Name}</li>
-                    {#each $AccountListStore as accountList}
+                {#each accountSections as accountSection}
+                    <li class="section"><input type=checkbox group={accountSection.Name} value={accountSection.Name} bind:checked={accountSection.Checked}>{accountSection.Name}</li>
+                    {#each accountLists as accountList}
                          {#if accountList.Type === accountSection.Name}
-                             <li class="section-item">{accountList.Name}</li>
+                            <li class="section-item"><input type=checkbox group={accountSection.Name} value={accountList.Name} bind:checked={accountList.Checked}>{accountList.Name}</li>
                          {/if}
                     {/each}
                 {/each}
                 </ul>
             {:else}
                 <ul>
-                {#each $PayeeListStore as payeeList}
-                    <li class="section-item">{payeeList.Name}</li>
+                {#each payeeLists as payeeList}
+                    <li class="section-item"><input type=checkbox group="payeeSection" value={payeeList.Name} checked={payeeList.Checked}>{payeeList.Name}</li>
                 {/each}
                 </ul>
             {/if}
@@ -112,9 +146,17 @@
     }
     .section {
         font-weight: bold;
+
+        font-size: .9em;
+
+        list-style: none;
     }
     .section-item {
         margin-left: 20px;
+        
+        font-size: .8em;
+
+        list-style: none;
     }
     .buttons {
         float: right;

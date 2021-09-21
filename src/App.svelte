@@ -69,10 +69,10 @@
 			if (category.name === 'Credit Card Payments') {
 				continue;
 			}
-			let categorySection = {Id: category.id, Name: category.name};
+			let categorySection = {Id: category.id, Name: category.name, Checked: true};
 			categorySections.push(categorySection);
     		for(let subcategory of category.categories) {
-				let categoryList = {Id: category.id, subId: subcategory.id, subName: subcategory.name};
+				let categoryList = {Id: category.id, subId: subcategory.id, subName: subcategory.name, Checked: true};
 				categoryLists.push(categoryList);
     		}
   		}
@@ -97,7 +97,7 @@
 			} else {
 				accountType = 'On Budget Accounts';
 			}
-			let accountList = {Name: account.name, Type: accountType};
+			let accountList = {Name: account.name, Type: accountType, Checked: true};
 			accountLists.push(accountList);
 		}
 
@@ -112,7 +112,7 @@
 			if (payee.deleted) {
 				continue;
 			}
-			let payeeList = {Name: payee.name};
+			let payeeList = {Name: payee.name, Checked: true};
 			payeeLists.push(payeeList);
 		}
 
