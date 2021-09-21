@@ -1,9 +1,9 @@
-import { writable } from "svelte/store";
+import { readable } from "svelte/store";
 
-export const AccountSectionStore = writable(
-    {name: 'On Budget Accounts'},
-    {name: 'Tracking Accounts'},
-    {name: 'Closed Accounts'} 
+export const AccountSectionStore = readable([
+    {Name: 'On Budget Accounts'},
+    {Name: 'Tracking Accounts'},
+    {Name: 'Closed Accounts'}]
 );
 
 export default AccountSectionStore;

@@ -5,7 +5,6 @@
     import AccountSectionStore from '../stores/accountSectionStore';
 	import AccountListStore from '../stores/accountListStore';
 
-    console.log(AccountListStore)
     export let togglePopup = () => {};
     export let filter;
     
@@ -31,14 +30,14 @@
                     {/each}
                 {/each}
                 </ul>
-            #{:else if filter === 'Accounts'}
+            {:else if filter === 'Accounts'}
                 <ul>
                 {#each $AccountSectionStore as accountSection}
                     <li class="section">{accountSection.Name}</li>
                     {#each $AccountListStore as accountList}
                          {#if accountList.Type === accountSection.Name}
                              <li class="section-item">{accountList.Name}</li>
-                         {/if}}
+                         {/if}
                     {/each}
                 {/each}
                 </ul>

@@ -87,7 +87,7 @@
 			let accountType;
 			if (account.closed) {
 				accountType = 'Closed Accounts';
-			} else if (!account.type) {
+			} else if (!account.on_budget) {
 				accountType = 'Tracking Accounts';
 			} else {
 				accountType = 'On Budget Accounts';
