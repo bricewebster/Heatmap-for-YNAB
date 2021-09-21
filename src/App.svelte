@@ -4,8 +4,8 @@
 	import { onMount } from 'svelte';
 	import CategorySectionStore from './stores/categorySectionStore';
 	import CategoryListStore from './stores/categoryListStore';
-	import AccountSectionStore from './stores/accountSectionStore';
 	import AccountListStore from './stores/accountListStore';
+	import payeeListStore from './stores/payeeListStore';
 	
 	let activeTab = 'Yearly';
 
@@ -36,6 +36,8 @@
 		initCategories(categoriesFetched);
 		const accountsFetched = await getAccounts(ynabAPI, mainBudgetID);
 		initAccounts(accountsFetched);
+		const payeesFetched = await getPayees(ynabAPI, mainBudgetID);
+		initPayees(payeesFetched);
 	}
 	async function getAccessToken() {
 		const response = await fetch('.vscode/accessToken.txt');
@@ -54,6 +56,10 @@
 	async function getAccounts(ynabAPI, mainBudgetID) {
   		const accountResponse = await ynabAPI.accounts.getAccounts(mainBudgetID);
   		return accountResponse.data.accounts;
+	}
+	async function getPayees(ynabAPI, mainBudgetID) {
+		const payeeResponse = await ynabAPI.payees.getPayees(mainBudgetID);
+		return payeeResponse.data.payees;
 	}
 	function initCategories(categoriesFetched) {
   		let categorySections =  [];
@@ -83,7 +89,6 @@
 		let accountLists = [];
 
   		for (let account of accountsFetched) {
-			let accountList;
 			let accountType;
 			if (account.closed) {
 				accountType = 'Closed Accounts';
@@ -92,14 +97,31 @@
 			} else {
 				accountType = 'On Budget Accounts';
 			}
-			accountList = {Name: account.name, Type: accountType};
+			let accountList = {Name: account.name, Type: accountType};
 			accountLists.push(accountList);
 		}
 
 		AccountListStore.update(currentList => {
 			return currentList.length === 0 ? [...accountLists] : [currentList, ...accountLists];
 		})
-  }
+ 	}
+	function initPayees(payeesFetched) {
+		let payeeLists = [];
+
+		for (let payee of payeesFetched) {
+			if (payee.deleted) {
+				continue;
+			}
+			let payeeList = {Name: payee.name};
+			payeeLists.push(payeeList);
+		}
+
+		payeeLists.sort((a,b) => (a.Name > b.Name) ? 1 : -1);
+
+		payeeListStore.update(currentList => {
+			return currentList.length === 0 ? [...payeeLists] : [currentList, ...payeeLists];
+		})
+	}
 
 </script>
 

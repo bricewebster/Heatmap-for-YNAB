@@ -4,6 +4,7 @@
 	import CategoryListStore from '../stores/categoryListStore';
     import AccountSectionStore from '../stores/accountSectionStore';
 	import AccountListStore from '../stores/accountListStore';
+    import PayeeListStore from '../stores/payeeListStore';
 
     export let togglePopup = () => {};
     export let filter;
@@ -39,6 +40,12 @@
                              <li class="section-item">{accountList.Name}</li>
                          {/if}
                     {/each}
+                {/each}
+                </ul>
+            {:else}
+                <ul>
+                {#each $PayeeListStore as payeeList}
+                    <li class="section-item">{payeeList.Name}</li>
                 {/each}
                 </ul>
             {/if}
@@ -124,11 +131,11 @@
         top: 95px;
         right: 275px;
     }
-    .Sources {
+    .Payees {
         top: 95px;
         right: 105px;
     }
-    .Accounts::after, .Categories::after, .Sources::after {
+    .Accounts::after, .Categories::after, .Payees::after {
         content: " ";
         position: absolute;
         bottom: 100%; /* At the bottom of the tooltip */
