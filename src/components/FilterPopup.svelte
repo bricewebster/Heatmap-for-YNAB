@@ -5,41 +5,62 @@
     import AccountSectionStore from '../stores/accountSectionStore';
 	import AccountListStore from '../stores/accountListStore';
     import PayeeListStore from '../stores/payeeListStore';
-    import { onDestroy } from 'svelte';
 
-    let categorySections = [];
-    let categoryLists = [];
-    
-    const unsubscribeCatSection = CategorySectionStore.subscribe(data => {
-        categorySections = data;
-    });
-
-    const unsubscribeCatList = CategoryListStore.subscribe(data => {
-        categoryLists = data;
-    });
-
-    let accountSections = [...$AccountSectionStore];
-    let accountLists = [...$AccountListStore];
-    let payeeLists = [...$PayeeListStore];
+    let categorySections = $CategorySectionStore.map(data => ({...data}));
+    let categoryLists = $CategoryListStore.map(data => ({...data}));
+    let accountSections = $AccountSectionStore.map(data => ({...data}));
+    let accountLists = $AccountListStore.map(data => ({...data}));
+    let payeeLists = $PayeeListStore.map(data => ({...data}));
 
     export let togglePopup = () => {};
     export let filter;
 
     const toggleCategoryGroup = (groupID) => {
+
+        let sectionSelected = categorySections.find(section => section.Id === groupID);
+        sectionSelected.Checked = !sectionSelected.Checked;
+
         for (let list of categoryLists) {
-           // console.log(list)
-           // console.log('gid: ' + groupID)
             if (list.Id === groupID) {
                 list.Checked = !list.Checked;
+                categoryLists = categoryLists;
             }
         }
-
     }
 
-    onDestroy(() => {
-        unsubscribeCatSection();
-        unsubscribeCatList();
-	});
+    const toggleAccountGroup = (groupName) => {
+
+        let sectionSelected = accountSections.find(section => section.Name === groupName);
+        sectionSelected.Checked = !sectionSelected.Checked;
+
+        for (let list of accountLists) {
+            if (list.Type === groupName) {
+                list.Checked = !list.Checked;
+                accountLists = accountLists;
+            }
+        }
+    }
+
+    const toggleListItem = (itemID) => {
+        let itemSelected;
+        if (filter === 'Categories') {
+            itemSelected = categoryLists.find(item => item.subId === itemID);
+        } else if (filter === 'Accounts') {
+            itemSelected = accountLists.find(item => item.Id === itemID);
+        } else {
+            itemSelected = payeeLists.find(item => item.Id === itemID);
+        }
+        itemSelected.Checked = !itemSelected.Checked;
+    }
+
+    const saveChanges = () => {
+        $CategorySectionStore = categorySections;
+        $CategoryListStore = categoryLists;
+        $AccountSectionStore = accountSections;
+        $AccountListStore = accountLists;
+        $PayeeListStore = payeeLists;
+        togglePopup();
+    }
     
 </script>
 
@@ -56,11 +77,11 @@
                 <ul>
                 {#each categorySections as catSection}
                     <li class="section">
-                        <input type=checkbox group={catSection.Name} value={catSection.Name} checked={catSection.Checked} on:click={() => toggleCategoryGroup(catSection.Id)}>{catSection.Name}
+                        <input type=checkbox value={catSection.Name} checked={catSection.Checked} on:click={() => toggleCategoryGroup(catSection.Id)}>{catSection.Name}
                     </li>
                     {#each categoryLists as catList}
                         {#if catList.Id === catSection.Id}
-                            <li class="section-item"><input type=checkbox group={catSection.Name} value={catList.subName} checked={catList.Checked}>{catList.subName}</li>
+                            <li class="section-item"><input type=checkbox value={catList.subName} checked={catList.Checked} on:click={() => toggleListItem(catList.subId)}>{catList.subName}</li>
                         {/if}
                     {/each}
                 {/each}
@@ -68,10 +89,10 @@
             {:else if filter === 'Accounts'}
                 <ul>
                 {#each accountSections as accountSection}
-                    <li class="section"><input type=checkbox group={accountSection.Name} value={accountSection.Name} bind:checked={accountSection.Checked}>{accountSection.Name}</li>
+                    <li class="section"><input type=checkbox value={accountSection.Name} checked={accountSection.Checked} on:click={() => toggleAccountGroup(accountSection.Name)}>{accountSection.Name}</li>
                     {#each accountLists as accountList}
                          {#if accountList.Type === accountSection.Name}
-                            <li class="section-item"><input type=checkbox group={accountSection.Name} value={accountList.Name} bind:checked={accountList.Checked}>{accountList.Name}</li>
+                            <li class="section-item"><input type=checkbox value={accountList.Name} checked={accountList.Checked} on:click={() => toggleListItem(accountList.Id)}>{accountList.Name}</li>
                          {/if}
                     {/each}
                 {/each}
@@ -79,14 +100,14 @@
             {:else}
                 <ul>
                 {#each payeeLists as payeeList}
-                    <li class="section-item"><input type=checkbox group="payeeSection" value={payeeList.Name} checked={payeeList.Checked}>{payeeList.Name}</li>
+                    <li class="section-item"><input type=checkbox value={payeeList.Name} checked={payeeList.Checked} on:click={() => toggleListItem(payeeList.Id)}>{payeeList.Name}</li>
                 {/each}
                 </ul>
             {/if}
     </div>
     <div class="buttons">
         <Button type="secondary" on:click={togglePopup}>Cancel</Button>
-        <Button>Done</Button>
+        <Button on:click={() => saveChanges()}>Done</Button>
     </div>
 </div>
 

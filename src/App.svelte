@@ -97,7 +97,7 @@
 			} else {
 				accountType = 'On Budget Accounts';
 			}
-			let accountList = {Name: account.name, Type: accountType, Checked: true};
+			let accountList = {Id: account.id, Name: account.name, Type: accountType, Checked: true};
 			accountLists.push(accountList);
 		}
 
@@ -112,7 +112,7 @@
 			if (payee.deleted) {
 				continue;
 			}
-			let payeeList = {Name: payee.name, Checked: true};
+			let payeeList = {Id: payee.id, Name: payee.name, Checked: true};
 			payeeLists.push(payeeList);
 		}
 
