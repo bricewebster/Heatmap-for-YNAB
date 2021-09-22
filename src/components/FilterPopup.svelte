@@ -53,6 +53,60 @@
         itemSelected.Checked = !itemSelected.Checked;
     }
 
+    const selectAll = () => {
+        if (filter === 'Categories') {
+            for(let section of categorySections) {
+                section.Checked = true;
+            }
+            for(let list of categoryLists) {
+                list.Checked = true;
+            }
+            categorySections = categorySections;
+            categoryLists = categoryLists;
+        } else if (filter === 'Accounts') {
+            for(let section of accountSections) {
+                section.Checked = true;
+            }
+            for(let list of accountLists) {
+                list.Checked = true;
+            }
+            accountSections = accountSections;
+            accountLists = accountLists;
+        } else {
+            for(let list of payeeLists) {
+                list.Checked = true;
+            }
+            payeeLists = payeeLists;
+        }
+    }
+
+    const selectNone = () => {
+        if (filter === 'Categories') {
+            for(let section of categorySections) {
+                section.Checked = false;
+            }
+            for(let list of categoryLists) {
+                list.Checked = false;
+            }
+            categorySections = categorySections;
+            categoryLists = categoryLists;
+        } else if (filter === 'Accounts') {
+            for(let section of accountSections) {
+                section.Checked = false;
+            }
+            for(let list of accountLists) {
+                list.Checked = false;
+            }
+            accountSections = accountSections;
+            accountLists = accountLists;
+        } else {
+            for(let list of payeeLists) {
+                list.Checked = false;
+            }
+            payeeLists = payeeLists;
+        }
+    }
+
     const saveChanges = () => {
         $CategorySectionStore = categorySections;
         $CategoryListStore = categoryLists;
@@ -68,8 +122,8 @@
     <p class="title">{filter}</p>
     <div class="selection">
         <ul>
-            <li>Select All</li>
-            <li>Select None</li>
+            <li on:click={() => selectAll()}>Select All</li>
+            <li on:click={() => selectNone()}>Select None</li>
         </ul>
     </div>
     <div class="list">
