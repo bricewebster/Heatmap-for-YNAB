@@ -15,6 +15,8 @@
         border-radius: .4em;
 
         line-height: 1em;
+
+        cursor: pointer;
     }
     .primary {
         border: 2px solid transparent;

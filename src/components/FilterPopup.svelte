@@ -220,7 +220,6 @@
         font-weight: 700;
         color: #383e41;
     }
-
     .selection {
         margin: 5px 15px 0 15px;
         height: 35px;
@@ -230,14 +229,20 @@
 
         & li {
             display: inline-block;
-            margin: 5px 5px 0 10px;
+
+            margin: 3px 0px 0 4px;
+            padding: .2em .6em;
+            
             background: none;
+            border-radius: 1000px;
 
             font-size: 13.5px;
             color: var(--ynab-light-blue);
 
             &:hover {
-                color: var(--ynab-dark-green);
+                background-color: var(--ynab-light-green);
+
+                color: white;
 
                 cursor: pointer;
             }
