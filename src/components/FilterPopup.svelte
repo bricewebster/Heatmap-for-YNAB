@@ -12,11 +12,12 @@
     let accountLists = $AccountListStore.map(data => ({...data}));
     let payeeLists = $PayeeListStore.map(data => ({...data}));
 
+    let filterAmountSelected = 'All';
+
     export let togglePopup = () => {};
     export let filter;
 
     const toggleCategoryGroup = (groupID) => {
-
         let sectionSelected = categorySections.find(section => section.Id === groupID);
         sectionSelected.Checked = !sectionSelected.Checked;
 
@@ -29,7 +30,6 @@
     }
 
     const toggleAccountGroup = (groupName) => {
-
         let sectionSelected = accountSections.find(section => section.Name === groupName);
         sectionSelected.Checked = !sectionSelected.Checked;
 
@@ -43,9 +43,9 @@
 
     const toggleListItem = (itemID) => {
         let itemSelected;
-        if (filter === 'Categories') {
+        if (filter.Type === 'Categories') {
             itemSelected = categoryLists.find(item => item.subId === itemID);
-        } else if (filter === 'Accounts') {
+        } else if (filter.Type === 'Accounts') {
             itemSelected = accountLists.find(item => item.Id === itemID);
         } else {
             itemSelected = payeeLists.find(item => item.Id === itemID);
@@ -53,55 +53,31 @@
         itemSelected.Checked = !itemSelected.Checked;
     }
 
-    const selectAll = () => {
-        if (filter === 'Categories') {
-            for(let section of categorySections) {
-                section.Checked = true;
-            }
-            for(let list of categoryLists) {
-                list.Checked = true;
-            }
-            categorySections = categorySections;
-            categoryLists = categoryLists;
-        } else if (filter === 'Accounts') {
-            for(let section of accountSections) {
-                section.Checked = true;
-            }
-            for(let list of accountLists) {
-                list.Checked = true;
-            }
-            accountSections = accountSections;
-            accountLists = accountLists;
-        } else {
-            for(let list of payeeLists) {
-                list.Checked = true;
-            }
-            payeeLists = payeeLists;
-        }
-    }
+    const selectToggle = (option) => {
 
-    const selectNone = () => {
-        if (filter === 'Categories') {
-            for(let section of categorySections) {
-                section.Checked = false;
+        let optionSelected = option === 'all' ? true : false;
+
+        if (filter.Type === 'Categories') {
+            for (let section of categorySections) {
+                section.Checked = optionSelected;
             }
-            for(let list of categoryLists) {
-                list.Checked = false;
+            for (let list of categoryLists) {
+                list.Checked = optionSelected;
             }
             categorySections = categorySections;
             categoryLists = categoryLists;
-        } else if (filter === 'Accounts') {
-            for(let section of accountSections) {
-                section.Checked = false;
+        } else if (filter.Type === 'Accounts') {
+            for (let section of accountSections) {
+                section.Checked = optionSelected;
             }
-            for(let list of accountLists) {
-                list.Checked = false;
+            for (let list of accountLists) {
+                list.Checked = optionSelected;
             }
             accountSections = accountSections;
             accountLists = accountLists;
         } else {
-            for(let list of payeeLists) {
-                list.Checked = false;
+            for (let list of payeeLists) {
+                list.Checked = optionSelected;
             }
             payeeLists = payeeLists;
         }
@@ -113,21 +89,78 @@
         $AccountSectionStore = accountSections;
         $AccountListStore = accountLists;
         $PayeeListStore = payeeLists;
+        checkSelected();
+        filter.Amount = filterAmountSelected;
         togglePopup();
+    }
+
+    const checkSelected = () => {
+        let sectionCount = 0;
+        let listCount = 0;
+        if (filter.Type === 'Categories') {
+            for (let section of categorySections) {
+                if (section.Checked) {
+                    sectionCount++;
+                }
+            }
+            for (let list of categoryLists) {
+                if (list.Checked) {
+                    listCount++;
+                }
+            }
+            if (sectionCount === 0 & listCount === 0)  {
+                filterAmountSelected = 'No';
+            } else if (categorySections.length != sectionCount || categoryLists.length != listCount) {
+                filterAmountSelected = 'Some'
+            } else {
+                filterAmountSelected = 'All'
+            }
+        } else if (filter.Type === 'Accounts') {
+            for (let section of accountSections) {
+                if (section.Checked) {
+                    sectionCount++;
+                }
+            }
+            for (let list of accountLists) {
+                if (list.Checked) {
+                    listCount++;
+                }
+            }
+            if (sectionCount === 0 & listCount === 0)  {
+                filterAmountSelected = 'No';
+            } else if (accountSections.length != sectionCount || accountLists.length != listCount) {
+                filterAmountSelected = 'Some'
+            } else {
+                filterAmountSelected = 'All'
+            }
+        } else {
+            for (let list of payeeLists) {
+                if (list.Checked) {
+                    listCount++;
+                }
+            }
+            if (listCount === 0)  {
+                filterAmountSelected = 'No';
+            } else if (payeeLists.length != listCount) {
+                filterAmountSelected = 'Some'
+            } else {
+                filterAmountSelected = 'All'
+            }
+        }
     }
     
 </script>
 
-<div class="popup {filter}">
-    <p class="title">{filter}</p>
+<div class="popup {filter.Type}">
+    <p class="title">{filter.Type}</p>
     <div class="selection">
         <ul>
-            <li on:click={() => selectAll()}>Select All</li>
-            <li on:click={() => selectNone()}>Select None</li>
+            <li on:click={() => selectToggle('all')}>Select All</li>
+            <li on:click={() => selectToggle('none')}>Select None</li>
         </ul>
     </div>
     <div class="list">
-            {#if filter === 'Categories'}
+            {#if filter.Type === 'Categories'}
                 <ul>
                 {#each categorySections as catSection}
                     <li class="section">
@@ -140,7 +173,7 @@
                     {/each}
                 {/each}
                 </ul>
-            {:else if filter === 'Accounts'}
+            {:else if filter.Type === 'Accounts'}
                 <ul>
                 {#each accountSections as accountSection}
                     <li class="section"><input type=checkbox value={accountSection.Name} checked={accountSection.Checked} on:click={() => toggleAccountGroup(accountSection.Name)}>{accountSection.Name}</li>

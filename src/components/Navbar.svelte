@@ -3,7 +3,7 @@
     import Filters from "./Filters.svelte";
 
     let tabs = ['Yearly', 'Monthly', 'Daily'];
-    let filters = ['Categories', 'Accounts', 'Payees'];
+    let filters = [{Amount: 'All', Type: 'Categories'}, {Amount: 'All', Type: 'Accounts'}, {Amount: 'All', Type: 'Payees'}];
 
     export let activeTab;
     

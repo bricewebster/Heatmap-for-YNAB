@@ -14,10 +14,10 @@
 <div class="filters">
     <ul>
         {#each filters as filter}
-            <li on:click={() => togglePopup(filter)}>All {filter}<span class="material-icons-round md-36">arrow_drop_down</span></li>
-            {#if showFilter & filter === selectedFilter}
+            <li on:click={() => togglePopup(filter.Type)}>{filter.Amount} {filter.Type}<span class="material-icons-round md-36">arrow_drop_down</span></li>
+            {#if showFilter & filter.Type === selectedFilter}
                 <div class="backdrop" on:click|self={() => togglePopup()}>
-                    <FilterPopup {filter} {togglePopup} />
+                    <FilterPopup bind:filter {togglePopup}/>
                 </div>
             {/if}
         {/each}
