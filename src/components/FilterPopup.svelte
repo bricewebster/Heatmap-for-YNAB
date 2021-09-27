@@ -208,6 +208,7 @@
         width:  250px;
         height: 350px;
 
+        background-color: white;
         border-radius: 5px;
         box-shadow: 0 16px 64px rgba(0, 0, 0, 0.2);
 
