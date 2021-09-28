@@ -2,7 +2,7 @@
     let dayLists = [];
     let dayCount = 31;
     let monthList = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    var selectedYear = new Date().getFullYear();
+    export let selectedYear;
 
     buildCalendarList();
 
@@ -64,13 +64,15 @@
 <style lang="scss">
     .cal-options {
         display: inline-block;
-        margin: 15px auto 0 auto;
-        width: 300px;
+        margin: 15px 0 0 25px;
+        width: 213px;
 
         & button {
             margin-right: 20px;
             background: none;
             border: none;
+
+            cursor: pointer;
         }
     }
     .income {
@@ -85,7 +87,7 @@
     .year-selector {
         display: inline-block;
 
-        margin: 0 auto 15px auto;
+        margin: 0 auto 15px 105px;
         width: 215px;
     }
     .year-selector p{

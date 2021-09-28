@@ -4,11 +4,12 @@
     import DailyContent from "./DailyContent.svelte";
 
     export let activeTab
+    export let selectedYear;
 </script>
 
 <div class="content">
     {#if activeTab === 'Yearly'}
-        <YearlyContent />
+        <YearlyContent bind:selectedYear/>
     {:else if activeTab === 'Monthly'}
         <MonthlyContent />
     {:else}

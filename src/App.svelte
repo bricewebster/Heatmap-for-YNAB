@@ -5,12 +5,17 @@
 	import CategorySectionStore from './stores/categorySectionStore';
 	import CategoryListStore from './stores/categoryListStore';
 	import AccountListStore from './stores/accountListStore';
-	import payeeListStore from './stores/payeeListStore';
+	import PayeeListStore from './stores/payeeListStore';
+	import AllTransactionsStore from './stores/allTransactionsStore';
+	import CurrentTransactionsStore from './stores/currentTransactionsStore';
 	
 	let activeTab = 'Yearly';
 
 	let ynabAPIReady = false;
     let mounted = false;
+
+	var selectedYear = new Date().getFullYear();
+	var currencyDecimals;
 
 	onMount(() => {
         mounted = true;
@@ -27,6 +32,7 @@
     }
 	
 	async function main() {
+		console.log('running')
 		const accessToken = await getAccessToken();
 		const mainBudgetID = await getBudgetID();
 
@@ -38,6 +44,11 @@
 		initAccounts(accountsFetched);
 		const payeesFetched = await getPayees(ynabAPI, mainBudgetID);
 		initPayees(payeesFetched);
+		currencyDecimals = getCurrencyDecimals(ynabAPI, mainBudgetID);
+		const transactionsFetch = await getTransactions(ynabAPI, mainBudgetID);
+		$AllTransactionsStore = transactionsFetch;
+		storeTransactionsMain();
+		console.log($CurrentTransactionsStore)
 	}
 	async function getAccessToken() {
 		const response = await fetch('.vscode/accessToken.txt');
@@ -60,6 +71,14 @@
 	async function getPayees(ynabAPI, mainBudgetID) {
 		const payeeResponse = await ynabAPI.payees.getPayees(mainBudgetID);
 		return payeeResponse.data.payees;
+	}
+	async function getTransactions(ynabAPI, mainBudgetID) {
+		const transactionResponse = await ynabAPI.transactions.getTransactions(mainBudgetID);
+		return transactionResponse.data.transactions;
+	}
+	async function getCurrencyDecimals(ynabAPI, mainBudgetID) {
+  		const budgetResponse = await ynabAPI.budgets.getBudgetSettingsById(mainBudgetID);
+  		return budgetResponse.data.settings.currency_format.decimal_digits;
 	}
 	function initCategories(categoriesFetched) {
   		let categorySections =  [];
@@ -118,9 +137,66 @@
 
 		payeeLists.sort((a,b) => (a.Name > b.Name) ? 1 : -1);
 
-		payeeListStore.update(currentList => {
+		PayeeListStore.update(currentList => {
 			return currentList.length === 0 ? [...payeeLists] : [currentList, ...payeeLists];
 		})
+	}
+	function storeTransactionsMain() {
+		let currentTransList = []
+		for(let transaction of $AllTransactionsStore) {
+			//If there are subtransctions(which are just split transactions) then it loops through those
+			if(transaction.subtransactions.length > 0) {
+				for(let subtransaction of transaction.subtransactions) {
+					let transactionInfo = storeTransactions(subtransaction);
+					if(transactionInfo === undefined) {
+						continue;
+					}
+					currentTransList.push(transactionInfo);
+				}
+			} else { 
+				let transactionInfo = storeTransactions(transaction);
+				if(transactionInfo === undefined) {
+					continue;
+				}
+				currentTransList.push(transactionInfo);
+			}
+		}
+		$CurrentTransactionsStore = currentTransList;
+	}
+	function storeTransactions(transaction) {
+		
+  		const transactionDate = newNormalizedDate(transaction.date);
+  		//If transaction isn't on selected year, is a transfer transaction, not a selected account, or not a selected category then it skips storing it
+  		if (transactionSkipCheck(transaction, transactionDate)) {
+    		return;
+  		} else {
+			const amount = ynab.utils.convertMilliUnitsToCurrencyAmount(transaction.amount, currencyDecimals); //Converts to users currency in decimals
+			let currentTrans = {Date: transactionDate, categoryId: transaction.category_id, accountId: transaction.account_id, payeeId: transaction.payee_id, Amount: amount, Memo: transaction.memo};
+			return currentTrans;
+		}
+	}
+
+	function transactionSkipCheck(transaction, transactionDate) {
+		let withinYearCheck = transactionDate.getFullYear() !== selectedYear;
+		let transferAccountCheck = transaction.transfer_account_id !== null;
+		let categorySelectedFind = $CategoryListStore.find(item => item.subId === transaction.category_id);
+		let categorySelectedCheck = categorySelectedFind === undefined ? true : !categorySelectedFind.Checked;
+		let accountSelectedFind = $AccountListStore.find(item => item.Id=== transaction.account_id);
+		let accountSelectedCheck = accountSelectedFind === undefined ? true : !accountSelectedFind.Checked;
+		let payeeSelectedFind = $PayeeListStore.find(item => item.Id === transaction.payee_id);
+		let payeeSelectedCheck = payeeSelectedFind === undefined ? true : !payeeSelectedFind.Checked;
+		// console.log('with: ' + withinYearCheck + ' transaccount: ' + transferAccountCheck + ' accountSelected: ' + accountSelectedCheck + 'category: ' + categorySelectedCheck + 'payee: ' + payeeSelectedCheck)
+
+		if (withinYearCheck || transferAccountCheck || categorySelectedCheck || accountSelectedCheck || payeeSelectedCheck) {
+			// console.log('with: ' + withinYearCheck + ' transaccount: ' + transferAccountCheck + ' accountSelected: ' + accountSelectedCheck + 'category: ' + categorySelectedCheck + 'payee: ' + payeeSelectedCheck)
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	function newNormalizedDate(date){
+  		return new Date(new Date(date).getTime() - new Date(date).getTimezoneOffset() * - 60000); //https://stackoverflow.com/a/14569783
 	}
 
 </script>
@@ -131,7 +207,7 @@
 
 <main>
 	<Navbar bind:activeTab = {activeTab} />
-	<Content {activeTab} />
+	<Content {activeTab} bind:selectedYear />
 </main>
 
 <style lang="scss">
