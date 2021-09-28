@@ -1,6 +1,7 @@
 <script>
 	import Navbar from "./components/Navbar.svelte";
 	import Content from "./components/Content.svelte";
+	import Loading from "./components/Loading.svelte";
 	import { onMount } from 'svelte';
 	import CategorySectionStore from './stores/categorySectionStore';
 	import CategoryListStore from './stores/categoryListStore';
@@ -9,6 +10,7 @@
 	import AllTransactionsStore from './stores/allTransactionsStore';
 	import CurrentTransactionsStore from './stores/currentTransactionsStore';
 	
+	let transactionsLoaded = false;
 	let activeTab = 'Yearly';
 
 	let ynabAPIReady = false;
@@ -162,6 +164,7 @@
 			}
 		}
 		$CurrentTransactionsStore = currentTransList;
+		transactionsLoaded = true;
 	}
 	function storeTransactions(transaction) {
 		
@@ -206,8 +209,13 @@
 </svelte:head>
 
 <main>
-	<Navbar bind:activeTab = {activeTab} />
-	<Content {activeTab} bind:selectedYear />
+	{#if transactionsLoaded}
+		<Navbar bind:activeTab = {activeTab} />
+		<Content {activeTab} bind:selectedYear />
+	{:else}
+		<Loading />	
+	{/if}
+
 </main>
 
 <style lang="scss">
