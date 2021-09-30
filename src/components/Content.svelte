@@ -5,11 +5,12 @@
 
     export let activeTab
     export let selectedYear;
+    export let selectedOption;
 </script>
 
 <div class="content">
     {#if activeTab === 'Yearly'}
-        <YearlyContent bind:selectedYear/>
+        <YearlyContent {selectedOption} bind:selectedYear/>
     {:else if activeTab === 'Monthly'}
         <MonthlyContent />
     {:else}

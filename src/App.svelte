@@ -19,6 +19,8 @@
 	var selectedYear = new Date().getFullYear();
 	var currencyDecimals;
 
+	let selectedOption = 'income';
+
 	onMount(() => {
         mounted = true;
         if (ynabAPIReady) {

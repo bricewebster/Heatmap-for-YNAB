@@ -1,19 +1,29 @@
 <script>
-    let dayLists = [];
+    import currentTransactionStore from '../stores/currentTransactionsStore';
+
+    let dayList = [];
     let dayCount = 31;
-    let monthList = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    let monthList = [{Number: 1, Word: 'Jan'}, {Number: 2 , Word: 'Feb'}, {Number: 3, Word: 'Mar'}, {Number: 4, Word: 'Apr'}, {Number: 5, Word: 'May'},
+                     {Number: 6, Word: 'Jun'}, {Number: 7, Word: 'Jul'}, {Number: 8, Word: 'Aug'}, {Number: 9, Word: 'Sep'}, {Number: 10, Word: 'Oct'},
+                     {Number: 11, Word: 'Nov'}, {Number: 12, Word: 'Dec'}];
+    let monthIndex = 0;
     export let selectedYear;
+    export let selectedOption;
 
     buildCalendarList();
 
     function buildCalendarList () {
-        let dayList = [];
+        let list = [];
         for (let calendarList = 1; calendarList <= 12; calendarList++) {
             let dayAmount = daysInMonth(calendarList, selectedYear);
-            let days = {Month: calendarList, Day: dayAmount};
-            dayList.push(days);
+            let sublist = [];
+            for (let day = 1; day <= dayAmount; day++) {
+                let days = {Month: calendarList, Day: dayAmount, Option: selectedOption};
+                sublist.push(days);
+            }
+            list.push(sublist);
         }
-        dayLists = dayList;
+        dayList = list;
     }
     function daysInMonth (month, year) {
         return new Date(year, month, 0).getDate();
@@ -21,6 +31,9 @@
     function toggleSelectedYear (buttonSelected) {
         selectedYear = buttonSelected === 'previous' ? selectedYear=selectedYear-1 : selectedYear=selectedYear+1;
         buildCalendarList();
+    }
+    function populateCalendar () {
+
     }
 </script>
 <div class="content">
@@ -46,16 +59,15 @@
         <div class="cal-year-subcontainer">
             <table class="cal-year month-list">
                 {#each monthList as month}   
-                    <tr><th><p>{month}</p></th></tr>
+                    <tr><th><p>{month.Word}</p></th></tr>
                 {/each}
             </table>
             <table class="cal-year cal-year-days">
-                {#each dayLists as month}
+                {#each dayList as month}
                     <tr>
-                    {#each Array(month.Day) as _, day}
-                        <th></th>
+                    {#each month as day}
+                        <th id="{day.Month}/{day.Day}"></th>
                     {/each}
-                    </tr>
                 {/each}
             </table>
         </div>
