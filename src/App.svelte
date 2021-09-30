@@ -36,7 +36,6 @@
     }
 	
 	async function main() {
-		console.log('running')
 		const accessToken = await getAccessToken();
 		const mainBudgetID = await getBudgetID();
 
@@ -48,11 +47,10 @@
 		initAccounts(accountsFetched);
 		const payeesFetched = await getPayees(ynabAPI, mainBudgetID);
 		initPayees(payeesFetched);
-		currencyDecimals = getCurrencyDecimals(ynabAPI, mainBudgetID);
+		currencyDecimals = await getCurrencyDecimals(ynabAPI, mainBudgetID);
 		const transactionsFetch = await getTransactions(ynabAPI, mainBudgetID);
 		$AllTransactionsStore = transactionsFetch;
 		storeTransactionsMain();
-		console.log($CurrentTransactionsStore)
 	}
 	async function getAccessToken() {
 		const response = await fetch('.vscode/accessToken.txt');
@@ -213,7 +211,7 @@
 <main>
 	{#if transactionsLoaded}
 		<Navbar bind:activeTab = {activeTab} />
-		<Content {activeTab} bind:selectedYear />
+		<Content {activeTab} {selectedOption} bind:selectedYear/>
 	{:else}
 		<Loading />	
 	{/if}

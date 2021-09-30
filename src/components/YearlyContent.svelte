@@ -1,12 +1,11 @@
 <script>
-    import currentTransactionStore from '../stores/currentTransactionsStore';
+    import currentTransactionsStore from '../stores/currentTransactionsStore';
 
     let dayList = [];
     let dayCount = 31;
     let monthList = [{Number: 1, Word: 'Jan'}, {Number: 2 , Word: 'Feb'}, {Number: 3, Word: 'Mar'}, {Number: 4, Word: 'Apr'}, {Number: 5, Word: 'May'},
                      {Number: 6, Word: 'Jun'}, {Number: 7, Word: 'Jul'}, {Number: 8, Word: 'Aug'}, {Number: 9, Word: 'Sep'}, {Number: 10, Word: 'Oct'},
                      {Number: 11, Word: 'Nov'}, {Number: 12, Word: 'Dec'}];
-    let monthIndex = 0;
     export let selectedYear;
     export let selectedOption;
 
@@ -18,7 +17,10 @@
             let dayAmount = daysInMonth(calendarList, selectedYear);
             let sublist = [];
             for (let day = 1; day <= dayAmount; day++) {
-                let days = {Month: calendarList, Day: dayAmount, Option: selectedOption};
+                let date = convertToDate(calendarList - 1, selectedYear, day);
+                let amount = getTransactionsForDay(date);
+                let dayClass = getDayClass(amount);
+                let days = {Amount: amount, Class: dayClass};
                 sublist.push(days);
             }
             list.push(sublist);
@@ -28,20 +30,49 @@
     function daysInMonth (month, year) {
         return new Date(year, month, 0).getDate();
     }
+    function convertToDate (month, year, day) {
+        return new Date(year, month, day);
+    }
     function toggleSelectedYear (buttonSelected) {
         selectedYear = buttonSelected === 'previous' ? selectedYear=selectedYear-1 : selectedYear=selectedYear+1;
         buildCalendarList();
     }
-    function populateCalendar () {
-
+    function toggleSelectedOption (option) {
+        selectedOption = option;
+        buildCalendarList();
+    }
+    function getTransactionsForDay (calendarDate) {
+        let amount = 0;
+        for (let transaction of $currentTransactionsStore) {
+            if (transaction.Date.getTime() === calendarDate.getTime()) {
+                
+                if (selectedOption === 'income' & transaction.Amount > 0 || selectedOption === 'expense' & transaction.Amount < 0 || selectedOption === 'net') {
+                    amount = amount + transaction.Amount;
+                }
+            }
+        }
+        return amount;
+    }
+    function getDayClass (amount) {
+        let dayClass;
+        if (selectedOption === 'income' & amount != 0) {
+            dayClass = 'income'
+        } else if (selectedOption === 'expense' & amount != 0) {
+            dayClass = 'expense'
+        } else if (selectedOption === 'net' & amount != 0) {
+            dayClass = amount > 0 ? 'net-pos' : 'net-neg';
+        } else {
+            dayClass = "none";
+        }
+        return dayClass;
     }
 </script>
 <div class="content">
     <div class="cal-year-container">
         <div class="cal-options">
-            <button on:click={() => toggleSelectedYear('previous')}><span class="material-icons-outlined md-36 income">savings</span></button>
-            <button on:click={() => toggleSelectedYear('previous')}><span class="material-icons-outlined md-36 expense">paid</span></button>
-            <button on:click={() => toggleSelectedYear('previous')}><span class="material-icons-outlined md-36 net">request_quote</span></button>
+            <button on:click={() => toggleSelectedOption('income')}><span class="material-icons-outlined md-36 income-icon">savings</span></button>
+            <button on:click={() => toggleSelectedOption('expense')}><span class="material-icons-outlined md-36 expense-icon">paid</span></button>
+            <button on:click={() => toggleSelectedOption('net')}><span class="material-icons-outlined md-36 net-icon">request_quote</span></button>
         </div>
         <div class="year-selector">
             <button on:click={() => toggleSelectedYear('previous')}><span class="material-icons-outlined md-36">chevron_left</span></button>
@@ -66,7 +97,7 @@
                 {#each dayList as month}
                     <tr>
                     {#each month as day}
-                        <th id="{day.Month}/{day.Day}"></th>
+                        <th class="{day.Class}"></th>
                     {/each}
                 {/each}
             </table>
@@ -87,13 +118,13 @@
             cursor: pointer;
         }
     }
-    .income {
+    .income-icon {
         color: #00a567;
     }
-    .expense {
+    .expense-icon {
         color: #de5d83;
     }
-    .net {
+    .net-icon {
         color: #ffb347;
     }
     .year-selector {
@@ -140,7 +171,19 @@
         width: 25px;
         height: 18px; 
     }
-    .cal-year.cal-year-days th {
+    .income {
+        background-color: #00a567;
+    }
+    .expense {
+        background-color: #de5d83;
+    }
+    .net-pos {
+        background-color: #fdfd96;
+    }
+    .net-neg {
+        background-color: #ffb347;
+    }
+    .none {
         background-color:  rgba(187, 167, 167, 0.842);
     }
 </style>
