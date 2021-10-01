@@ -17,7 +17,7 @@
             <li on:click={() => togglePopup(filter.Type)}>{filter.Amount} {filter.Type}<span class="material-icons-round md-36">arrow_drop_down</span></li>
             {#if showFilter & filter.Type === selectedFilter}
                 <div class="backdrop" on:click|self={() => togglePopup()}>
-                    <FilterPopup bind:filter {togglePopup}/>
+                    <FilterPopup {togglePopup} bind:filter on:filterChange/>
                 </div>
             {/if}
         {/each}

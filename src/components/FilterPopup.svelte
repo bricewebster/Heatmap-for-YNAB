@@ -5,6 +5,9 @@
     import AccountSectionStore from '../stores/accountSectionStore';
 	import AccountListStore from '../stores/accountListStore';
     import PayeeListStore from '../stores/payeeListStore';
+    import { createEventDispatcher } from 'svelte';
+
+    const dispatch = createEventDispatcher();
 
     let categorySections = $CategorySectionStore.map(data => ({...data}));
     let categoryLists = $CategoryListStore.map(data => ({...data}));
@@ -91,6 +94,7 @@
         $PayeeListStore = payeeLists;
         checkSelected();
         filter.Amount = filterAmountSelected;
+        dispatch('filterChange', );
         togglePopup();
     }
 

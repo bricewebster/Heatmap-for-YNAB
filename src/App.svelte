@@ -144,6 +144,7 @@
 		})
 	}
 	function storeTransactionsMain() {
+		console.log('storin')
 		let currentTransList = []
 		for(let transaction of $AllTransactionsStore) {
 			//If there are subtransctions(which are just split transactions) then it loops through those
@@ -164,6 +165,7 @@
 			}
 		}
 		$CurrentTransactionsStore = currentTransList;
+		console.log($CurrentTransactionsStore)
 		transactionsLoaded = true;
 	}
 	function storeTransactions(transaction) {
@@ -210,7 +212,7 @@
 
 <main>
 	{#if transactionsLoaded}
-		<Navbar bind:activeTab = {activeTab} />
+		<Navbar bind:activeTab = {activeTab} on:filterChange={storeTransactionsMain}/>
 		<Content {activeTab} {selectedOption} bind:selectedYear on:yearChange={storeTransactionsMain}/>
 	{:else}
 		<Loading />	

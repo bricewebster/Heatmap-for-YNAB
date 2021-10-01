@@ -16,7 +16,7 @@
 <div class="navbar">
   <h1>Heatmap for YNAB</h1>
   <Tabs {activeTab} {tabs} on:tabChange={tabChange}/>
-  <Filters {filters}/>
+  <Filters {filters} on:filterChange/>
 </div>
 
 <style lang="scss">
