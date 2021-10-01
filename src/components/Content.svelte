@@ -10,7 +10,7 @@
 
 <div class="content">
     {#if activeTab === 'Yearly'}
-        <YearlyContent {selectedOption} bind:selectedYear/>
+        <YearlyContent {selectedOption} bind:selectedYear on:yearChange/>
     {:else if activeTab === 'Monthly'}
         <MonthlyContent />
     {:else}

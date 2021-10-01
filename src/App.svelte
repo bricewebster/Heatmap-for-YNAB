@@ -211,7 +211,7 @@
 <main>
 	{#if transactionsLoaded}
 		<Navbar bind:activeTab = {activeTab} />
-		<Content {activeTab} {selectedOption} bind:selectedYear/>
+		<Content {activeTab} {selectedOption} bind:selectedYear on:yearChange={storeTransactionsMain}/>
 	{:else}
 		<Loading />	
 	{/if}

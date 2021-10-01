@@ -1,9 +1,12 @@
 <script>
     import currentTransactionsStore from '../stores/currentTransactionsStore';
+    import { createEventDispatcher } from 'svelte';
+
+    const dispatch = createEventDispatcher();
 
     let dayList = [];
     let dayCount = 31;
-    let monthList = [{Number: 1, Word: 'Jan'}, {Number: 2 , Word: 'Feb'}, {Number: 3, Word: 'Mar'}, {Number: 4, Word: 'Apr'}, {Number: 5, Word: 'May'},
+    let monthList = [{Number: 1, Word: 'Jan'}, {Number: 2, Word: 'Feb'}, {Number: 3, Word: 'Mar'}, {Number: 4, Word: 'Apr'}, {Number: 5, Word: 'May'},
                      {Number: 6, Word: 'Jun'}, {Number: 7, Word: 'Jul'}, {Number: 8, Word: 'Aug'}, {Number: 9, Word: 'Sep'}, {Number: 10, Word: 'Oct'},
                      {Number: 11, Word: 'Nov'}, {Number: 12, Word: 'Dec'}];
     export let selectedYear;
@@ -35,6 +38,7 @@
     }
     function toggleSelectedYear (buttonSelected) {
         selectedYear = buttonSelected === 'previous' ? selectedYear=selectedYear-1 : selectedYear=selectedYear+1;
+        dispatch('yearChange', );
         buildCalendarList();
     }
     function toggleSelectedOption (option) {
