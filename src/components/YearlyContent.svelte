@@ -1,5 +1,6 @@
 <script>
-    import currentTransactionsStore from '../stores/currentTransactionsStore';
+    import CurrentTransactionsStore from '../stores/currentTransactionsStore';
+    import CurrencyDecimalsStore from '../stores/currencyDecimalsStore';
     import { createEventDispatcher } from 'svelte';
 
     const dispatch = createEventDispatcher();
@@ -12,7 +13,7 @@
     export let selectedYear;
     export let selectedOption;
 
-    $: $currentTransactionsStore, buildCalendarList();
+    $: $CurrentTransactionsStore, buildCalendarList();
 
     function buildCalendarList () {
         let list = [];
@@ -46,11 +47,11 @@
     }
     function getTransactionsForDay (calendarDate) {
         let amount = 0;
-        for (let transaction of $currentTransactionsStore) {
+        for (let transaction of $CurrentTransactionsStore) {
             if (transaction.Date.getTime() === calendarDate.getTime()) {
                 
                 if (selectedOption === 'income' & transaction.Amount > 0 || selectedOption === 'expense' & transaction.Amount < 0 || selectedOption === 'net') {
-                    amount = amount + transaction.Amount;
+                    amount = (parseFloat(amount) + parseFloat(transaction.Amount)).toFixed($CurrencyDecimalsStore);
                 }
             }
         }
@@ -59,9 +60,9 @@
     function getDayClass (amount) {
         let dayClass;
         if (selectedOption === 'income' & amount != 0) {
-            dayClass = 'income'
+            dayClass = 'income';
         } else if (selectedOption === 'expense' & amount != 0) {
-            dayClass = 'expense'
+            dayClass = 'expense';
         } else if (selectedOption === 'net' & amount != 0) {
             dayClass = amount > 0 ? 'net-pos' : 'net-neg';
         } else {
@@ -100,7 +101,11 @@
                 {#each dayList as month}
                     <tr>
                     {#each month as day}
-                        <th class="{day.Class}"></th>
+                        {#if day.Amount != 0}
+                            <th class="{day.Class}"><div class="tooltip"><span class="tooltiptext">{day.Amount}</span></div></th>
+                        {:else}
+                            <th class="{day.Class}"></th>
+                        {/if}
                     {/each}
                 {/each}
             </table>
@@ -189,4 +194,45 @@
     .none {
         background-color:  rgba(187, 167, 167, 0.842);
     }
+    .tooltip {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+  }
+  /* Tooltip text */
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: 100px;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -50px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    font-size: 10px;
+    padding: 5px 0;
+    border-radius: 6px;
+   
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    z-index: 1;
+  }
+  
+  /* Show the tooltip text when you mouse over the tooltip container */
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+  }
+
+  .tooltip .tooltiptext::after {
+    content: " ";
+    position: absolute;
+    top: 100%; /* At the bottom of the tooltip */
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+  }
+
 </style>

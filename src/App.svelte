@@ -9,6 +9,7 @@
 	import PayeeListStore from './stores/payeeListStore';
 	import AllTransactionsStore from './stores/allTransactionsStore';
 	import CurrentTransactionsStore from './stores/currentTransactionsStore';
+	import currencyDecimalsStore from './stores/currencyDecimalsStore';
 	
 	let transactionsLoaded = false;
 	let activeTab = 'Yearly';
@@ -17,7 +18,6 @@
     let mounted = false;
 
 	var selectedYear = new Date().getFullYear();
-	var currencyDecimals;
 
 	let selectedOption = 'income';
 
@@ -47,7 +47,8 @@
 		initAccounts(accountsFetched);
 		const payeesFetched = await getPayees(ynabAPI, mainBudgetID);
 		initPayees(payeesFetched);
-		currencyDecimals = await getCurrencyDecimals(ynabAPI, mainBudgetID);
+		const currencyDecimals = await getCurrencyDecimals(ynabAPI, mainBudgetID);
+		$currencyDecimalsStore = currencyDecimals;
 		const transactionsFetch = await getTransactions(ynabAPI, mainBudgetID);
 		$AllTransactionsStore = transactionsFetch;
 		storeTransactionsMain();
@@ -144,7 +145,6 @@
 		})
 	}
 	function storeTransactionsMain() {
-		console.log('storin')
 		let currentTransList = []
 		for(let transaction of $AllTransactionsStore) {
 			//If there are subtransctions(which are just split transactions) then it loops through those
@@ -165,7 +165,6 @@
 			}
 		}
 		$CurrentTransactionsStore = currentTransList;
-		console.log($CurrentTransactionsStore)
 		transactionsLoaded = true;
 	}
 	function storeTransactions(transaction) {
@@ -175,7 +174,7 @@
   		if (transactionSkipCheck(transaction, transactionDate)) {
     		return;
   		} else {
-			const amount = ynab.utils.convertMilliUnitsToCurrencyAmount(transaction.amount, currencyDecimals); //Converts to users currency in decimals
+			const amount = ynab.utils.convertMilliUnitsToCurrencyAmount(transaction.amount, $currencyDecimalsStore); //Converts to users currency in decimals
 			let currentTrans = {Date: transactionDate, categoryId: transaction.category_id, accountId: transaction.account_id, payeeId: transaction.payee_id, Amount: amount, Memo: transaction.memo};
 			return currentTrans;
 		}
