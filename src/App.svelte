@@ -9,7 +9,7 @@
 	import PayeeListStore from './stores/payeeListStore';
 	import AllTransactionsStore from './stores/allTransactionsStore';
 	import CurrentTransactionsStore from './stores/currentTransactionsStore';
-	import currencyDecimalsStore from './stores/currencyDecimalsStore';
+	import CurrencyInfoStore from './stores/currencyInfoStore';
 	
 	let transactionsLoaded = false;
 	let activeTab = 'Yearly';
@@ -48,7 +48,7 @@
 		const payeesFetched = await getPayees(ynabAPI, mainBudgetID);
 		initPayees(payeesFetched);
 		const currencyDecimals = await getCurrencyDecimals(ynabAPI, mainBudgetID);
-		$currencyDecimalsStore = currencyDecimals;
+		$CurrencyInfoStore = currencyDecimals;
 		const transactionsFetch = await getTransactions(ynabAPI, mainBudgetID);
 		$AllTransactionsStore = transactionsFetch;
 		storeTransactionsMain();
@@ -81,7 +81,10 @@
 	}
 	async function getCurrencyDecimals(ynabAPI, mainBudgetID) {
   		const budgetResponse = await ynabAPI.budgets.getBudgetSettingsById(mainBudgetID);
-  		return budgetResponse.data.settings.currency_format.decimal_digits;
+		let currencyInfo = {Decimals: budgetResponse.data.settings.currency_format.decimal_digits, Separator: budgetResponse.data.settings.decimal_separator, 
+				            symbolFirst:  budgetResponse.data.settings.symbol_first, Symbol:  budgetResponse.data.settings.currency_symbol, 
+							displaySymbol: budgetResponse.data.settings.display_symbol}
+  		return currencyInfo;
 	}
 	function initCategories(categoriesFetched) {
   		let categorySections =  [];
@@ -174,7 +177,7 @@
   		if (transactionSkipCheck(transaction, transactionDate)) {
     		return;
   		} else {
-			const amount = ynab.utils.convertMilliUnitsToCurrencyAmount(transaction.amount, $currencyDecimalsStore); //Converts to users currency in decimals
+			const amount = ynab.utils.convertMilliUnitsToCurrencyAmount(transaction.amount, $CurrencyInfoStore.Decimals); //Converts to users currency in decimals
 			let currentTrans = {Date: transactionDate, categoryId: transaction.category_id, accountId: transaction.account_id, payeeId: transaction.payee_id, Amount: amount, Memo: transaction.memo};
 			return currentTrans;
 		}

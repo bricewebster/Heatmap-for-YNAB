@@ -1,6 +1,6 @@
 <script>
     import CurrentTransactionsStore from '../stores/currentTransactionsStore';
-    import CurrencyDecimalsStore from '../stores/currencyDecimalsStore';
+    import CurrencyInfoStore from '../stores/currencyInfoStore';
     import { createEventDispatcher } from 'svelte';
 
     const dispatch = createEventDispatcher();
@@ -51,7 +51,7 @@
             if (transaction.Date.getTime() === calendarDate.getTime()) {
                 
                 if (selectedOption === 'income' & transaction.Amount > 0 || selectedOption === 'expense' & transaction.Amount < 0 || selectedOption === 'net') {
-                    amount = (parseFloat(amount) + parseFloat(transaction.Amount)).toFixed($CurrencyDecimalsStore);
+                    amount = (parseFloat(amount) + parseFloat(transaction.Amount)).toFixed($CurrencyInfoStore.Decimals);
                 }
             }
         }
@@ -102,13 +102,16 @@
                     <tr>
                     {#each month as day}
                         {#if day.Amount != 0}
-                            <th class="{day.Class}"><div class="tooltip"><span class="tooltiptext">{day.Amount}</span></div></th>
+                            <th class="{day.Class} populated"><div class="tooltip"><span class="tooltiptext">{day.Amount}</span></div></th>
                         {:else}
                             <th class="{day.Class}"></th>
                         {/if}
                     {/each}
                 {/each}
             </table>
+        </div>
+        <div class="transactions-list">
+
         </div>
     </div>
 </div>
@@ -193,6 +196,9 @@
     }
     .none {
         background-color:  rgba(187, 167, 167, 0.842);
+    }
+    .populated {
+        cursor: pointer;
     }
     .tooltip {
     position: relative;
