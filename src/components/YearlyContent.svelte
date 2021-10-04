@@ -12,7 +12,7 @@
     export let selectedYear;
     export let selectedOption;
 
-    buildCalendarList();
+    $: $currentTransactionsStore, buildCalendarList();
 
     function buildCalendarList () {
         let list = [];
@@ -39,7 +39,6 @@
     function toggleSelectedYear (buttonSelected) {
         selectedYear = buttonSelected === 'previous' ? selectedYear=selectedYear-1 : selectedYear=selectedYear+1;
         dispatch('yearChange', );
-        buildCalendarList();
     }
     function toggleSelectedOption (option) {
         selectedOption = option;
