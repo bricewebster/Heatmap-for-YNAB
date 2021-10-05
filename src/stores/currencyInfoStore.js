@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
 
-export const currencyDecimalsStore = writable(0);
+export const CurrencyInfoStore = writable(0);
 
-export default currencyDecimalsStore;
+export default CurrencyInfoStore;

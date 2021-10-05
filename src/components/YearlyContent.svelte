@@ -23,8 +23,8 @@
             for (let day = 1; day <= dayAmount; day++) {
                 let date = convertToDate(calendarList - 1, selectedYear, day);
                 let amount = getTransactionsForDay(date);
-                let dayClass = getDayClass(amount);
-                let days = {Amount: amount, Class: dayClass};
+                let dayClass = getDayClass(amount.Amount);
+                let days = {Amount: amount.Amount, amountFormatted: amount.formattedAmount, Class: dayClass};
                 sublist.push(days);
             }
             list.push(sublist);
@@ -55,7 +55,31 @@
                 }
             }
         }
-        return amount;
+        let formattedAmount = formatAmount(amount);
+        let finalAmount = {Amount: amount, formattedAmount: formattedAmount};
+        return finalAmount;
+    }
+    function formatAmount (amount) {
+        if (amount === 0) {
+            return '0';
+        }
+        let amountSplit = String(amount).split('.');
+        let beforeDecimal = amountSplit[0];
+        let afterDecimal = amountSplit[1];
+        let finalAmount;
+
+        let newAfterDecimal = afterDecimal === undefined ? '' : $CurrencyInfoStore.decimalSeparator + afterDecimal;
+
+        let newBeforeDecimal = '';
+        for (let index = beforeDecimal.length - 1; index >= 0; index--) {
+            index % 4 === 0 & beforeDecimal.length > 3? newBeforeDecimal = beforeDecimal[index] + $CurrencyInfoStore.groupSeparator + newBeforeDecimal : newBeforeDecimal = beforeDecimal[index] + newBeforeDecimal;
+        }
+        if ($CurrencyInfoStore.displaySymbol) {
+            $CurrencyInfoStore.symbolFirst ? finalAmount = $CurrencyInfoStore.Symbol + newBeforeDecimal + newAfterDecimal : finalAmount = newBeforeDecimal + newAfterDecimal + $CurrencyInfoStore.Symbol;
+        } else {
+            finalAmount = newBeforeDecimal + newAfterDecimal;
+        }
+        return finalAmount;
     }
     function getDayClass (amount) {
         let dayClass;
@@ -102,7 +126,7 @@
                     <tr>
                     {#each month as day}
                         {#if day.Amount != 0}
-                            <th class="{day.Class} populated"><div class="tooltip"><span class="tooltiptext">{day.Amount}</span></div></th>
+                            <th class="{day.Class} populated"><div class="tooltip"><span class="tooltiptext">{day.amountFormatted}</span></div></th>
                         {:else}
                             <th class="{day.Class}"></th>
                         {/if}

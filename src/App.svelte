@@ -47,8 +47,8 @@
 		initAccounts(accountsFetched);
 		const payeesFetched = await getPayees(ynabAPI, mainBudgetID);
 		initPayees(payeesFetched);
-		const currencyDecimals = await getCurrencyDecimals(ynabAPI, mainBudgetID);
-		$CurrencyInfoStore = currencyDecimals;
+		const currencyInfo = await getCurrencyInfo(ynabAPI, mainBudgetID);
+		$CurrencyInfoStore = currencyInfo;
 		const transactionsFetch = await getTransactions(ynabAPI, mainBudgetID);
 		$AllTransactionsStore = transactionsFetch;
 		storeTransactionsMain();
@@ -79,11 +79,12 @@
 		const transactionResponse = await ynabAPI.transactions.getTransactions(mainBudgetID);
 		return transactionResponse.data.transactions;
 	}
-	async function getCurrencyDecimals(ynabAPI, mainBudgetID) {
-  		const budgetResponse = await ynabAPI.budgets.getBudgetSettingsById(mainBudgetID);
-		let currencyInfo = {Decimals: budgetResponse.data.settings.currency_format.decimal_digits, Separator: budgetResponse.data.settings.decimal_separator, 
-				            symbolFirst:  budgetResponse.data.settings.symbol_first, Symbol:  budgetResponse.data.settings.currency_symbol, 
-							displaySymbol: budgetResponse.data.settings.display_symbol}
+	async function getCurrencyInfo(ynabAPI, mainBudgetID) {
+  		const currencyResponse = await ynabAPI.budgets.getBudgetSettingsById(mainBudgetID);
+		const currencySettings = currencyResponse.data.settings.currency_format;
+		let currencyInfo = {Decimals: currencySettings.decimal_digits, decimalSeparator: currencySettings.decimal_separator, 
+				            symbolFirst: currencySettings.symbol_first, Symbol: currencySettings.currency_symbol, 
+							displaySymbol: currencySettings.display_symbol, groupSeparator: currencySettings.group_separator};
   		return currencyInfo;
 	}
 	function initCategories(categoriesFetched) {
