@@ -84,7 +84,8 @@
 		const currencySettings = currencyResponse.data.settings.currency_format;
 		let currencyInfo = {Decimals: currencySettings.decimal_digits, decimalSeparator: currencySettings.decimal_separator, 
 				            symbolFirst: currencySettings.symbol_first, Symbol: currencySettings.currency_symbol, 
-							displaySymbol: currencySettings.display_symbol, groupSeparator: currencySettings.group_separator};
+							displaySymbol: currencySettings.display_symbol, groupSeparator: currencySettings.group_separator, dateFormat: currencyResponse.data.settings.date_format.format};
+							console.log(currencyResponse)
   		return currencyInfo;
 	}
 	function initCategories(categoriesFetched) {
@@ -179,7 +180,7 @@
     		return;
   		} else {
 			const amount = ynab.utils.convertMilliUnitsToCurrencyAmount(transaction.amount, $CurrencyInfoStore.Decimals); //Converts to users currency in decimals
-			let currentTrans = {Date: transactionDate, categoryId: transaction.category_id, accountId: transaction.account_id, payeeId: transaction.payee_id, Amount: amount, Memo: transaction.memo};
+			let currentTrans = {Date: transactionDate, categoryName: transaction.category_name, accountName: transaction.account_name, payeeName: transaction.payee_name, Amount: amount, Memo: transaction.memo};
 			return currentTrans;
 		}
 	}

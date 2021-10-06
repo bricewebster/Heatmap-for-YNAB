@@ -1,9 +1,14 @@
 <script>
+    import TransListPopup from '../components/TransListPopup.svelte';
     import CurrentTransactionsStore from '../stores/currentTransactionsStore';
     import CurrencyInfoStore from '../stores/currencyInfoStore';
     import { createEventDispatcher } from 'svelte';
 
     const dispatch = createEventDispatcher();
+
+    var showPopup = false;
+    var selectedDay;
+    var selectedDayList = [];
 
     let dayList = [];
     let dayCount = 31;
@@ -24,7 +29,7 @@
                 let date = convertToDate(calendarList - 1, selectedYear, day);
                 let amount = getTransactionsForDay(date);
                 let dayClass = getDayClass(amount.Amount);
-                let days = {Amount: amount.Amount, amountFormatted: amount.formattedAmount, Class: dayClass};
+                let days = {Amount: amount.Amount, amountFormatted: amount.formattedAmount, Class: dayClass, Date: date};
                 sublist.push(days);
             }
             list.push(sublist);
@@ -81,6 +86,11 @@
         }
         return finalAmount;
     }
+    function formatDate (date) {
+        var DateTime = luxon.DateTime;
+        let newDate = DateTime.fromISO(date).toFormat($CurrencyInfoStore.dateFormat);
+        return newDate;
+    }
     function getDayClass (amount) {
         let dayClass;
         if (selectedOption === 'income' & amount != 0) {
@@ -93,6 +103,31 @@
             dayClass = "none";
         }
         return dayClass;
+    }
+    function dayClicked(date) {
+        selectedDay = formatDate(date);
+        selectedDayList = getDayTransactions(date);
+        togglePopup();
+    }
+    function getDayTransactions (date) {
+        let transactionList = [];
+        for (let day of $CurrentTransactionsStore) {
+            //console.log("day: " + day.Date + ' selectedday: ' + date)
+            if (day.Date.getTime() === date.getTime()) {
+                if (selectedOption === 'income' & day.Amount > 0) {
+                    day.Amount = formatAmount(day.Amount);
+                    transactionList.push(day);
+                } else if (selectedOption === 'expense' & day.Amount < 0) {
+                    transactionList.push(day);
+                } else if (selectedOption === 'net') {
+                    transactionList.push(day);
+                }
+            }
+        }
+        return transactionList;
+    } 
+    function togglePopup () {
+        showPopup = !showPopup;
     }
 </script>
 <div class="content">
@@ -126,7 +161,7 @@
                     <tr>
                     {#each month as day}
                         {#if day.Amount != 0}
-                            <th class="{day.Class} populated"><div class="tooltip"><span class="tooltiptext">{day.amountFormatted}</span></div></th>
+                            <th class="{day.Class} populated" on:click={() => dayClicked(day.Date)}><div class="tooltip"><span class="tooltiptext">{day.amountFormatted}</span></div></th>
                         {:else}
                             <th class="{day.Class}"></th>
                         {/if}
@@ -134,9 +169,11 @@
                 {/each}
             </table>
         </div>
-        <div class="transactions-list">
-
-        </div>
+        {#if showPopup}
+            <div class="backdrop" on:click|self={() => togglePopup()}>
+                <TransListPopup {togglePopup} {selectedDay} {selectedDayList}/>
+            </div>
+        {/if}
     </div>
 </div>
 <style lang="scss">
@@ -264,5 +301,13 @@
     border-style: solid;
     border-color: black transparent transparent transparent;
   }
+  .backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        z-index: 10;
+    }
 
 </style>
