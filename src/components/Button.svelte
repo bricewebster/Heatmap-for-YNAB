@@ -1,7 +1,6 @@
 <script>
     export let type = 'primary';
-    $$restProps
-
+    $$restProps //Used to include all the props when the component is used. That way the button can be clicked, focused, etc.
 </script>
 
 <button class={type} on:click on:mouseover on:focus on:mouseenter on:mouseleave	{...$$restProps}>

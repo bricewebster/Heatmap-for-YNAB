@@ -1,5 +1,5 @@
 <script>
-    // your script goes here
+
 </script>
 
 <div class="content">
@@ -19,5 +19,3 @@
     }
 
 </style>
-
-<!-- markup (zero or more items) goes here -->

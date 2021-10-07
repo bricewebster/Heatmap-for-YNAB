@@ -5,6 +5,10 @@
     let showFilter = false;
     export let filters;
 
+    /**
+     * Opens and closes the popup and sets the selectedFilter variable to the filter that was selected.
+     * @param {String} filter filter selected
+     */
     const togglePopup = (filter) => {
         showFilter = !showFilter;
         selectedFilter = filter;

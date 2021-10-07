@@ -7,6 +7,10 @@
 
     export let activeTab;
     
+    /**
+     * When the tab changes, set the active tab to the selected tab.
+     * @param {Object} e event Object
+     */
     const tabChange = (e) => {
         activeTab = e.detail;
     }
