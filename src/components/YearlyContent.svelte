@@ -27,9 +27,9 @@
             let sublist = [];
             for (let day = 1; day <= dayAmount; day++) {
                 let date = convertToDate(calendarList - 1, selectedYear, day);
-                let amount = getTransactionsForDay(date);
-                let dayClass = getDayClass(amount.Amount);
-                let days = {Amount: amount.Amount, amountFormatted: amount.formattedAmount, Class: dayClass, Date: date};
+                let transInfo = getTransactionsForDay(date);
+                let dayClass = getDayClass(transInfo.Amount);
+                let days = {Amount: transInfo.Amount, amountFormatted: transInfo.formattedAmount, Class: dayClass, Date: date, dateFormatted: transInfo.dateFormatted};
                 sublist.push(days);
             }
             list.push(sublist);
@@ -52,16 +52,18 @@
     }
     function getTransactionsForDay (calendarDate) {
         let amount = 0;
+        let dateFormatted;
         for (let transaction of $CurrentTransactionsStore) {
             if (transaction.Date.getTime() === calendarDate.getTime()) {
                 
                 if (selectedOption === 'income' & transaction.Amount > 0 || selectedOption === 'expense' & transaction.Amount < 0 || selectedOption === 'net') {
                     amount = (parseFloat(amount) + parseFloat(transaction.Amount)).toFixed($CurrencyInfoStore.Decimals);
+                    dateFormatted = transaction.dateFormatted;
                 }
             }
         }
         let formattedAmount = formatAmount(amount);
-        let finalAmount = {Amount: amount, formattedAmount: formattedAmount};
+        let finalAmount = {Amount: amount, formattedAmount: formattedAmount, dateFormatted: dateFormatted};
         return finalAmount;
     }
     function formatAmount (amount) {
@@ -86,11 +88,6 @@
         }
         return finalAmount;
     }
-    function formatDate (date) {
-        var DateTime = luxon.DateTime;
-        let newDate = DateTime.fromISO(date).toFormat($CurrencyInfoStore.dateFormat);
-        return newDate;
-    }
     function getDayClass (amount) {
         let dayClass;
         if (selectedOption === 'income' & amount != 0) {
@@ -104,8 +101,8 @@
         }
         return dayClass;
     }
-    function dayClicked(date) {
-        selectedDay = formatDate(date);
+    function dayClicked(date, dateFormatted) {
+        selectedDay = dateFormatted;
         selectedDayList = getDayTransactions(date);
         togglePopup();
     }
@@ -161,7 +158,7 @@
                     <tr>
                     {#each month as day}
                         {#if day.Amount != 0}
-                            <th class="{day.Class} populated" on:click={() => dayClicked(day.Date)}><div class="tooltip"><span class="tooltiptext">{day.amountFormatted}</span></div></th>
+                            <th class="{day.Class} populated" on:click={() => dayClicked(day.Date, day.dateFormatted)}><div class="tooltip"><span class="tooltiptext">{day.amountFormatted}</span></div></th>
                         {:else}
                             <th class="{day.Class}"></th>
                         {/if}

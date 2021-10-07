@@ -180,7 +180,7 @@
     		return;
   		} else {
 			const amount = ynab.utils.convertMilliUnitsToCurrencyAmount(transaction.amount, $CurrencyInfoStore.Decimals); //Converts to users currency in decimals
-			let currentTrans = {Date: transactionDate, categoryName: transaction.category_name, accountName: transaction.account_name, payeeName: transaction.payee_name, Amount: amount, Memo: transaction.memo};
+			let currentTrans = {Date: transactionDate, dateFormatted: formatDate(transactionDate), categoryName: transaction.category_name, accountName: transaction.account_name, payeeName: transaction.payee_name, Amount: amount, Memo: transaction.memo};
 			return currentTrans;
 		}
 	}
@@ -207,6 +207,35 @@
 	function newNormalizedDate(date){
   		return new Date(new Date(date).getTime() - new Date(date).getTimezoneOffset() * - 60000); //https://stackoverflow.com/a/14569783
 	}
+
+	function formatDate (date) {
+        let year = date.getFullYear();
+        let month = ("0" + (date.getMonth() + 1)).slice(-2);
+        let day = ("0" + date.getDate()).slice(-2);
+
+        let userDateFormat = $CurrencyInfoStore.dateFormat;
+        let newDate;
+
+        if (userDateFormat === 'YYYY/MM/DD') {
+            newDate = year + '/' + month + '/' + day;
+        } else if (userDateFormat === 'YYYY-MM-DD') {
+            newDate = year + '-' + month + '-' + day;
+        } else if (userDateFormat === 'DD-MM-YYYY') {
+            newDate = day + '-' + month + '-' + year;
+        } else if (userDateFormat === 'DD/MM/YYYY') {
+            newDate = day + '/' + month + '/' + year;
+        } else if (userDateFormat === 'DD.MM.YYYY') {
+            newDate = day + '.' + month + '.' + year;
+        } else if (userDateFormat === 'MM/DD/YYYY') {
+            newDate = month + '/' + day + '/' + year;
+        } else if (userDateFormat === 'YYYY.MM.DD') {
+            newDate = year + '.' + month + '.' + day;
+        } else {
+            newDate = date;
+        }
+
+        return newDate;
+    }
 
 </script>
 

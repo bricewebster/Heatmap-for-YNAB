@@ -25,7 +25,7 @@
                     <tr>
                         <th title="{day.categoryName}">{day.categoryName}</th>
                         <th title="{day.accountName}">{day.accountName}</th>
-                        <th title="{day.Date}">{day.Date}</th>
+                        <th title="{day.dateFormatted}">{day.dateFormatted}</th>
                         <th title="{day.payeeName}">{day.payeeName}</th>
                         <th title="{day.Memo}">{day.Memo}</th>
                         <th title="{day.Amount}">{day.Amount}</th>
@@ -95,7 +95,6 @@
         letter-spacing: .05em;
         font-weight: 100;
         color: #383e41;
-        text-transform: uppercase;
         text-align: left;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -118,6 +117,8 @@
             
         & th {
             border-right: 1px solid #d1d1d6;
+
+            text-transform: uppercase;
         }
     }
     .list {
