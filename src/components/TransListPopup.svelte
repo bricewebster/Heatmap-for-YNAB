@@ -4,11 +4,15 @@
     export let togglePopup = () => {};
     export let selectedDay;
     export let selectedDayList;
+    export let selectedAmount;
 </script>
 
 <div class="popup">
     <div class="content">
-        <p class="title"><span class="material-icons-outlined md-24">event_note</span>{selectedDay}</p>
+        <div class="title-container">
+            <p class="title"><span class="material-icons-outlined md-24">event_note</span>{selectedDay}</p>
+            <p class="amount">{selectedAmount}</p>
+        </div>
         <div class="trans-list">
             <table class="column-header">
                 <tr>
@@ -28,7 +32,7 @@
                         <th title="{day.dateFormatted}">{day.dateFormatted}</th>
                         <th title="{day.payeeName}">{day.payeeName}</th>
                         <th title="{day.Memo}">{day.Memo}</th>
-                        <th title="{day.Amount}">{day.Amount}</th>
+                        <th title="{day.amountFormatted}">{day.amountFormatted}</th>
                     </tr>
                 {/each}
             </table>
@@ -67,16 +71,23 @@
     .content {
         padding: .765em .765em 0;
     }
+    .title-container {
+        display: flex;
+
+        color: #636366;
+        font-weight: 400;
+        font-size: 1.2em;
+    }
     .title {
         display: flex;
         align-items: center;
-
-        font-size: 1.2em;
-        color: #636366;
-        font-weight: 400;
     }
     span {
         padding-right: 5px;
+    }
+    .amount {
+        margin-top: 5px;
+        margin-left: auto;
     }
     .trans-list {
         margin-top: 5px;

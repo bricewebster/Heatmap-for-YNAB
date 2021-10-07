@@ -180,7 +180,7 @@
     		return;
   		} else {
 			const amount = ynab.utils.convertMilliUnitsToCurrencyAmount(transaction.amount, $CurrencyInfoStore.Decimals); //Converts to users currency in decimals
-			let currentTrans = {Date: transactionDate, dateFormatted: formatDate(transactionDate), categoryName: transaction.category_name, accountName: transaction.account_name, payeeName: transaction.payee_name, Amount: amount, Memo: transaction.memo};
+			let currentTrans = {Date: transactionDate, dateFormatted: formatDate(transactionDate), categoryName: transaction.category_name, accountName: transaction.account_name, payeeName: transaction.payee_name, Amount: amount, amountFormatted: formatAmount(amount), Memo: transaction.memo};
 			return currentTrans;
 		}
 	}
@@ -236,7 +236,28 @@
 
         return newDate;
     }
+	function formatAmount (amount) {
+        if (amount === 0) {
+            return '0';
+        }
+        let amountSplit = String(amount).split('.');
+        let beforeDecimal = amountSplit[0];
+        let afterDecimal = amountSplit[1];
+        let finalAmount;
 
+        let newAfterDecimal = afterDecimal === undefined ? '' : $CurrencyInfoStore.decimalSeparator + afterDecimal;
+
+        let newBeforeDecimal = '';
+        for (let index = beforeDecimal.length - 1; index >= 0; index--) {
+            index % 4 === 0 & beforeDecimal.length > 3? newBeforeDecimal = beforeDecimal[index] + $CurrencyInfoStore.groupSeparator + newBeforeDecimal : newBeforeDecimal = beforeDecimal[index] + newBeforeDecimal;
+        }
+        if ($CurrencyInfoStore.displaySymbol) {
+            $CurrencyInfoStore.symbolFirst ? finalAmount = $CurrencyInfoStore.Symbol + newBeforeDecimal + newAfterDecimal : finalAmount = newBeforeDecimal + newAfterDecimal + $CurrencyInfoStore.Symbol;
+        } else {
+            finalAmount = newBeforeDecimal + newAfterDecimal;
+        }
+        return finalAmount;
+    }
 </script>
 
 <svelte:head>
@@ -246,7 +267,7 @@
 <main>
 	{#if transactionsLoaded}
 		<Navbar bind:activeTab = {activeTab} on:filterChange={storeTransactionsMain}/>
-		<Content {activeTab} {selectedOption} bind:selectedYear on:yearChange={storeTransactionsMain}/>
+		<Content {activeTab} {selectedOption} {formatAmount}bind:selectedYear on:yearChange={storeTransactionsMain}/>
 	{:else}
 		<Loading />	
 	{/if}

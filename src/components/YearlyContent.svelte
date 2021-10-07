@@ -9,6 +9,7 @@
     var showPopup = false;
     var selectedDay;
     var selectedDayList = [];
+    var selectedAmount;
 
     let dayList = [];
     let dayCount = 31;
@@ -17,6 +18,7 @@
                      {Number: 11, Word: 'Nov'}, {Number: 12, Word: 'Dec'}];
     export let selectedYear;
     export let selectedOption;
+    export let formatAmount = () => {};
 
     $: $CurrentTransactionsStore, buildCalendarList();
 
@@ -27,7 +29,7 @@
             let sublist = [];
             for (let day = 1; day <= dayAmount; day++) {
                 let date = convertToDate(calendarList - 1, selectedYear, day);
-                let transInfo = getTransactionsForDay(date);
+                let transInfo = getTransactionsInfoForDay(date);
                 let dayClass = getDayClass(transInfo.Amount);
                 let days = {Amount: transInfo.Amount, amountFormatted: transInfo.formattedAmount, Class: dayClass, Date: date, dateFormatted: transInfo.dateFormatted};
                 sublist.push(days);
@@ -50,7 +52,7 @@
         selectedOption = option;
         buildCalendarList();
     }
-    function getTransactionsForDay (calendarDate) {
+    function getTransactionsInfoForDay (calendarDate) {
         let amount = 0;
         let dateFormatted;
         for (let transaction of $CurrentTransactionsStore) {
@@ -58,34 +60,13 @@
                 
                 if (selectedOption === 'income' & transaction.Amount > 0 || selectedOption === 'expense' & transaction.Amount < 0 || selectedOption === 'net') {
                     amount = (parseFloat(amount) + parseFloat(transaction.Amount)).toFixed($CurrencyInfoStore.Decimals);
+                    console.log(transaction.Memo)
                     dateFormatted = transaction.dateFormatted;
                 }
             }
         }
         let formattedAmount = formatAmount(amount);
         let finalAmount = {Amount: amount, formattedAmount: formattedAmount, dateFormatted: dateFormatted};
-        return finalAmount;
-    }
-    function formatAmount (amount) {
-        if (amount === 0) {
-            return '0';
-        }
-        let amountSplit = String(amount).split('.');
-        let beforeDecimal = amountSplit[0];
-        let afterDecimal = amountSplit[1];
-        let finalAmount;
-
-        let newAfterDecimal = afterDecimal === undefined ? '' : $CurrencyInfoStore.decimalSeparator + afterDecimal;
-
-        let newBeforeDecimal = '';
-        for (let index = beforeDecimal.length - 1; index >= 0; index--) {
-            index % 4 === 0 & beforeDecimal.length > 3? newBeforeDecimal = beforeDecimal[index] + $CurrencyInfoStore.groupSeparator + newBeforeDecimal : newBeforeDecimal = beforeDecimal[index] + newBeforeDecimal;
-        }
-        if ($CurrencyInfoStore.displaySymbol) {
-            $CurrencyInfoStore.symbolFirst ? finalAmount = $CurrencyInfoStore.Symbol + newBeforeDecimal + newAfterDecimal : finalAmount = newBeforeDecimal + newAfterDecimal + $CurrencyInfoStore.Symbol;
-        } else {
-            finalAmount = newBeforeDecimal + newAfterDecimal;
-        }
         return finalAmount;
     }
     function getDayClass (amount) {
@@ -101,22 +82,24 @@
         }
         return dayClass;
     }
-    function dayClicked(date, dateFormatted) {
+    function dayClicked(date, dateFormatted, amount) {
         selectedDay = dateFormatted;
-        selectedDayList = getDayTransactions(date);
+        selectedDayList = getSelectedDaysTransactions(date);
+        selectedAmount = amount;
         togglePopup();
     }
-    function getDayTransactions (date) {
+    function getSelectedDaysTransactions (date) {
         let transactionList = [];
         for (let day of $CurrentTransactionsStore) {
-            //console.log("day: " + day.Date + ' selectedday: ' + date)
             if (day.Date.getTime() === date.getTime()) {
                 if (selectedOption === 'income' & day.Amount > 0) {
-                    day.Amount = formatAmount(day.Amount);
+                    day.amountFormatted = formatAmount(day.Amount);
                     transactionList.push(day);
                 } else if (selectedOption === 'expense' & day.Amount < 0) {
+                    day.amountFormatted = formatAmount(day.Amount);
                     transactionList.push(day);
                 } else if (selectedOption === 'net') {
+                    day.amountFormatted = formatAmount(day.Amount);
                     transactionList.push(day);
                 }
             }
@@ -158,7 +141,7 @@
                     <tr>
                     {#each month as day}
                         {#if day.Amount != 0}
-                            <th class="{day.Class} populated" on:click={() => dayClicked(day.Date, day.dateFormatted)}><div class="tooltip"><span class="tooltiptext">{day.amountFormatted}</span></div></th>
+                            <th class="{day.Class} populated" on:click={() => dayClicked(day.Date, day.dateFormatted, day.amountFormatted)}><div class="tooltip"><span class="tooltiptext">{day.amountFormatted}</span></div></th>
                         {:else}
                             <th class="{day.Class}"></th>
                         {/if}
@@ -168,7 +151,7 @@
         </div>
         {#if showPopup}
             <div class="backdrop" on:click|self={() => togglePopup()}>
-                <TransListPopup {togglePopup} {selectedDay} {selectedDayList}/>
+                <TransListPopup {togglePopup} {selectedDay} {selectedDayList} {selectedAmount}/>
             </div>
         {/if}
     </div>
