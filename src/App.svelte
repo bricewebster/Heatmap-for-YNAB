@@ -85,7 +85,6 @@
 		let currencyInfo = {Decimals: currencySettings.decimal_digits, decimalSeparator: currencySettings.decimal_separator, 
 				            symbolFirst: currencySettings.symbol_first, Symbol: currencySettings.currency_symbol, 
 							displaySymbol: currencySettings.display_symbol, groupSeparator: currencySettings.group_separator, dateFormat: currencyResponse.data.settings.date_format.format};
-							console.log(currencyResponse)
   		return currencyInfo;
 	}
 	function initCategories(categoriesFetched) {
@@ -180,7 +179,8 @@
     		return;
   		} else {
 			const amount = ynab.utils.convertMilliUnitsToCurrencyAmount(transaction.amount, $CurrencyInfoStore.Decimals); //Converts to users currency in decimals
-			let currentTrans = {Date: transactionDate, dateFormatted: formatDate(transactionDate), categoryName: transaction.category_name, accountName: transaction.account_name, payeeName: transaction.payee_name, Amount: amount, amountFormatted: formatAmount(amount), Memo: transaction.memo};
+			let memo = transaction.memo === null ? '' : transaction.memo;
+			let currentTrans = {Date: transactionDate, dateFormatted: formatDate(transactionDate), categoryName: transaction.category_name, accountName: transaction.account_name, payeeName: transaction.payee_name, Amount: amount, amountFormatted: formatAmount(amount), Memo: memo};
 			return currentTrans;
 		}
 	}
@@ -243,21 +243,41 @@
         let amountSplit = String(amount).split('.');
         let beforeDecimal = amountSplit[0];
         let afterDecimal = amountSplit[1];
+		let newBeforeDecimal = '';
+		let newAfterDecimal = '';
         let finalAmount;
+		let sign = '+';
 
-        let newAfterDecimal = afterDecimal === undefined ? '' : $CurrencyInfoStore.decimalSeparator + afterDecimal;
+		if (afterDecimal === undefined) {
+			newAfterDecimal = $CurrencyInfoStore.decimalSeparator + addLeadingZeroes(0);
+		} else {
+			newAfterDecimal = $CurrencyInfoStore.decimalSeparator + afterDecimal + addLeadingZeroes($CurrencyInfoStore.Decimals - ($CurrencyInfoStore.Decimals - afterDecimal.length));
+		}
 
-        let newBeforeDecimal = '';
+		if (beforeDecimal.includes('-')) {
+			beforeDecimal = beforeDecimal.replace('-', '');	
+			sign = '-';
+		}
         for (let index = beforeDecimal.length - 1; index >= 0; index--) {
             index % 4 === 0 & beforeDecimal.length > 3? newBeforeDecimal = beforeDecimal[index] + $CurrencyInfoStore.groupSeparator + newBeforeDecimal : newBeforeDecimal = beforeDecimal[index] + newBeforeDecimal;
         }
         if ($CurrencyInfoStore.displaySymbol) {
-            $CurrencyInfoStore.symbolFirst ? finalAmount = $CurrencyInfoStore.Symbol + newBeforeDecimal + newAfterDecimal : finalAmount = newBeforeDecimal + newAfterDecimal + $CurrencyInfoStore.Symbol;
+            $CurrencyInfoStore.symbolFirst ? finalAmount = sign + $CurrencyInfoStore.Symbol + newBeforeDecimal + newAfterDecimal : finalAmount = sign + newBeforeDecimal + newAfterDecimal + $CurrencyInfoStore.Symbol;
         } else {
             finalAmount = newBeforeDecimal + newAfterDecimal;
         }
         return finalAmount;
     }
+
+	function addLeadingZeroes (currentZeroes) {
+		let zeroes = '';
+		console.log(zeroes)
+		for (let count = currentZeroes; count < $CurrencyInfoStore.Decimals; count++) {
+			zeroes = zeroes + '0';
+		}
+		console.log(zeroes)
+		return zeroes;
+	}
 </script>
 
 <svelte:head>

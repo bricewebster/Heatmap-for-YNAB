@@ -60,7 +60,6 @@
                 
                 if (selectedOption === 'income' & transaction.Amount > 0 || selectedOption === 'expense' & transaction.Amount < 0 || selectedOption === 'net') {
                     amount = (parseFloat(amount) + parseFloat(transaction.Amount)).toFixed($CurrencyInfoStore.Decimals);
-                    console.log(transaction.Memo)
                     dateFormatted = transaction.dateFormatted;
                 }
             }
