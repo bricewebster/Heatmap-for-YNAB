@@ -20,9 +20,13 @@
     export let selectedOption;
     export let formatAmount = () => {};
 
-    $: $CurrentTransactionsStore, buildCalendarList();
+    //Reactively calls populateDayList when currentTransactionStore is updated anywhere in project.
+    $: $CurrentTransactionsStore, populateDayList();
 
-    function buildCalendarList () {
+    /**
+     * Populates the daylist used to build the yearly calendar.
+     */
+    function populateDayList () {
         let list = [];
         for (let calendarList = 1; calendarList <= 12; calendarList++) {
             let dayAmount = daysInMonth(calendarList, selectedYear);
@@ -38,20 +42,30 @@
         }
         dayList = list;
     }
+    /**
+     * Gets the amount of days in the supplied month.
+     * @param {String} month supplied month
+     * @param {String} year selected year
+     * @returns {Int} number of days in the month 
+     */
     function daysInMonth (month, year) {
         return new Date(year, month, 0).getDate();
     }
+    /**
+     * Converts supplised month, year, and day into Date object.
+     * @param {String} month supplied month
+     * @param {String} year selected year
+     * @param {String} day supplied day
+     * @returns {Date} Date object based on parameters
+     */
     function convertToDate (month, year, day) {
         return new Date(year, month, day);
     }
-    function toggleSelectedYear (buttonSelected) {
-        selectedYear = buttonSelected === 'previous' ? selectedYear=selectedYear-1 : selectedYear=selectedYear+1;
-        dispatch('yearChange', );
-    }
-    function toggleSelectedOption (option) {
-        selectedOption = option;
-        buildCalendarList();
-    }
+    /**TODO:Function has two redundancies, one is it loops through the same list multiple times for each day and the other is it sets the date formatted multiple times. Need to improve this.
+     * Gets the total amount for the supplied day based on the selected option.
+     * @param {Date} calendarDate day supplied
+     * @returns {Int} total amount for the supplied day
+     */
     function getTransactionsInfoForDay (calendarDate) {
         let amount = 0;
         let dateFormatted;
@@ -68,6 +82,11 @@
         let finalAmount = {Amount: amount, formattedAmount: formattedAmount, dateFormatted: dateFormatted};
         return finalAmount;
     }
+    /**
+     * Determine the class to be used based on the supplied amount and selected option.
+     * @param {Int} amount supplied amount
+     * @returns class to be used
+     */
     function getDayClass (amount) {
         let dayClass;
         if (selectedOption === 'income' & amount != 0) {
@@ -81,12 +100,23 @@
         }
         return dayClass;
     }
-    function dayClicked(date, dateFormatted, amount) {
+    /**
+     * When a day is clicked on the calendar, set all the information to be passed to the trans list popup and then call it.
+     * @param {Date} date date clicked
+     * @param {String} dateFormatted date clicked in user settings format
+     * @param {String} amountFormatted amount for day clicked in user settings format
+     */
+    function dayClicked(date, dateFormatted, amountFormatted) {
         selectedDay = dateFormatted;
         selectedDayList = getSelectedDaysTransactions(date);
-        selectedAmount = amount;
+        selectedAmount = amountFormatted;
         togglePopup();
     }
+    /**
+     * Get all the transactions for the selected day and populate them in a list.
+     * @param {Date} date day selected
+     * @returns {Array of Objects} transactions for day selected
+     */
     function getSelectedDaysTransactions (date) {
         let transactionList = [];
         for (let day of $CurrentTransactionsStore) {
@@ -104,7 +134,26 @@
             }
         }
         return transactionList;
-    } 
+    }
+     /**
+     * Toggles the selected year based on button clicked and calls the update to transactions.
+     * @param {String} buttonSelected name of button selected
+     */
+     function toggleSelectedYear (buttonSelected) {
+        selectedYear = buttonSelected === 'previous' ? selectedYear=selectedYear-1 : selectedYear=selectedYear+1;
+        dispatch('yearChange', );
+    }
+    /**
+     * Changes the selected option based on what was selected and calls the update to the calendar.
+     * @param {String} option option selected
+     */
+    function changeSelectedOption (option) {
+        selectedOption = option;
+        populateDayList();
+    }
+    /**
+     * Opens and closes the trans list popup.
+     */
     function togglePopup () {
         showPopup = !showPopup;
     }
@@ -112,9 +161,9 @@
 <div class="content">
     <div class="cal-year-container">
         <div class="cal-options">
-            <button on:click={() => toggleSelectedOption('income')}><span class="material-icons-outlined md-36 income-icon">savings</span></button>
-            <button on:click={() => toggleSelectedOption('expense')}><span class="material-icons-outlined md-36 expense-icon">paid</span></button>
-            <button on:click={() => toggleSelectedOption('net')}><span class="material-icons-outlined md-36 net-icon">request_quote</span></button>
+            <button on:click={() => changeSelectedOption('income')}><span class="material-icons-outlined md-36 income-icon">savings</span></button>
+            <button on:click={() => changeSelectedOption('expense')}><span class="material-icons-outlined md-36 expense-icon">paid</span></button>
+            <button on:click={() => changeSelectedOption('net')}><span class="material-icons-outlined md-36 net-icon">request_quote</span></button>
         </div>
         <div class="year-selector">
             <button on:click={() => toggleSelectedYear('previous')}><span class="material-icons-outlined md-36">chevron_left</span></button>

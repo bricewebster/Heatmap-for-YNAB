@@ -20,6 +20,10 @@
     export let togglePopup = () => {};
     export let filter;
 
+    /**
+     * When a category group checkbox is toggled, toggle all the checkboxes in that group.
+     * @param {String} groupID ID of toggled category group
+     */
     const toggleCategoryGroup = (groupID) => {
         let sectionSelected = categorySections.find(section => section.Id === groupID);
         sectionSelected.Checked = !sectionSelected.Checked;
@@ -31,7 +35,10 @@
             }
         }
     }
-
+    /**
+     * When an account group checkbox is toggled, toggle all the checkboxes in that group.
+     * @param {String} groupName name of group toggled
+     */
     const toggleAccountGroup = (groupName) => {
         let sectionSelected = accountSections.find(section => section.Name === groupName);
         sectionSelected.Checked = !sectionSelected.Checked;
@@ -43,7 +50,10 @@
             }
         }
     }
-
+    /**
+     * When one checkbox is toggled, toggle that checkbox.
+     * @param itemID id of item toggled
+     */
     const toggleListItem = (itemID) => {
         let itemSelected;
         if (filter.Type === 'Categories') {
@@ -55,7 +65,10 @@
         }
         itemSelected.Checked = !itemSelected.Checked;
     }
-
+    /**
+     * Toggle for the 'Select All' and 'Select None' buttons.
+     * @param {String} option option toggled
+     */
     const selectToggle = (option) => {
 
         let optionSelected = option === 'all' ? true : false;
@@ -85,7 +98,9 @@
             payeeLists = payeeLists;
         }
     }
-
+    /**
+     * Saves all the lists, checks to see what is selected which is used for the filter names and sets it, and closes the popup.
+     */
     const saveChanges = () => {
         $CategorySectionStore = categorySections;
         $CategoryListStore = categoryLists;
@@ -97,7 +112,9 @@
         dispatch('filterChange', );
         togglePopup();
     }
-
+    /**
+     * Checks to see what is selected to change the filter name.
+     */
     const checkSelected = () => {
         let sectionCount = 0;
         let listCount = 0;
@@ -152,7 +169,6 @@
             }
         }
     }
-    
 </script>
 
 <div class="popup {filter.Type}">
