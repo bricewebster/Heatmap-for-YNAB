@@ -11,11 +11,16 @@
     var selectedDayList = [];
     var selectedAmount;
 
-    let dayList = [];
-    let dayCount = 31;
-    let monthList = [{Number: 1, Word: 'Jan'}, {Number: 2, Word: 'Feb'}, {Number: 3, Word: 'Mar'}, {Number: 4, Word: 'Apr'}, {Number: 5, Word: 'May'},
-                     {Number: 6, Word: 'Jun'}, {Number: 7, Word: 'Jul'}, {Number: 8, Word: 'Aug'}, {Number: 9, Word: 'Sep'}, {Number: 10, Word: 'Oct'},
-                     {Number: 11, Word: 'Nov'}, {Number: 12, Word: 'Dec'}];
+    let dayList = [{Number: 1, Class: 'non-focused'}, {Number: 2, Class: 'non-focused'}, {Number: 3, Class: 'non-focused'}, {Number: 4, Class: 'non-focused'}, {Number: 5, Class: 'non-focused'}, {Number: 6, Class: 'non-focused'},
+                    {Number: 7, Class: 'non-focused'}, {Number: 8, Class: 'non-focused'}, {Number: 9, Class: 'non-focused'}, {Number: 10, Class: 'non-focused'}, {Number: 11, Class: 'non-focused'}, {Number: 12, Class: 'non-focused'},
+                    {Number: 13, Class: 'non-focused'}, {Number: 14, Class: 'non-focused'}, {Number: 15, Class: 'non-focused'}, {Number: 16, Class: 'non-focused'}, {Number: 17, Class: 'non-focused'}, {Number: 18, Class: 'non-focused'},
+                    {Number: 19, Class: 'non-focused'}, {Number: 20, Class: 'non-focused'}, {Number: 21, Class: 'non-focused'}, {Number: 22, Class: 'non-focused'}, {Number: 23, Class: 'non-focused'}, {Number: 24, Class: 'non-focused'},
+                    {Number: 25, Class: 'non-focused'}, {Number: 26, Class: 'non-focused'}, {Number: 27, Class: 'non-focused'}, {Number: 28, Class: 'non-focused'}, {Number: 29, Class: 'non-focused'}, {Number: 30, Class: 'non-focused'},
+                    {Number: 31, Class: 'non-focused'}];
+    let monthList = [{Number: 1, Word: 'Jan', Class: 'non-focused'}, {Number: 2, Word: 'Feb', Class: 'non-focused'}, {Number: 3, Word: 'Mar', Class: 'non-focused'}, {Number: 4, Word: 'Apr', Class: 'non-focused'}, 
+                     {Number: 5, Word: 'May', Class: 'non-focused'}, {Number: 6, Word: 'Jun', Class: 'non-focused'}, {Number: 7, Word: 'Jul', Class: 'non-focused'}, {Number: 8, Word: 'Aug', Class: 'non-focused'}, 
+                     {Number: 9, Word: 'Sep', Class: 'non-focused'}, {Number: 10, Word: 'Oct', Class: 'non-focused'}, {Number: 11, Word: 'Nov', Class: 'non-focused'}, {Number: 12, Word: 'Dec', Class: 'non-focused'}];
+    let fullDayList = [];
     export let selectedYear;
     export let selectedOption;
     export let formatAmount = () => {};
@@ -35,12 +40,12 @@
                 let date = convertToDate(calendarList - 1, selectedYear, day);
                 let transInfo = getTransactionsInfoForDay(date);
                 let dayClass = getDayClass(transInfo.Amount);
-                let days = {Amount: transInfo.Amount, amountFormatted: transInfo.formattedAmount, Class: dayClass, Date: date, dateFormatted: transInfo.dateFormatted};
+                let days = {Amount: transInfo.Amount, amountFormatted: transInfo.formattedAmount, Class: dayClass, Date: date, Month: calendarList, Day: day, dateFormatted: transInfo.dateFormatted};
                 sublist.push(days);
             }
             list.push(sublist);
         }
-        dayList = list;
+        fullDayList = list;
     }
     /**
      * Gets the amount of days in the supplied month.
@@ -151,6 +156,17 @@
         selectedOption = option;
         populateDayList();
     }
+    function highlightMonthDay (monthId, dayId) {
+       // console.log('month ' + monthId + ' day ' + dayId)
+        for (let month of monthList) {
+            month.Number === monthId ? month.Class = 'focused' : month.Class = 'non-focused';
+        }
+        for (let day of dayList) {
+            day.Number == dayId ? day.Class = 'focused' : day.Class = 'non-focused';
+        }
+        monthList = monthList;
+        dayList = dayList;
+    }
     /**
      * Opens and closes the trans list popup.
      */
@@ -173,23 +189,23 @@
         <table class="cal-year day-list">
             <tr>
             <th><p></p></th>
-            {#each Array(dayCount) as _, day}   
-                <th><p>{day + 1}</p></th>
+            {#each dayList as day}   
+                <th><p class="{day.Class}">{day.Number}</p></th>
             {/each}
             </tr>
         </table>
         <div class="cal-year-subcontainer">
             <table class="cal-year month-list">
                 {#each monthList as month}   
-                    <tr><th><p>{month.Word}</p></th></tr>
+                    <tr><th><p class="{month.Class}">{month.Word}</p></th></tr>
                 {/each}
             </table>
             <table class="cal-year cal-year-days">
-                {#each dayList as month}
+                {#each fullDayList as month}
                     <tr>
                     {#each month as day}
                         {#if day.Amount != 0}
-                            <th class="{day.Class} populated" on:click={() => dayClicked(day.Date, day.dateFormatted, day.amountFormatted)}><div class="tooltip"><span class="tooltiptext">{day.amountFormatted}</span></div></th>
+                            <th class="{day.Class} populated" on:click={() => dayClicked(day.Date, day.dateFormatted, day.amountFormatted)} on:mouseover={() => highlightMonthDay(day.Month, day.Day)} on:focus={() => highlightMonthDay() }><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><div class="amountPopup"><span class="amountPopupText">{day.amountFormatted}</span></div></div></div></div></th>
                         {:else}
                             <th class="{day.Class}"></th>
                         {/if}
@@ -286,56 +302,205 @@
     .none {
         background-color:  rgba(187, 167, 167, 0.842);
     }
+    .focused {
+        color: var(--ynab-dark-green);
+        transition: transform 250ms ease-in;
+        transition-delay: 200ms;
+    }
+    .nonfocused {
+        color: var(--ynab-dark-green);
+        transition: transform 250ms ease-in;
+        transition-delay: 200ms;
+    }
     .populated {
         cursor: pointer;
     }
-    .tooltip {
-    position: relative;
-    display: inline-block;
-    width: 100%;
-    height: 100%;
-  }
-  /* Tooltip text */
-  .tooltip .tooltiptext {
-    visibility: hidden;
-    width: 100px;
-    bottom: 100%;
-    left: 50%;
-    margin-left: -50px;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    font-size: 10px;
-    padding: 5px 0;
-    border-radius: 6px;
-   
-    /* Position the tooltip text - see examples below! */
-    position: absolute;
-    z-index: 1;
-  }
-  
-  /* Show the tooltip text when you mouse over the tooltip container */
-  .tooltip:hover .tooltiptext {
-    visibility: visible;
-  }
+    .populated-main-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+    .populated-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+    .populated-subcontainer {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+    .populated-subcontainer::before {
+        /* Bottom Line */
+        content: '';
+        position: absolute;
 
-  .tooltip .tooltiptext::after {
-    content: " ";
-    position: absolute;
-    top: 100%; /* At the bottom of the tooltip */
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: black transparent transparent transparent;
-  }
-  .backdrop {
+        bottom: -3px;
+        left: -3px;
+        width: 125.5%;
+        height: 2px;
+
+        background: var(--ynab-dark-green);
+
+        border-bottom-left-radius: 2px;
+        border-bottom-right-radius: 2px;
+
+        transform: scaleX(0);
+        transform-origin: center;
+        transition: transform 250ms ease-in;
+        transition-delay: 500ms;
+    }
+    .populated-subcontainer:hover::before {
+        transform: scaleY(1);
+        transition: transform 250ms ease-in;
+        transition-delay: 200ms;
+    }
+    .populated-subcontainer::after {
+        /* Left Line */
+        content: '';
+        position: absolute;
+
+        top: -3px;
+        left: -3px;
+        width: 2px;
+        height: 135%;
+
+        background: var(--ynab-dark-green);
+        border-top-left-radius: 2px;
+        border-bottom-left-radius: 2px;
+
+        transform: scaleY(0);
+        transform-origin: bottom;
+        transition: transform 250ms ease-in;
+        transition-delay: 300ms;
+    }
+    .populated-subcontainer:hover::after {
+        transform: scaleY(1);
+        transition: transform 250ms ease-in;
+        transition-delay: 400ms;
+    }
+    .populated-container::before {
+        /* Right Line */
+        content: '';
+        position: absolute;
+
+        top: -3px;
+        right: -3px;
+        width: 2px;
+        height: 135%;
+
+        background: var(--ynab-dark-green);
+        border-top-right-radius: 2px;
+        border-bottom-right-radius: 2px;
+
+        transform: scaleY(0);
+        transform-origin: bottom;
+        transition: transform 250ms ease-in;
+        transition-delay: 300ms;
+    }
+    .populated-container:hover::before {
+        transform: scaleY(1);
+        transform-origin: bottom;
+        transition: transform 250ms ease-in;
+        transition-delay: 400ms;
+    }
+    .populated-container::after {
+        /* Top Left Line */
+        content: '';
+        position: absolute;
+
+        top: -3px;
+        left: -3px;
+        width: 63.5%;
+        height: 2px;
+
+        background: var(--ynab-dark-green);
+        border-top-left-radius: 2px;
+
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 250ms ease-in;
+        transition-delay: 100ms;
+    }
+    .populated-container:hover::after {
+        transform: scaleX(1);
+        transition: transform 250ms ease-in;
+        transition-delay: 600ms;
+    }
+    .populated-main-container::before {
+        /* Top Right Line */
+        content: '';
+        position: absolute;
+
+        top: -3px;
+        right: -3px;
+        width: 63.5%;
+        height: 2px;
+
+        background: var(--ynab-dark-green);
+        border-top-right-radius: 5px;
+
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 250ms ease-in;
+        transition-delay: 100ms;
+    }
+    .populated-main-container:hover::before {
+        transform: scaleX(1);
+        transition: transform 250ms ease-in;
+        transition-delay: 600ms;
+    }
+    .amountPopup {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+    }
+    .amountPopup .amountPopupText {
+        position: absolute;
+
+        top: -5px;
+        left: 140%;
+        padding: 5px;
+        width: auto;
+
+        background-color: white;
+        border-radius: 5px;
+        box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.2);
+
+        color: #636366;
+        text-align: center;
+        font-size: 12px;
+   
+        z-index: 1;
+        visibility: hidden;
+    }
+    .amountPopup .amountPopupText::after {
+        content: "";
+        position: absolute;
+
+        top: 50%;
+        right: 100%;
+        margin-top: -5px;
+
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent white transparent transparent;
+    }
+    .amountPopup:hover .amountPopupText {
+        visibility: visible;
+    }
+    .amountPopup:hover .amountPopupText:hover {
+        visibility: hidden;
+    }
+    .backdrop {
         position: fixed;
+
         top: 0;
         left: 0;
         height: 100%;
         width: 100%;
+
         z-index: 10;
     }
-
 </style>
