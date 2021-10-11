@@ -41,7 +41,7 @@
                 let date = convertToDate(calendarList - 1, selectedYear, day);
                 let transInfo = getTransactionsInfoForDay(date);
                 let dayClass = getDayClass(transInfo.Amount);
-                let days = {Amount: transInfo.Amount, amountFormatted: transInfo.formattedAmount, Class: dayClass, Date: date, Month: calendarList, Day: day, dateFormatted: transInfo.dateFormatted};
+                let days = {Amount: transInfo.Amount, amountFormatted: transInfo.formattedAmount, Rank: 0, Class: dayClass, Date: date, Month: calendarList, Day: day, dateFormatted: transInfo.dateFormatted};
                 sublist.push(days);
             }
             list.push(sublist);
@@ -95,14 +95,18 @@
      */
     function getDayClass (amount) {
         let dayClass;
-        if (selectedOption === 'income' & amount != 0) {
-            dayClass = 'income';
-        } else if (selectedOption === 'expense' & amount != 0) {
-            dayClass = 'expense';
-        } else if (selectedOption === 'net' & amount != 0) {
-            dayClass = amount > 0 ? 'net-pos' : 'net-neg';
+        if (selectedStyle === 'regular') {
+            if (selectedOption === 'income' & amount != 0) {
+                dayClass = 'income';
+            } else if (selectedOption === 'expense' & amount != 0) {
+                dayClass = 'expense';
+            } else if (selectedOption === 'net' & amount != 0) {
+                dayClass = amount > 0 ? 'net-pos' : 'net-neg';
+            } else {
+                dayClass = "none";
+            }
         } else {
-            dayClass = "none";
+
         }
         return dayClass;
     }
@@ -170,6 +174,30 @@
     }
     function changeSelectedStyle (style) {
         selectedStyle = style;
+        setHeatmapStyle(style, fullDayList);
+    }
+    function setHeatmapStyle (style, daylist) {
+        console.log(daylist)
+
+        let rankings = daylist;
+        for(let month = 0; month < rankings.length; month++) {
+            rankings[month].sort((a,b) => (a.Amount < b.Amount) ? 1 : -1);
+            console.log(rankings[month]);
+            for(let day = 0; day < daylist[month].length; day++) {
+               // console.log(daylist[month][day])
+                daylist[month][day].Rank = rankings[month].indexOf(daylist[month][day].Date);
+            }
+        }
+      
+        // console.log(rankings)
+        
+        // for(let month in daylist) {
+        //     for(let day in month){
+        //         daylist.Rank = rankings.indexOf(day.Date);
+        //     }
+        // }
+
+       console.log(daylist)
     }
     /**
      * Opens and closes the trans list popup.
@@ -191,8 +219,8 @@
             <button on:click={() => toggleSelectedYear('next')}><span class="material-icons-outlined md-36">chevron_right</span></button>
         </div>
         <div class="cal-styles">
-            <button on:click={() => changeSelectedStyle('regular')}><span class="material-icons-outlined md-36 style-regular-icon" class:selected={selectedStyle === 'regular'} class:nonselected-icon={selectedStyle != 'regular'}>local_fire_department</span></button>
-            <button on:click={() => changeSelectedStyle('simple')}><span class="material-icons-outlined md-36 style-simple-icon" class:selected={selectedStyle === 'simple'} class:nonselected-icon={selectedStyle != 'simple'}>whatshot</span></button>
+            <button on:click={() => changeSelectedStyle('regular', fullDayList)}><span class="material-icons-outlined md-36 style-regular-icon" class:selected={selectedStyle === 'regular'} class:nonselected-icon={selectedStyle != 'regular'}>local_fire_department</span></button>
+            <button on:click={() => changeSelectedStyle('simple', fullDayList)}><span class="material-icons-outlined md-36 style-simple-icon" class:selected={selectedStyle === 'simple'} class:nonselected-icon={selectedStyle != 'simple'}>whatshot</span></button>
         </div>
         <table class="cal-year day-list">
             <tr>
