@@ -11,7 +11,7 @@
 	import CurrentTransactionsStore from './stores/currentTransactionsStore';
 	import CurrencyInfoStore from './stores/currencyInfoStore';
 	
-	let transactionsLoaded = false;
+	let transactionsLoaded = true;
 	let activeTab = 'Yearly';
 
 	let ynabAPIReady = false;
@@ -20,12 +20,13 @@
 	var selectedYear = new Date().getFullYear();
 
 	let selectedOption = 'income';
+	let selectedStyle = 'regular';
 
 	//Once the component mounts, it will run the main function if the YNAB API js file has downloaded.
 	onMount(() => {
         mounted = true;
         if (ynabAPIReady) {
-            main();
+           // main();
         }
     });
 
@@ -35,7 +36,7 @@
 	function ynabAPILoaded() {
         ynabAPIReady = true;
         if (mounted) {
-            main();
+           // main();
         }
     }
 	
@@ -380,7 +381,7 @@
 <main>
 	{#if transactionsLoaded}
 		<Navbar bind:activeTab = {activeTab} on:filterChange={storeTransactionsMain}/>
-		<Content {activeTab} {selectedOption} {formatAmount}bind:selectedYear on:yearChange={storeTransactionsMain}/>
+		<Content {activeTab} {selectedOption} {selectedStyle} {formatAmount}bind:selectedYear on:yearChange={storeTransactionsMain}/>
 	{:else}
 		<Loading />	
 	{/if}

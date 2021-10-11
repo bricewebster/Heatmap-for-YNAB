@@ -6,12 +6,13 @@
     export let activeTab
     export let selectedYear;
     export let selectedOption;
+    export let selectedStyle;
     export let formatAmount = () => {};
 </script>
 
 <div class="content">
     {#if activeTab === 'Yearly'}
-        <YearlyContent {selectedOption} {formatAmount} bind:selectedYear on:yearChange/>
+        <YearlyContent {selectedOption} {selectedStyle} {formatAmount} bind:selectedYear on:yearChange/>
     {:else if activeTab === 'Monthly'}
         <MonthlyContent />
     {:else}
