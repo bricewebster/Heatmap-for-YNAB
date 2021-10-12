@@ -79,7 +79,7 @@
             if (transaction.Date.getTime() === calendarDate.getTime()) {
                 
                 if (selectedOption === 'income' & transaction.Amount > 0 || selectedOption === 'expense' & transaction.Amount < 0 || selectedOption === 'net') {
-                    amount = (parseFloat(amount) + parseFloat(transaction.Amount)).toFixed($CurrencyInfoStore.Decimals);
+                    amount = parseFloat((parseFloat(amount) + parseFloat(transaction.Amount)).toFixed($CurrencyInfoStore.Decimals));
                     dateFormatted = transaction.dateFormatted;
                 }
             }
@@ -177,15 +177,18 @@
         setHeatmapStyle(style, fullDayList);
     }
     function setHeatmapStyle (style, daylist) {
-        console.log(daylist)
+       // console.log(daylist)
 
-        let rankings = daylist;
+        let rankings = [... new Set(daylist)];
         for(let month = 0; month < rankings.length; month++) {
-            rankings[month].sort((a,b) => (a.Amount < b.Amount) ? 1 : -1);
-            console.log(rankings[month]);
+            rankings[month].sort((a,b) => b.Amount - a.Amount);
+            let rank = new Map(rankings[month].map((x, i) => [x, i + 1]))
+           console.log(rank);
             for(let day = 0; day < daylist[month].length; day++) {
-               // console.log(daylist[month][day])
-                daylist[month][day].Rank = rankings[month].indexOf(daylist[month][day].Date);
+                console.log('day')
+                console.log(daylist[month][day])
+                daylist[month][day].Rank = rank.findIndex((x) => x.Date.valueOf() === daylist[month][day].Date.valueOf()) + 1;
+               console.log(daylist[month][day].Rank)
             }
         }
       
@@ -197,7 +200,7 @@
         //     }
         // }
 
-       console.log(daylist)
+      console.log(daylist)
     }
     /**
      * Opens and closes the trans list popup.
