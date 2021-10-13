@@ -21,6 +21,7 @@
                      {Number: 5, Word: 'May', Class: 'non-focused'}, {Number: 6, Word: 'Jun', Class: 'non-focused'}, {Number: 7, Word: 'Jul', Class: 'non-focused'}, {Number: 8, Word: 'Aug', Class: 'non-focused'}, 
                      {Number: 9, Word: 'Sep', Class: 'non-focused'}, {Number: 10, Word: 'Oct', Class: 'non-focused'}, {Number: 11, Word: 'Nov', Class: 'non-focused'}, {Number: 12, Word: 'Dec', Class: 'non-focused'}];
     let fullDayList = [];
+    let yearDayList = [];
     export let selectedYear;
     export let selectedOption;
     export let selectedStyle;
@@ -34,6 +35,7 @@
      */
     function populateDayList () {
         let list = [];
+        yearDayList = [];
         for (let calendarList = 1; calendarList <= 12; calendarList++) {
             let dayAmount = daysInMonth(calendarList, selectedYear);
             let sublist = [];
@@ -41,12 +43,16 @@
                 let date = convertToDate(calendarList - 1, selectedYear, day);
                 let transInfo = getTransactionsInfoForDay(date);
                 let dayClass = getDayClass(transInfo.Amount);
-                let days = {Amount: transInfo.Amount, amountFormatted: transInfo.formattedAmount, Rank: 0, Class: dayClass, Date: date, Month: calendarList, Day: day, dateFormatted: transInfo.dateFormatted};
+                let days = {Amount: transInfo.Amount, amountFormatted: transInfo.formattedAmount, Rank: 0, Color: '', Class: dayClass, Date: date, dayOfYear: daysInYear(date), Month: calendarList, Day: day, dateFormatted: transInfo.dateFormatted};
+                if (transInfo.Amount != 0) {
+                    yearDayList.push(days);
+                }
                 sublist.push(days);
             }
             list.push(sublist);
         }
         fullDayList = list;
+        setHeatmapStyle(selectedStyle, yearDayList);
     }
     /**
      * Gets the amount of days in the supplied month.
@@ -95,20 +101,19 @@
      */
     function getDayClass (amount) {
         let dayClass;
-        if (selectedStyle === 'regular') {
-            if (selectedOption === 'income' & amount != 0) {
-                dayClass = 'income';
-            } else if (selectedOption === 'expense' & amount != 0) {
-                dayClass = 'expense';
-            } else if (selectedOption === 'net' & amount != 0) {
-                dayClass = amount > 0 ? 'net-pos' : 'net-neg';
-            } else {
-                dayClass = "none";
-            }
+        if (selectedOption === 'income' & amount != 0) {
+            dayClass = 'income';
+        } else if (selectedOption === 'expense' & amount != 0) {
+            dayClass = 'expense';
+        } else if (selectedOption === 'net' & amount != 0) {
+            dayClass = amount > 0 ? 'net-pos' : 'net-neg';
         } else {
-
+            dayClass = "none";
         }
         return dayClass;
+    }
+    function daysInYear (transactionDate) {
+        return (Date.UTC(transactionDate.getFullYear(), transactionDate.getMonth(), transactionDate.getDate()) - Date.UTC(transactionDate.getFullYear(), 0, 0)) / 24 / 60 / 60 / 1000;
     }
     /**
      * When a day is clicked on the calendar, set all the information to be passed to the trans list popup and then call it.
@@ -162,7 +167,6 @@
         populateDayList();
     }
     function highlightMonthDay (monthId, dayId) {
-       // console.log('month ' + monthId + ' day ' + dayId)
         for (let month of monthList) {
             month.Number === monthId ? month.Class = 'focused' : month.Class = 'non-focused';
         }
@@ -172,35 +176,62 @@
         monthList = monthList;
         dayList = dayList;
     }
-    function changeSelectedStyle (style) {
+    function changeSelectedStyle (style, daylist) {
         selectedStyle = style;
-        setHeatmapStyle(style, fullDayList);
+        setHeatmapStyle(style, daylist);
     }
     function setHeatmapStyle (style, daylist) {
-       // console.log(daylist)
-
-        let rankings = [... new Set(daylist)];
-        for(let month = 0; month < rankings.length; month++) {
-            rankings[month].sort((a,b) => b.Amount - a.Amount);
-            let rank = new Map(rankings[month].map((x, i) => [x, i + 1]))
-           console.log(rank);
-            for(let day = 0; day < daylist[month].length; day++) {
-                console.log('day')
-                console.log(daylist[month][day])
-                daylist[month][day].Rank = rank.findIndex((x) => x.Date.valueOf() === daylist[month][day].Date.valueOf()) + 1;
-               console.log(daylist[month][day].Rank)
+        let list = daylist.map(data => ({...data}));
+        let amountToColor;
+        if (style != 'simple') {
+            let sortList = daylist.map(data => ({...data}));
+            let sorted = sortHeatmapList(sortList);
+            let rank = new Map(sorted.map((x, i) => [x, i + 1]));
+            amountToColor = rank.size;
+            for(let day of list) {
+                day.Rank = rank.get(day.Amount);
             }
         }
-      
-        // console.log(rankings)
-        
-        // for(let month in daylist) {
-        //     for(let day in month){
-        //         daylist.Rank = rankings.indexOf(day.Date);
-        //     }
-        // }
-
-      console.log(daylist)
+        setHeatmapColors(amountToColor, list, style);
+        fullDayList = applyHeatMapColor(list, fullDayList);
+    }
+    function sortHeatmapList (list) {
+        var unique = [];
+        var distinct = [];
+        for (let i = 0; i < list.length; i++ ) {
+            if (!unique[list[i].Amount]){
+                distinct.push(list[i].Amount);
+                unique[list[i].Amount] = 1;
+            }
+        }
+        return distinct.sort((a,b) => b- a);
+    }
+    function setHeatmapColors (amountToColor, list, style) {
+        let increment = 100 / amountToColor;
+        let background;
+        for (let day of list) {
+            let s = increment * day.Rank;
+            if (style === 'simple') {
+                if (selectedOption === 'income') {
+                    background = 'background: #00a567';
+                } else if (selectedOption === 'expense') {
+                    background = 'background: #de5d83';
+                }
+            } else if (style === 'regular') {
+                if (selectedOption === 'income') {
+                    background = 'background: hsl(157,' + s + '%, 32%)';
+                } else if (selectedOption === 'expense') {
+                    background = 'background: hsl(342,' + s + '%, 62%)';
+                }
+            }
+            day.Color = background;
+        }
+    }
+    function applyHeatMapColor (list, fullList) {
+        for (let day of list) {
+           fullList[day.Month - 1][day.Day - 1].Color = day.Color;
+        }
+        return fullList;
     }
     /**
      * Opens and closes the trans list popup.
@@ -222,8 +253,9 @@
             <button on:click={() => toggleSelectedYear('next')}><span class="material-icons-outlined md-36">chevron_right</span></button>
         </div>
         <div class="cal-styles">
-            <button on:click={() => changeSelectedStyle('regular', fullDayList)}><span class="material-icons-outlined md-36 style-regular-icon" class:selected={selectedStyle === 'regular'} class:nonselected-icon={selectedStyle != 'regular'}>local_fire_department</span></button>
-            <button on:click={() => changeSelectedStyle('simple', fullDayList)}><span class="material-icons-outlined md-36 style-simple-icon" class:selected={selectedStyle === 'simple'} class:nonselected-icon={selectedStyle != 'simple'}>whatshot</span></button>
+            <button on:click={() => changeSelectedStyle('regular', yearDayList)}><span class="material-icons-outlined md-36 style-regular-icon" class:selected={selectedStyle === 'regular'} class:nonselected-icon={selectedStyle != 'regular'}>local_fire_department</span></button>
+            <button on:click={() => changeSelectedStyle('group', yearDayList)}><span class="material-icons-outlined md-36 style-group-icon" class:selected={selectedStyle === 'group'} class:nonselected-icon={selectedStyle != 'group'}>whatshot</span></button>
+            <button on:click={() => changeSelectedStyle('simple', yearDayList)}><span class="material-icons-outlined md-36 style-simple-icon" class:selected={selectedStyle === 'simple'} class:nonselected-icon={selectedStyle != 'simple'}>fireplace</span></button>
         </div>
         <table class="cal-year day-list">
             <tr>
@@ -244,7 +276,7 @@
                     <tr>
                     {#each month as day}
                         {#if day.Amount != 0}
-                            <th class="{day.Class} populated" on:click={() => dayClicked(day.Date, day.dateFormatted, day.amountFormatted)} on:mouseover={() => highlightMonthDay(day.Month, day.Day)} on:focus={() => highlightMonthDay() }><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><div class="amountPopup"><span class="amountPopupText">{day.amountFormatted}</span></div></div></div></div></th>
+                            <th class="{day.Class} populated" style="{day.Color}" on:click={() => dayClicked(day.Date, day.dateFormatted, day.amountFormatted)} on:mouseover={() => highlightMonthDay(day.Month, day.Day)} on:focus={() => highlightMonthDay() }><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><div class="amountPopup"><span class="amountPopupText">{day.amountFormatted}</span></div></div></div></div></th>
                         {:else}
                             <th class="{day.Class}"></th>
                         {/if}
@@ -310,7 +342,7 @@
         float: right;
 
         margin: 15px 0 0 0px;
-        width: 143px;
+        width: 223px;
 
         & button {
             margin-left: 20px;
@@ -323,8 +355,11 @@
     .style-regular-icon.selected, .style-regular-icon:hover {
         color: #B31313;
     }
-    .style-simple-icon.selected, .style-simple-icon:hover {
+    .style-group-icon.selected, .style-group-icon:hover {
         color: #FF9000;
+    }
+    .style-simple-icon.selected, .style-simple-icon:hover {
+        color: #FEDE17;
     }
     .cal-year-container{
         display: block;
