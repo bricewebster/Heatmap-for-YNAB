@@ -210,18 +210,43 @@
         let increment = 100 / amountToColor;
         let background;
         for (let day of list) {
-            let s = increment * day.Rank;
-            if (style === 'simple') {
-                if (selectedOption === 'income') {
-                    background = 'background: #00a567';
-                } else if (selectedOption === 'expense') {
-                    background = 'background: #de5d83';
-                }
-            } else if (style === 'regular') {
+            let s;
+            if (style === 'regular') {
+                s = increment * day.Rank;
                 if (selectedOption === 'income') {
                     background = 'background: hsl(157,' + s + '%, 32%)';
                 } else if (selectedOption === 'expense') {
                     background = 'background: hsl(342,' + s + '%, 62%)';
+                }
+            } else if (style === 'group') {
+                let placement = (day.Rank / amountToColor) * 100;
+                if (placement >= 90) {
+                    if (selectedOption === 'expense') {
+                        background = 'background: hsl(343,63%,54%)';
+                    }
+                } else if (placement >= 50 & placement < 90) {
+                    if (selectedOption === 'expense') {
+                        background = 'background: hsl(4,66%,60%)';
+                    }
+                } else if (placement >= 10 & placement < 50) {
+                    if (selectedOption === 'expense') {
+                        background = 'background: hsl(22,75%,57%)';
+                    }
+                } else {
+                    if (selectedOption === 'expense') {
+                        background = 'background: hsl(34,81%,54%)';
+                    }
+                }
+                if (selectedOption === 'income') {
+                    background = 'background: hsl(157,' + s + '%, 32%)';
+                }// else if (selectedOption === 'expense') {
+                //     background = 'background: hsl(334,' + s + '%, 55%)';
+                // }
+            } else {
+                if (selectedOption === 'income') {
+                    background = 'background: #00a567';
+                } else if (selectedOption === 'expense') {
+                    background = 'background: #de5d83';
                 }
             }
             day.Color = background;
@@ -248,9 +273,9 @@
             <button on:click={() => changeSelectedOption('net')}><span class="material-icons-outlined md-36 net-icon" class:selected={selectedOption === 'net'} class:nonselected-icon={selectedOption != 'net'}>request_quote</span></button>
         </div>
         <div class="year-selector">
-            <button on:click={() => toggleSelectedYear('previous')}><span class="material-icons-outlined md-36">chevron_left</span></button>
+            <button on:click={() => toggleSelectedYear('previous')}><span class="material-icons-outlined md-24">chevron_left</span></button>
             <p>{selectedYear}</p>
-            <button on:click={() => toggleSelectedYear('next')}><span class="material-icons-outlined md-36">chevron_right</span></button>
+            <button on:click={() => toggleSelectedYear('next')}><span class="material-icons-outlined md-24">chevron_right</span></button>
         </div>
         <div class="cal-styles">
             <button on:click={() => changeSelectedStyle('regular', yearDayList)}><span class="material-icons-outlined md-36 style-regular-icon" class:selected={selectedStyle === 'regular'} class:nonselected-icon={selectedStyle != 'regular'}>local_fire_department</span></button>
@@ -293,8 +318,8 @@
 </div>
 <style lang="scss">
     .cal-options {
-        display: inline-block;
-        margin: 15px 0 0 25px;
+        float: left;
+        margin-left: 25px;
         width: 213px;
 
         & button {
@@ -318,30 +343,27 @@
         color:  rgba(187, 167, 167, 0.842);
     }
     .year-selector {
-        display: inline-block;
+        float: left;
 
-        margin: 0 auto 15px 105px;
-        width: 215px;
+        margin-left: 118px;
+        width: 245px;
     }
     .year-selector p{
         display: inline-block;
 
-        margin: 0 10px;
+        margin: 0 5px;
 
         font-size: 2.2em;
     }
     .year-selector button{
         background: none;
         border: none;
-        border-radius: 5px;
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-
+     
         cursor: pointer;
     }
     .cal-styles {
         float: right;
 
-        margin: 15px 0 0 0px;
         width: 223px;
 
         & button {
@@ -373,7 +395,7 @@
         font-size: 12px;
     }
     .day-list {
-        margin-left: 5px;
+        margin: 15px 0 0 5px;
     }
     .cal-year.cal-year-days {
         width: 840px;
