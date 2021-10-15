@@ -3,7 +3,6 @@
     import TransListPopup from '../components/TransListPopup.svelte';
     import CurrentTransactionsStore from '../stores/currentTransactionsStore';
 
-
     var showPopup = false;
     var selectedDay;
     var selectedDayList = [];
@@ -142,23 +141,32 @@
                 if (placement >= 90) {
                     if (selectedOption === 'expense') {
                         background = 'background: hsl(343,63%,54%)';
+                    } else if (selectedOption === 'income') {
+                        background = 'background: hsl(52, 84%, 73%)';
                     }
                 } else if (placement >= 50 & placement < 90) {
                     if (selectedOption === 'expense') {
                         background = 'background: hsl(4,66%,60%)';
+                    } else if (selectedOption === 'income') {
+                        background = 'background: hsl(76, 52%, 63%)';
                     }
                 } else if (placement >= 10 & placement < 50) {
                     if (selectedOption === 'expense') {
                         background = 'background: hsl(22,75%,57%)';
+                    } else if (selectedOption === 'income') {
+                        background = 'background: hsl(111, 39%, 57%)';
                     }
                 } else {
                     if (selectedOption === 'expense') {
                         background = 'background: hsl(34,81%,54%)';
+                    } else if (selectedOption === 'income') {
+                     
+                        background = 'background: hsl(157, 100%, 32%)';
                     }
                 }
-                if (selectedOption === 'income') {
-                    background = 'background: hsl(157,' + s + '%, 32%)';
-                }// else if (selectedOption === 'expense') {
+                // if (selectedOption === 'income') {
+                //     background = 'background: hsl(157,' + s + '%, 32%)';
+                // }// else if (selectedOption === 'expense') {
                 //     background = 'background: hsl(334,' + s + '%, 55%)';
                 // }
             } else {
