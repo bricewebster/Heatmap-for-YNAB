@@ -30,7 +30,7 @@
         display: inline-block;
 
         margin-left: 20px;
-        padding: 0px 5px 5px 5px;
+        padding: 0px 5px 4px 5px;
   
         background: none;
         border: none;

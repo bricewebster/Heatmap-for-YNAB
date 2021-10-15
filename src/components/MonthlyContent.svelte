@@ -5,5 +5,10 @@
     <p>Monthly Content</p>
 </div>
 <style>
-    /* your styles go here */
+    .content{
+        display: block;
+        
+        margin: 50px auto 0 auto;
+        width: 880px;
+    }
 </style>

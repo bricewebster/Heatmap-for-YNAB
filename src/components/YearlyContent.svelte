@@ -1,15 +1,18 @@
 <script>
+    import CalendarNavigation from "./CalendarNavigation.svelte";
     import TransListPopup from '../components/TransListPopup.svelte';
     import CurrentTransactionsStore from '../stores/currentTransactionsStore';
-    import CurrencyInfoStore from '../stores/currencyInfoStore';
-    import { createEventDispatcher } from 'svelte';
 
-    const dispatch = createEventDispatcher();
 
     var showPopup = false;
     var selectedDay;
     var selectedDayList = [];
     var selectedAmount;
+    export let convertToDate = () => {};
+    export let getTransactionsInfoForDay = () => {};
+    export let getDayClass = () => {};
+    export let getSelectedDaysTransactions = () => {};
+    export let daysInYear = () => {};
 
     let dayList = [{Number: 1, Class: 'non-focused'}, {Number: 2, Class: 'non-focused'}, {Number: 3, Class: 'non-focused'}, {Number: 4, Class: 'non-focused'}, {Number: 5, Class: 'non-focused'}, {Number: 6, Class: 'non-focused'},
                     {Number: 7, Class: 'non-focused'}, {Number: 8, Class: 'non-focused'}, {Number: 9, Class: 'non-focused'}, {Number: 10, Class: 'non-focused'}, {Number: 11, Class: 'non-focused'}, {Number: 12, Class: 'non-focused'},
@@ -25,7 +28,6 @@
     export let selectedYear;
     export let selectedOption;
     export let selectedStyle;
-    export let formatAmount = () => {};
 
     //Reactively calls populateDayList when currentTransactionStore is updated anywhere in project.
     $: $CurrentTransactionsStore, populateDayList();
@@ -64,58 +66,6 @@
         return new Date(year, month, 0).getDate();
     }
     /**
-     * Converts supplised month, year, and day into Date object.
-     * @param {String} month supplied month
-     * @param {String} year selected year
-     * @param {String} day supplied day
-     * @returns {Date} Date object based on parameters
-     */
-    function convertToDate (month, year, day) {
-        return new Date(year, month, day);
-    }
-    /**TODO:Function has two redundancies, one is it loops through the same list multiple times for each day and the other is it sets the date formatted multiple times. Need to improve this.
-     * Gets the total amount for the supplied day based on the selected option.
-     * @param {Date} calendarDate day supplied
-     * @returns {Int} total amount for the supplied day
-     */
-    function getTransactionsInfoForDay (calendarDate) {
-        let amount = 0;
-        let dateFormatted;
-        for (let transaction of $CurrentTransactionsStore) {
-            if (transaction.Date.getTime() === calendarDate.getTime()) {
-                
-                if (selectedOption === 'income' & transaction.Amount > 0 || selectedOption === 'expense' & transaction.Amount < 0 || selectedOption === 'net') {
-                    amount = parseFloat((parseFloat(amount) + parseFloat(transaction.Amount)).toFixed($CurrencyInfoStore.Decimals));
-                    dateFormatted = transaction.dateFormatted;
-                }
-            }
-        }
-        let formattedAmount = formatAmount(amount);
-        let finalAmount = {Amount: amount, formattedAmount: formattedAmount, dateFormatted: dateFormatted};
-        return finalAmount;
-    }
-    /**
-     * Determine the class to be used based on the supplied amount and selected option.
-     * @param {Int} amount supplied amount
-     * @returns class to be used
-     */
-    function getDayClass (amount) {
-        let dayClass;
-        if (selectedOption === 'income' & amount != 0) {
-            dayClass = 'income';
-        } else if (selectedOption === 'expense' & amount != 0) {
-            dayClass = 'expense';
-        } else if (selectedOption === 'net' & amount != 0) {
-            dayClass = amount > 0 ? 'net-pos' : 'net-neg';
-        } else {
-            dayClass = "none";
-        }
-        return dayClass;
-    }
-    function daysInYear (transactionDate) {
-        return (Date.UTC(transactionDate.getFullYear(), transactionDate.getMonth(), transactionDate.getDate()) - Date.UTC(transactionDate.getFullYear(), 0, 0)) / 24 / 60 / 60 / 1000;
-    }
-    /**
      * When a day is clicked on the calendar, set all the information to be passed to the trans list popup and then call it.
      * @param {Date} date date clicked
      * @param {String} dateFormatted date clicked in user settings format
@@ -126,37 +76,6 @@
         selectedDayList = getSelectedDaysTransactions(date);
         selectedAmount = amountFormatted;
         togglePopup();
-    }
-    /**
-     * Get all the transactions for the selected day and populate them in a list.
-     * @param {Date} date day selected
-     * @returns {Array of Objects} transactions for day selected
-     */
-    function getSelectedDaysTransactions (date) {
-        let transactionList = [];
-        for (let day of $CurrentTransactionsStore) {
-            if (day.Date.getTime() === date.getTime()) {
-                if (selectedOption === 'income' & day.Amount > 0) {
-                    day.amountFormatted = formatAmount(day.Amount);
-                    transactionList.push(day);
-                } else if (selectedOption === 'expense' & day.Amount < 0) {
-                    day.amountFormatted = formatAmount(day.Amount);
-                    transactionList.push(day);
-                } else if (selectedOption === 'net') {
-                    day.amountFormatted = formatAmount(day.Amount);
-                    transactionList.push(day);
-                }
-            }
-        }
-        return transactionList;
-    }
-     /**
-     * Toggles the selected year based on button clicked and calls the update to transactions.
-     * @param {String} buttonSelected name of button selected
-     */
-     function toggleSelectedYear (buttonSelected) {
-        selectedYear = buttonSelected === 'previous' ? selectedYear=selectedYear-1 : selectedYear=selectedYear+1;
-        dispatch('yearChange', );
     }
     /**
      * Changes the selected option based on what was selected and calls the update to the calendar.
@@ -267,21 +186,7 @@
 </script>
 <div class="content">
     <div class="cal-year-container">
-        <div class="cal-options">
-            <button on:click={() => changeSelectedOption('income')}><span class="material-icons-outlined md-36 income-icon" class:selected={selectedOption === 'income'} class:nonselected-icon={selectedOption != 'income'}>savings</span></button>
-            <button on:click={() => changeSelectedOption('expense')}><span class="material-icons-outlined md-36 expense-icon" class:selected={selectedOption === 'expense'} class:nonselected-icon={selectedOption != 'expense'}>paid</span></button>
-            <button on:click={() => changeSelectedOption('net')}><span class="material-icons-outlined md-36 net-icon" class:selected={selectedOption === 'net'} class:nonselected-icon={selectedOption != 'net'}>request_quote</span></button>
-        </div>
-        <div class="year-selector">
-            <button on:click={() => toggleSelectedYear('previous')}><span class="material-icons-outlined md-24">chevron_left</span></button>
-            <p>{selectedYear}</p>
-            <button on:click={() => toggleSelectedYear('next')}><span class="material-icons-outlined md-24">chevron_right</span></button>
-        </div>
-        <div class="cal-styles">
-            <button on:click={() => changeSelectedStyle('regular', yearDayList)}><span class="material-icons-outlined md-36 style-regular-icon" class:selected={selectedStyle === 'regular'} class:nonselected-icon={selectedStyle != 'regular'}>local_fire_department</span></button>
-            <button on:click={() => changeSelectedStyle('group', yearDayList)}><span class="material-icons-outlined md-36 style-group-icon" class:selected={selectedStyle === 'group'} class:nonselected-icon={selectedStyle != 'group'}>whatshot</span></button>
-            <button on:click={() => changeSelectedStyle('simple', yearDayList)}><span class="material-icons-outlined md-36 style-simple-icon" class:selected={selectedStyle === 'simple'} class:nonselected-icon={selectedStyle != 'simple'}>fireplace</span></button>
-        </div>
+        <CalendarNavigation {selectedOption} {selectedStyle} {yearDayList} {changeSelectedOption} {changeSelectedStyle} bind:selectedYear on:yearChange/>
         <table class="cal-year day-list">
             <tr>
             <th><p></p></th>
@@ -317,73 +222,7 @@
     </div>
 </div>
 <style lang="scss">
-    .cal-options {
-        float: left;
-        margin-left: 25px;
-        width: 213px;
-
-        & button {
-            margin-right: 20px;
-            background: none;
-            border: none;
-
-            cursor: pointer;
-        }
-    }
-    .income-icon.selected, .income-icon:hover {
-        color: #00a567;
-    }
-    .expense-icon.selected, .expense-icon:hover {
-        color: #de5d83;
-    }
-    .net-icon.selected, .net-icon:hover {
-        color: #ffb347;
-    }
-    .nonselected-icon {
-        color:  rgba(187, 167, 167, 0.842);
-    }
-    .year-selector {
-        float: left;
-
-        margin-left: 118px;
-        width: 245px;
-    }
-    .year-selector p{
-        display: inline-block;
-
-        margin: 0 5px;
-
-        font-size: 2.2em;
-    }
-    .year-selector button{
-        background: none;
-        border: none;
-     
-        cursor: pointer;
-    }
-    .cal-styles {
-        float: right;
-
-        width: 223px;
-
-        & button {
-            margin-left: 20px;
-            background: none;
-            border: none;
-
-            cursor: pointer;
-        }
-    }
-    .style-regular-icon.selected, .style-regular-icon:hover {
-        color: #B31313;
-    }
-    .style-group-icon.selected, .style-group-icon:hover {
-        color: #FF9000;
-    }
-    .style-simple-icon.selected, .style-simple-icon:hover {
-        color: #FEDE17;
-    }
-    .cal-year-container{
+    .content {
         display: block;
         
         margin: 50px auto 0 auto;
