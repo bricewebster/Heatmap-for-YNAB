@@ -92,7 +92,7 @@
     {#if activeTab === 'Yearly'}
         <YearlyContent {convertToDate} {getTransactionsInfoForDay} {getDayClass} {getSelectedDaysTransactions} {daysInYear} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange/>
     {:else if activeTab === 'Monthly'}
-        <MonthlyContent />
+        <MonthlyContent {selectedOption} {selectedYear} {selectedStyle} {formatAmount} {daysInYear} {getDayClass}/>
     {:else}
         <DailyContent />
     {/if}

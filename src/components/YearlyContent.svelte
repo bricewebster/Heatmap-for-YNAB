@@ -194,7 +194,7 @@
 </script>
 <div class="content">
     <div class="cal-year-container">
-        <CalendarNavigation {selectedOption} {selectedStyle} {yearDayList} {changeSelectedOption} {changeSelectedStyle} bind:selectedYear on:yearChange/>
+        <CalendarNavigation {selectedOption} {selectedStyle} list = {yearDayList} {changeSelectedOption} {changeSelectedStyle} bind:selectedYear on:yearChange/>
         <table class="cal-year day-list">
             <tr>
             <th><p></p></th>

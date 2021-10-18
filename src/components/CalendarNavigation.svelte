@@ -6,7 +6,7 @@
     export let selectedYear;
     export let selectedOption;
     export let selectedStyle;
-    export let yearDayList = [];
+    export let list = [];
 
     export let changeSelectedOption = () => {};
     export let changeSelectedStyle = () => {};
@@ -32,9 +32,9 @@
     <button on:click={() => toggleSelectedYear('next')}><span class="material-icons-outlined md-24">chevron_right</span></button>
 </div>
 <div class="cal-styles">
-    <button on:click={() => changeSelectedStyle('regular', yearDayList)}><span class="material-icons-outlined md-36 style-regular-icon" class:selected={selectedStyle === 'regular'} class:nonselected-icon={selectedStyle != 'regular'}>local_fire_department</span></button>
-    <button on:click={() => changeSelectedStyle('group', yearDayList)}><span class="material-icons-outlined md-36 style-group-icon" class:selected={selectedStyle === 'group'} class:nonselected-icon={selectedStyle != 'group'}>whatshot</span></button>
-    <button on:click={() => changeSelectedStyle('simple', yearDayList)}><span class="material-icons-outlined md-36 style-simple-icon" class:selected={selectedStyle === 'simple'} class:nonselected-icon={selectedStyle != 'simple'}>fireplace</span></button>
+    <button on:click={() => changeSelectedStyle('regular', list)}><span class="material-icons-outlined md-36 style-regular-icon" class:selected={selectedStyle === 'regular'} class:nonselected-icon={selectedStyle != 'regular'}>local_fire_department</span></button>
+    <button on:click={() => changeSelectedStyle('group', list)}><span class="material-icons-outlined md-36 style-group-icon" class:selected={selectedStyle === 'group'} class:nonselected-icon={selectedStyle != 'group'}>whatshot</span></button>
+    <button on:click={() => changeSelectedStyle('simple', list)}><span class="material-icons-outlined md-36 style-simple-icon" class:selected={selectedStyle === 'simple'} class:nonselected-icon={selectedStyle != 'simple'}>fireplace</span></button>
 </div>
 
 <style lang="scss">
