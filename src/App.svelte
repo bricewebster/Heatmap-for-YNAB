@@ -248,7 +248,7 @@
   		} else {
 			const amount = ynab.utils.convertMilliUnitsToCurrencyAmount(transaction.amount, $CurrencyInfoStore.Decimals); //Converts to users currency in decimals.
 			let memo = transaction.memo === null ? '' : transaction.memo; //Some memos are null for some reason. This makes them blank strings.
-			let currentTrans = {Date: transactionDate, dateFormatted: formatDate(transactionDate), categoryName: transaction.category_name, accountName: transaction.account_name, payeeName: transaction.payee_name, Amount: amount, amountFormatted: formatAmount(amount), Memo: memo};
+			let currentTrans = {Date: transactionDate, dateFormatted: formatDate(transactionDate), dayOfMonth: transactionDate.getDate(), categoryName: transaction.category_name, accountName: transaction.account_name, payeeName: transaction.payee_name, Amount: amount, amountFormatted: formatAmount(amount), Memo: memo};
 			return currentTrans;
 		}
 	}

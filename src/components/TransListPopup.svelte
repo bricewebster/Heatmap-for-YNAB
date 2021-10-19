@@ -5,6 +5,8 @@
     export let selectedDay;
     export let selectedDayList;
     export let selectedAmount;
+
+    console.log(selectedDayList)
 </script>
 
 <div class="popup">

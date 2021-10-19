@@ -65,10 +65,17 @@
      * @param {Date} date day selected
      * @returns {Array of Objects} transactions for day selected
      */
-    function getSelectedDaysTransactions (date) {
+    function getSelectedDaysTransactions (date, tabOption) {
         let transactionList = [];
         for (let day of $CurrentTransactionsStore) {
-            if (day.Date.getTime() === date.getTime()) {
+            let compare;
+            if (tabOption === 'year') {
+                compare = day.Date.getTime() === date.getTime();
+            } else if (tabOption === 'month') {
+                compare = day.dayOfMonth === date;
+                console.log(day.dayOfMonth)
+            }
+            if (compare) {
                 if (selectedOption === 'income' & day.Amount > 0) {
                     day.amountFormatted = formatAmount(day.Amount);
                     transactionList.push(day);
@@ -81,6 +88,7 @@
                 }
             }
         }
+        console.log(transactionList)
         return transactionList;
     }
     function daysInYear (transactionDate) {
@@ -92,7 +100,7 @@
     {#if activeTab === 'Yearly'}
         <YearlyContent {convertToDate} {getTransactionsInfoForDay} {getDayClass} {getSelectedDaysTransactions} {daysInYear} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange/>
     {:else if activeTab === 'Monthly'}
-        <MonthlyContent {selectedOption} {selectedYear} {selectedStyle} {formatAmount} {daysInYear} {getDayClass}/>
+        <MonthlyContent {formatAmount} {daysInYear} {getDayClass} {getSelectedDaysTransactions} bind:selectedOption bind:selectedStyle bind:selectedYear/>
     {:else}
         <DailyContent />
     {/if}
