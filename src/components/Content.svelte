@@ -73,7 +73,6 @@
                 compare = day.Date.getTime() === date.getTime();
             } else if (tabOption === 'month') {
                 compare = day.dayOfMonth === date;
-                console.log(day.dayOfMonth)
             }
             if (compare) {
                 if (selectedOption === 'income' & day.Amount > 0) {
@@ -88,19 +87,99 @@
                 }
             }
         }
-        console.log(transactionList)
         return transactionList;
     }
     function daysInYear (transactionDate) {
         return (Date.UTC(transactionDate.getFullYear(), transactionDate.getMonth(), transactionDate.getDate()) - Date.UTC(transactionDate.getFullYear(), 0, 0)) / 24 / 60 / 60 / 1000;
     }
+    function setHeatmapStyle (daylist) {
+        let list = daylist.map(data => ({...data}));
+        let amountToColor;
+        if (selectedStyle != 'simple') {
+            let sortList = daylist.map(data => ({...data}));
+            let sorted = sortHeatmapList(sortList);
+            let rank = new Map(sorted.map((x, i) => [x, i + 1]));
+            amountToColor = rank.size;
+            for(let day of list) {
+                day.Rank = rank.get(day.Amount);
+            }
+        }
+        setHeatmapColors(amountToColor, list);
+        return list;
+    }
+    function sortHeatmapList (list) {
+        var unique = [];
+        var distinct = [];
+        for (let i = 0; i < list.length; i++ ) {
+            if (!unique[list[i].Amount]){
+                distinct.push(list[i].Amount);
+                unique[list[i].Amount] = 1;
+            }
+        }
+        return distinct.sort((a,b) => b- a);
+    }
+    function setHeatmapColors (amountToColor, list) {
+        let increment = 100 / amountToColor;
+        let background;
+        for (let day of list) {
+            let s;
+            if (selectedStyle === 'regular') {
+                s = increment * day.Rank;
+                if (selectedOption === 'income') {
+                    background = 'background: hsl(157,' + s + '%, 32%)';
+                } else if (selectedOption === 'expense') {
+                    background = 'background: hsl(342,' + s + '%, 62%)';
+                }
+            } else if (selectedStyle === 'group') {
+                let placement = (day.Rank / amountToColor) * 100;
+                if (placement >= 90) {
+                    if (selectedOption === 'expense') {
+                        background = 'background: hsl(343,63%,54%)';
+                    } else if (selectedOption === 'income') {
+                        background = 'background: hsl(52, 84%, 73%)';
+                    }
+                } else if (placement >= 50 & placement < 90) {
+                    if (selectedOption === 'expense') {
+                        background = 'background: hsl(4,66%,60%)';
+                    } else if (selectedOption === 'income') {
+                        background = 'background: hsl(76, 52%, 63%)';
+                    }
+                } else if (placement >= 10 & placement < 50) {
+                    if (selectedOption === 'expense') {
+                        background = 'background: hsl(22,75%,57%)';
+                    } else if (selectedOption === 'income') {
+                        background = 'background: hsl(111, 39%, 57%)';
+                    }
+                } else {
+                    if (selectedOption === 'expense') {
+                        background = 'background: hsl(34,81%,54%)';
+                    } else if (selectedOption === 'income') {
+                     
+                        background = 'background: hsl(157, 100%, 32%)';
+                    }
+                }
+                // if (selectedOption === 'income') {
+                //     background = 'background: hsl(157,' + s + '%, 32%)';
+                // }// else if (selectedOption === 'expense') {
+                //     background = 'background: hsl(334,' + s + '%, 55%)';
+                // }
+            } else {
+                if (selectedOption === 'income') {
+                    background = 'background: #00a567';
+                } else if (selectedOption === 'expense') {
+                    background = 'background: #de5d83';
+                }
+            }
+            day.Color = background;
+        }
+    }
 </script>
 
 <div class="content">
     {#if activeTab === 'Yearly'}
-        <YearlyContent {convertToDate} {getTransactionsInfoForDay} {getDayClass} {getSelectedDaysTransactions} {daysInYear} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange/>
+        <YearlyContent {convertToDate} {getTransactionsInfoForDay} {getDayClass} {getSelectedDaysTransactions} {daysInYear} {setHeatmapStyle} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange/>
     {:else if activeTab === 'Monthly'}
-        <MonthlyContent {formatAmount} {daysInYear} {getDayClass} {getSelectedDaysTransactions} bind:selectedOption bind:selectedStyle bind:selectedYear/>
+        <MonthlyContent {formatAmount} {daysInYear} {getDayClass} {getSelectedDaysTransactions} {setHeatmapStyle} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange/>
     {:else}
         <DailyContent />
     {/if}

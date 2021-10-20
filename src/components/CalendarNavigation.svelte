@@ -20,24 +20,30 @@
         dispatch('yearChange', );
     }
 </script>
-
-<div class="cal-options">
-    <button on:click={() => changeSelectedOption('income')}><span class="material-icons-outlined md-36 income-icon" class:selected={selectedOption === 'income'} class:nonselected-icon={selectedOption != 'income'}>savings</span></button>
-    <button on:click={() => changeSelectedOption('expense')}><span class="material-icons-outlined md-36 expense-icon" class:selected={selectedOption === 'expense'} class:nonselected-icon={selectedOption != 'expense'}>paid</span></button>
-    <button on:click={() => changeSelectedOption('net')}><span class="material-icons-outlined md-36 net-icon" class:selected={selectedOption === 'net'} class:nonselected-icon={selectedOption != 'net'}>request_quote</span></button>
-</div>
-<div class="year-selector">
-    <button on:click={() => toggleSelectedYear('previous')}><span class="material-icons-outlined md-24">chevron_left</span></button>
-    <p>{selectedYear}</p>
-    <button on:click={() => toggleSelectedYear('next')}><span class="material-icons-outlined md-24">chevron_right</span></button>
-</div>
-<div class="cal-styles">
-    <button on:click={() => changeSelectedStyle('regular', list)}><span class="material-icons-outlined md-36 style-regular-icon" class:selected={selectedStyle === 'regular'} class:nonselected-icon={selectedStyle != 'regular'}>local_fire_department</span></button>
-    <button on:click={() => changeSelectedStyle('group', list)}><span class="material-icons-outlined md-36 style-group-icon" class:selected={selectedStyle === 'group'} class:nonselected-icon={selectedStyle != 'group'}>whatshot</span></button>
-    <button on:click={() => changeSelectedStyle('simple', list)}><span class="material-icons-outlined md-36 style-simple-icon" class:selected={selectedStyle === 'simple'} class:nonselected-icon={selectedStyle != 'simple'}>fireplace</span></button>
+<div class="cal-navigation">
+    <div class="cal-options">
+        <button on:click={() => changeSelectedOption('income')}><span class="material-icons-outlined md-36 income-icon" class:selected={selectedOption === 'income'} class:nonselected-icon={selectedOption != 'income'}>savings</span></button>
+        <button on:click={() => changeSelectedOption('expense')}><span class="material-icons-outlined md-36 expense-icon" class:selected={selectedOption === 'expense'} class:nonselected-icon={selectedOption != 'expense'}>paid</span></button>
+        <button on:click={() => changeSelectedOption('net')}><span class="material-icons-outlined md-36 net-icon" class:selected={selectedOption === 'net'} class:nonselected-icon={selectedOption != 'net'}>request_quote</span></button>
+    </div>
+    <div class="year-selector">
+        <button on:click={() => toggleSelectedYear('previous')}><span class="material-icons-outlined md-24">chevron_left</span></button>
+        <p>{selectedYear}</p>
+        <button on:click={() => toggleSelectedYear('next')}><span class="material-icons-outlined md-24">chevron_right</span></button>
+    </div>
+    <div class="cal-styles">
+        <button on:click={() => changeSelectedStyle('regular', list)}><span class="material-icons-outlined md-36 style-regular-icon" class:selected={selectedStyle === 'regular'} class:nonselected-icon={selectedStyle != 'regular'}>local_fire_department</span></button>
+        <button on:click={() => changeSelectedStyle('group', list)}><span class="material-icons-outlined md-36 style-group-icon" class:selected={selectedStyle === 'group'} class:nonselected-icon={selectedStyle != 'group'}>whatshot</span></button>
+        <button on:click={() => changeSelectedStyle('simple', list)}><span class="material-icons-outlined md-36 style-simple-icon" class:selected={selectedStyle === 'simple'} class:nonselected-icon={selectedStyle != 'simple'}>fireplace</span></button>
+    </div>
 </div>
 
 <style lang="scss">
+    .cal-navigation {
+        display: block;
+
+        height: 50px;
+    }
     .cal-options {
         float: left;
         margin-left: 25px;

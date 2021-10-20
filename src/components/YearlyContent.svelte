@@ -12,6 +12,7 @@
     export let getDayClass = () => {};
     export let getSelectedDaysTransactions = () => {};
     export let daysInYear = () => {};
+    export let setHeatmapStyle = () => {};
 
     let dayList = [{Number: 1, Class: 'non-focused'}, {Number: 2, Class: 'non-focused'}, {Number: 3, Class: 'non-focused'}, {Number: 4, Class: 'non-focused'}, {Number: 5, Class: 'non-focused'}, {Number: 6, Class: 'non-focused'},
                     {Number: 7, Class: 'non-focused'}, {Number: 8, Class: 'non-focused'}, {Number: 9, Class: 'non-focused'}, {Number: 10, Class: 'non-focused'}, {Number: 11, Class: 'non-focused'}, {Number: 12, Class: 'non-focused'},
@@ -53,7 +54,7 @@
             list.push(sublist);
         }
         fullDayList = list;
-        setHeatmapStyle(selectedStyle, yearDayList);
+        changeSelectedStyle(selectedStyle, yearDayList);
     }
     /**
      * Gets the amount of days in the supplied month.
@@ -72,7 +73,7 @@
      */
     function dayClicked(date, dateFormatted, amountFormatted) {
         selectedDay = dateFormatted;
-        selectedDayList = getSelectedDaysTransactions(date);
+        selectedDayList = getSelectedDaysTransactions(date, 'year');
         selectedAmount = amountFormatted;
         togglePopup();
     }
@@ -96,88 +97,8 @@
     }
     function changeSelectedStyle (style, daylist) {
         selectedStyle = style;
-        setHeatmapStyle(style, daylist);
-    }
-    function setHeatmapStyle (style, daylist) {
-        let list = daylist.map(data => ({...data}));
-        let amountToColor;
-        if (style != 'simple') {
-            let sortList = daylist.map(data => ({...data}));
-            let sorted = sortHeatmapList(sortList);
-            let rank = new Map(sorted.map((x, i) => [x, i + 1]));
-            amountToColor = rank.size;
-            for(let day of list) {
-                day.Rank = rank.get(day.Amount);
-            }
-        }
-        setHeatmapColors(amountToColor, list, style);
+        let list = setHeatmapStyle(daylist);
         fullDayList = applyHeatMapColor(list, fullDayList);
-    }
-    function sortHeatmapList (list) {
-        var unique = [];
-        var distinct = [];
-        for (let i = 0; i < list.length; i++ ) {
-            if (!unique[list[i].Amount]){
-                distinct.push(list[i].Amount);
-                unique[list[i].Amount] = 1;
-            }
-        }
-        return distinct.sort((a,b) => b- a);
-    }
-    function setHeatmapColors (amountToColor, list, style) {
-        let increment = 100 / amountToColor;
-        let background;
-        for (let day of list) {
-            let s;
-            if (style === 'regular') {
-                s = increment * day.Rank;
-                if (selectedOption === 'income') {
-                    background = 'background: hsl(157,' + s + '%, 32%)';
-                } else if (selectedOption === 'expense') {
-                    background = 'background: hsl(342,' + s + '%, 62%)';
-                }
-            } else if (style === 'group') {
-                let placement = (day.Rank / amountToColor) * 100;
-                if (placement >= 90) {
-                    if (selectedOption === 'expense') {
-                        background = 'background: hsl(343,63%,54%)';
-                    } else if (selectedOption === 'income') {
-                        background = 'background: hsl(52, 84%, 73%)';
-                    }
-                } else if (placement >= 50 & placement < 90) {
-                    if (selectedOption === 'expense') {
-                        background = 'background: hsl(4,66%,60%)';
-                    } else if (selectedOption === 'income') {
-                        background = 'background: hsl(76, 52%, 63%)';
-                    }
-                } else if (placement >= 10 & placement < 50) {
-                    if (selectedOption === 'expense') {
-                        background = 'background: hsl(22,75%,57%)';
-                    } else if (selectedOption === 'income') {
-                        background = 'background: hsl(111, 39%, 57%)';
-                    }
-                } else {
-                    if (selectedOption === 'expense') {
-                        background = 'background: hsl(34,81%,54%)';
-                    } else if (selectedOption === 'income') {
-                     
-                        background = 'background: hsl(157, 100%, 32%)';
-                    }
-                }
-                // if (selectedOption === 'income') {
-                //     background = 'background: hsl(157,' + s + '%, 32%)';
-                // }// else if (selectedOption === 'expense') {
-                //     background = 'background: hsl(334,' + s + '%, 55%)';
-                // }
-            } else {
-                if (selectedOption === 'income') {
-                    background = 'background: #00a567';
-                } else if (selectedOption === 'expense') {
-                    background = 'background: #de5d83';
-                }
-            }
-            day.Color = background;
-        }
     }
     function applyHeatMapColor (list, fullList) {
         for (let day of list) {
@@ -224,7 +145,7 @@
         </div>
         {#if showPopup}
             <div class="backdrop" on:click|self={() => togglePopup()}>
-                <TransListPopup {togglePopup} {selectedDay} {selectedDayList} {selectedAmount}/>
+                <TransListPopup {selectedDay} {selectedDayList} {selectedAmount} {togglePopup}/>
             </div>
         {/if}
     </div>
