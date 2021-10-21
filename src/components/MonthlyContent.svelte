@@ -8,7 +8,7 @@
     export let selectedOption;
     export let selectedStyle;
     export let formatAmount = () => {};
-    export let daysInYear = () => {};
+    export let dayOfYear = () => {};
     export let getSelectedDaysTransactions = () => {};
     export let getDayClass = () => {};
     export let setHeatmapStyle = () => {};
@@ -38,8 +38,20 @@
     let fullDayList;
 
     //Reactively calls populateDayList when currentTransactionStore is updated anywhere in project.
-    $: $CurrentTransactionsStore, populateFullDayList();
+    $: $CurrentTransactionsStore, refreshCalendar();
 
+    /**
+     * Main function that refreshes the calendar. It is called when sections of the calendar are updated.
+     */
+    function refreshCalendar () {
+        populateFullDayList();
+        populateDayList()
+        changeSelectedStyle(selectedStyle, dayList);
+    }
+
+    /**
+     * Populates the fullDayList used to store all the transactions for each day in an array of arrays.
+     */
     function populateFullDayList () {
         fullDayList = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]];
         for (let transaction of $CurrentTransactionsStore) {
@@ -47,19 +59,18 @@
                 let amount = parseFloat(parseFloat(transaction.Amount).toFixed($CurrencyInfoStore.Decimals));
                 let formattedAmount = formatAmount(amount);
                 let dateFormatted = transaction.dateFormatted;
-               // console.log(transaction.Date)
-                let dayOfYear = daysInYear(transaction.Date);
+                let dayOfYear = dayOfYear(transaction.Date);
                 let dayOfMonth = transaction.Date.getDate() - 1;
-                //console.log(dayOfMonth)
                 let days = {Amount: amount, amountFormatted: formattedAmount, dayOfYear: dayOfYear, dateFormatted: dateFormatted, dayOfMonth: dayOfMonth};
                 fullDayList[dayOfMonth].push(days);
                // let dayClass = getDayClass(transInfo.Amount);
             }
         }
-        populateDayList()
-        changeSelectedStyle(selectedStyle, dayList);
     }
 
+    /**
+     *  Populate dayList which stores the summary of each day in an array.
+     */
     function populateDayList() {
         let dayIndex = 0;
         for (let day of fullDayList) {
@@ -74,15 +85,30 @@
         }
     }
 
+    /**
+     * Change selected option to what was choosen by the user.
+     * @param {String} option option choosen by user
+     */
     function changeSelectedOption (option) {
         selectedOption = option;
-        populateFullDayList();
+        refreshCalendar();
     }
+    /**
+     * Change selected style to what was choosen by user.
+     * @param {String} style style selected by user
+     * @param {Array of Objects} daylist list of days to change styles
+     */
     function changeSelectedStyle (style, daylist) {
         selectedStyle = style;
         let list = setHeatmapStyle(daylist);
         dayList = applyHeatMapColor(list, dayList);
     }
+    /**
+     * Apply the temp list color change to the main day list.
+     * @param {Array of Objects} list temp list with color changes
+     * @param {Array of Objects} daylist main list to be changed
+     * @returns {Array of Objects} changed main list to new style color
+     */
     function applyHeatMapColor (list, daylist) {
         for (let day of list) {
            daylist[day.dayOfMonth - 1].Color = day.Color;
@@ -91,8 +117,8 @@
     }
     /**
      * When a day is clicked on the calendar, set all the information to be passed to the trans list popup and then call it.
-     * @param {Date} date date clicked
-     * @param {String} dateFormatted date clicked in user settings format
+     * @param {Date} day day clicked
+     * @param {String} dateFormatted day clicked in user settings format
      * @param {String} amountFormatted amount for day clicked in user settings format
      */
      function dayClicked(day, displayName, amountFormatted) {

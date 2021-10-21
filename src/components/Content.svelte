@@ -45,7 +45,7 @@
     /**
      * Determine the class to be used based on the supplied amount and selected option.
      * @param {Int} amount supplied amount
-     * @returns class to be used
+     * @returns {String} class to be used
      */
     function getDayClass (amount) {
         let dayClass;
@@ -63,7 +63,7 @@
     /**
      * Get all the transactions for the selected day and populate them in a list.
      * @param {Date} date day selected
-     * @returns {Array of Objects} transactions for day selected
+     * @return {Array of Objects} transactions for day selected
      */
     function getSelectedDaysTransactions (date, tabOption) {
         let transactionList = [];
@@ -89,9 +89,20 @@
         }
         return transactionList;
     }
-    function daysInYear (transactionDate) {
+    /**
+     * Gets the day of the year based on the date provided between 1-366. For example if today is 10/21 then it would return 294.
+     * @param {Date} transactionDate date of the transaction
+     * @return {Int} day of the year.
+     */
+    function dayOfYear (transactionDate) {
         return (Date.UTC(transactionDate.getFullYear(), transactionDate.getMonth(), transactionDate.getDate()) - Date.UTC(transactionDate.getFullYear(), 0, 0)) / 24 / 60 / 60 / 1000;
     }
+    /**
+     * Main function that sets the new heatmap style that was selected. If the selected style isn't simple then it breaks down the day list provided and ranks them smallest to largest.
+     * Calls a function with ranked list to set heatmap colors and then returns that list.
+     * @param {Array of Objects} daylist list of days change the heatmap style of
+     * @return {Array of Objects} new list with changed heatmap colors
+     */
     function setHeatmapStyle (daylist) {
         let list = daylist.map(data => ({...data}));
         let amountToColor;
@@ -107,6 +118,11 @@
         setHeatmapColors(amountToColor, list);
         return list;
     }
+    /**
+     * Creates a new list from the provided list with duplicates removed, sorts it and returns the new list.
+     * @param {Array of Objects} list day list to be sorted and duplicates removed
+     * @return {Array of Objects} new day list with duplicates removed and sorted
+     */
     function sortHeatmapList (list) {
         var unique = [];
         var distinct = [];
@@ -118,6 +134,12 @@
         }
         return distinct.sort((a,b) => b- a);
     }
+    /**
+     * Set the heatmap colors based on the selected option and style to the provided list and returns the list
+     * @param {Int} amountToColor amount of days to be colored
+     * @param {Array of Objects} list list of days to apply selected styles to
+     * @return {Array of Objects} list of days with selected style colors to be assigned 
+     */
     function setHeatmapColors (amountToColor, list) {
         let increment = 100 / amountToColor;
         let background;
@@ -177,9 +199,9 @@
 
 <div class="content">
     {#if activeTab === 'Yearly'}
-        <YearlyContent {convertToDate} {getTransactionsInfoForDay} {getDayClass} {getSelectedDaysTransactions} {daysInYear} {setHeatmapStyle} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange/>
+        <YearlyContent {convertToDate} {getTransactionsInfoForDay} {getDayClass} {getSelectedDaysTransactions} {dayOfYear} {setHeatmapStyle} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange/>
     {:else if activeTab === 'Monthly'}
-        <MonthlyContent {formatAmount} {daysInYear} {getDayClass} {getSelectedDaysTransactions} {setHeatmapStyle} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange/>
+        <MonthlyContent {formatAmount} {dayOfYear} {getDayClass} {getSelectedDaysTransactions} {setHeatmapStyle} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange/>
     {:else}
         <DailyContent />
     {/if}

@@ -11,7 +11,7 @@
     export let getTransactionsInfoForDay = () => {};
     export let getDayClass = () => {};
     export let getSelectedDaysTransactions = () => {};
-    export let daysInYear = () => {};
+    export let dayOfYear = () => {};
     export let setHeatmapStyle = () => {};
 
     let dayList = [{Number: 1, Class: 'non-focused'}, {Number: 2, Class: 'non-focused'}, {Number: 3, Class: 'non-focused'}, {Number: 4, Class: 'non-focused'}, {Number: 5, Class: 'non-focused'}, {Number: 6, Class: 'non-focused'},
@@ -45,7 +45,7 @@
                 let date = convertToDate(calendarList - 1, selectedYear, day);
                 let transInfo = getTransactionsInfoForDay(date);
                 let dayClass = getDayClass(transInfo.Amount);
-                let days = {Amount: transInfo.Amount, amountFormatted: transInfo.formattedAmount, Rank: 0, Color: '', Class: dayClass, Date: date, dayOfYear: daysInYear(date), Month: calendarList, Day: day, dateFormatted: transInfo.dateFormatted};
+                let days = {Amount: transInfo.Amount, amountFormatted: transInfo.formattedAmount, Rank: 0, Color: '', Class: dayClass, Date: date, dayOfYear: dayOfYear(date), Month: calendarList, Day: day, dateFormatted: transInfo.dateFormatted};
                 if (transInfo.Amount != 0) {
                     yearDayList.push(days);
                 }
@@ -85,6 +85,11 @@
         selectedOption = option;
         populateDayList();
     }
+    /**
+     * Highlights the month and day indicators based on the populated day that the users hovers over.
+     * @param {Int} monthId month integer
+     * @param {Int} dayId day integer
+     */
     function highlightMonthDay (monthId, dayId) {
         for (let month of monthList) {
             month.Number === monthId ? month.Class = 'focused' : month.Class = 'non-focused';
@@ -95,11 +100,21 @@
         monthList = monthList;
         dayList = dayList;
     }
+    /**
+     * When a style button is clicked, the style is changed to that selected style.
+     * @param {String} style selected style
+     * @param {Array of Objects} daylist list of days of the year
+     */
     function changeSelectedStyle (style, daylist) {
         selectedStyle = style;
         let list = setHeatmapStyle(daylist);
         fullDayList = applyHeatMapColor(list, fullDayList);
     }
+    /**
+     * Takes a list and sets the colors for the heatmap style change and returns the list.
+     * @param {Array of Objects} list list that will be applied to current list
+     * @param {Array of Objects} fullList list that is to be updated with new colors
+     */
     function applyHeatMapColor (list, fullList) {
         for (let day of list) {
            fullList[day.Month - 1][day.Day - 1].Color = day.Color;
