@@ -3,7 +3,6 @@
     import MonthlyContent from "./MonthlyContent.svelte";
     import DailyContent from "./DailyContent.svelte";
     import CurrentTransactionsStore from '../stores/currentTransactionsStore';
-    import CurrencyInfoStore from '../stores/currencyInfoStore';
 
     export let activeTab
     export let selectedYear;
@@ -20,27 +19,6 @@
      */
     function convertToDate (month, year, day) {
         return new Date(year, month, day);
-    }
-    /**TODO:Function has two redundancies, one is it loops through the same list multiple times for each day and the other is it sets the date formatted multiple times. Need to improve this.
-     * Gets the total amount for the supplied day based on the selected option.
-     * @param {Date} calendarDate day supplied
-     * @returns {Int} total amount for the supplied day
-     */
-    function getTransactionsInfoForDay (calendarDate) {
-        let amount = 0;
-        let dateFormatted;
-        for (let transaction of $CurrentTransactionsStore) {
-            if (transaction.Date.getTime() === calendarDate.getTime()) {
-                
-                if (selectedOption === 'income' & transaction.Amount > 0 || selectedOption === 'expense' & transaction.Amount < 0 || selectedOption === 'net') {
-                    amount = parseFloat((parseFloat(amount) + parseFloat(transaction.Amount)).toFixed($CurrencyInfoStore.Decimals));
-                    dateFormatted = transaction.dateFormatted;
-                }
-            }
-        }
-        let formattedAmount = formatAmount(amount);
-        let finalAmount = {Amount: amount, formattedAmount: formattedAmount, dateFormatted: dateFormatted};
-        return finalAmount;
     }
     /**
      * Determine the class to be used based on the supplied amount and selected option.
@@ -199,7 +177,7 @@
 
 <div class="content">
     {#if activeTab === 'Yearly'}
-        <YearlyContent {convertToDate} {getTransactionsInfoForDay} {getDayClass} {getSelectedDaysTransactions} {dayOfYear} {setHeatmapStyle} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange/>
+        <YearlyContent {formatAmount} {getDayClass} {getSelectedDaysTransactions} {dayOfYear} {setHeatmapStyle} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange/>
     {:else if activeTab === 'Monthly'}
         <MonthlyContent {formatAmount} {dayOfYear} {getDayClass} {getSelectedDaysTransactions} {setHeatmapStyle} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange/>
     {:else}

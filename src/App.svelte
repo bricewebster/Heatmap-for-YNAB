@@ -109,8 +109,8 @@
 	}
 	/**
 	 * Fetches all of the transactions from the user's YNAB account.
-	 * @param ynabAPI ynabAPI object used to get info from YNAB
-	 * @param mainBudgetID User's main budget ID(Might be replaced later)
+	 * @param {Object} ynabAPI ynabAPI object used to get info from YNAB
+	 * @param {String} mainBudgetID User's main budget ID(Might be replaced later)
 	 * @returns {Array of Objects} Transaction Objects
 	 */
 	async function getTransactions(ynabAPI, mainBudgetID) {
@@ -119,8 +119,8 @@
 	}
 	/**
 	 * Fetches the user settings from the user's YNAB account.
-	 * @param ynabAPI ynabAPI object used to get info from YNAB
-	 * @param mainBudgetID User's main budget ID(Might be replaced later)
+	 * @param {Object} ynabAPI ynabAPI object used to get info from YNAB
+	 * @param {String} mainBudgetID User's main budget ID(Might be replaced later)
 	 * @returns {Object} User's Setting Object
 	 */
 	async function getCurrencyInfo(ynabAPI, mainBudgetID) {
@@ -258,6 +258,7 @@
 	 * Criteria are the following; not the selected year, is a transfer account, category not selected, account not selected, & payee not selected.
 	 * @param {Object} transaction transaction Object
 	 * @param {Date} transactionDate transaction Date
+	 * @return {Boolen} true if transaction is to be skipped else false
 	 */
 	function transactionSkipCheck(transaction, transactionDate) {
 		let withinYearCheck = transactionDate.getFullYear() !== selectedYear;
@@ -279,7 +280,7 @@
 	/**
 	 * Normalize the supplied date so there isn't an offset issue with timezones
 	 * @param {Date} date The date being normalized
-	 * @returns {Date} normalized Date
+	 * @return {Date} normalized Date
 	 */
 	function newNormalizedDate(date){
   		return new Date(new Date(date).getTime() - new Date(date).getTimezoneOffset() * - 60000); //https://stackoverflow.com/a/14569783
@@ -288,7 +289,7 @@
 	/**
 	 * Formats the supplied date based on the User's settings.
 	 * @param {Date} date date to be formatted
-	 * @returns {String} a string formatted
+	 * @return {String} a string formatted
 	 */
 	function formatDate (date) {
         let year = date.getFullYear();
@@ -321,7 +322,7 @@
 	/**
 	 * Formats supplied amount based on User's settings.
 	 * @param amount the amount to be formatted
-	 * @returns the amount formatted
+	 * @return {String} the amount formatted
 	 */
 	function formatAmount (amount) {
         if (amount === 0) {
@@ -363,7 +364,7 @@
 	/**
 	 * Takes the parameter to add determine the amount of leading zeroes needed and returns a string with that amount.
 	 * @param {Number} currentZeroes amount of leading zeroes needed
-	 * @returns {String} string with the determined amount of zeroes
+	 * @return {String} string with the determined amount of zeroes
 	 */
 	function addLeadingZeroes (currentZeroes) {
 		let zeroes = '';
