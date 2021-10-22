@@ -18,7 +18,7 @@
     let selectedDayList = [];
     let selectedAmount;
 
-    let dayList = [{dayOfMonth: 1, Amount: 0, amountFormatted: '', displayName: '1st', Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 2, Amount: 0, amountFormatted: '', displayName: '2nd',  Rank: 0, Color: '', Class: 'none'},
+    let summaryList = [{dayOfMonth: 1, Amount: 0, amountFormatted: '', displayName: '1st', Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 2, Amount: 0, amountFormatted: '', displayName: '2nd',  Rank: 0, Color: '', Class: 'none'},
                        {dayOfMonth: 3, Amount: 0, amountFormatted: '', displayName: '3rd',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 4, Amount: 0, amountFormatted: '', displayName: '4th',  Rank: 0, Color: '', Class: 'none'},
                        {dayOfMonth: 5, Amount: 0, amountFormatted: '', displayName: '5th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 6, Amount: 0, amountFormatted: '', displayName: '6th',  Rank: 0, Color: '', Class: 'none'},
                        {dayOfMonth: 7, Amount: 0, amountFormatted: '', displayName: '7th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 8, Amount: 0, amountFormatted: '', displayName: '8th',  Rank: 0, Color: '', Class: 'none'},
@@ -35,52 +35,51 @@
                        {dayOfMonth: 29, Amount: 0, amountFormatted: '', displayName: '29th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 30, Amount: 0, amountFormatted: '', displayName: '30th',  Rank: 0, Color: '', Class: 'none'},
                        {dayOfMonth: 31, Amount: 0, amountFormatted: '', displayName: '31st',  Rank: 0, Color: '', Class: 'none'}];
     
-    let fullDayList;
+    let transactionList;
 
-    //Reactively calls populateDayList when currentTransactionStore is updated anywhere in project.
+    //Reactively calls refreshCalendar when currentTransactionStore is updated anywhere in project.
     $: $CurrentTransactionsStore, refreshCalendar();
 
     /**
      * Main function that refreshes the calendar. It is called when sections of the calendar are updated.
      */
     function refreshCalendar () {
-        populateFullDayList();
-        populateDayList()
-        changeSelectedStyle(selectedStyle, dayList);
+        populateTransactionList();
+        populateSummaryList()
+        changeSelectedStyle(selectedStyle, summaryList);
     }
 
     /**
-     * Populates the fullDayList used to store all the transactions for each day in an array of arrays.
+     * Populates the transaction List used to store all the transactions for each day in an array of arrays.
      */
-    function populateFullDayList () {
-        fullDayList = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]];
+    function populateTransactionList () {
+        transactionList = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]];
         for (let transaction of $CurrentTransactionsStore) {
             if (selectedOption === 'income' & transaction.Amount > 0 || selectedOption === 'expense' & transaction.Amount < 0 || selectedOption === 'net' & transaction.Amount != 0) {
                 let amount = parseFloat(parseFloat(transaction.Amount).toFixed($CurrencyInfoStore.Decimals));
                 let formattedAmount = formatAmount(amount);
                 let dateFormatted = transaction.dateFormatted;
-                let dayOfYear = dayOfYear(transaction.Date);
                 let dayOfMonth = transaction.Date.getDate() - 1;
-                let days = {Amount: amount, amountFormatted: formattedAmount, dayOfYear: dayOfYear, dateFormatted: dateFormatted, dayOfMonth: dayOfMonth};
-                fullDayList[dayOfMonth].push(days);
+                let days = {Amount: amount, amountFormatted: formattedAmount, dateFormatted: dateFormatted, dayOfMonth: dayOfMonth};
+                transactionList[dayOfMonth].push(days);
                // let dayClass = getDayClass(transInfo.Amount);
             }
         }
     }
 
     /**
-     *  Populate dayList which stores the summary of each day in an array.
+     *  Populate summary list which stores the summary of each day in an array.
      */
-    function populateDayList() {
+    function populateSummaryList() {
         let dayIndex = 0;
-        for (let day of fullDayList) {
+        for (let day of transactionList) {
             let amount = 0;
             for (let transaction of day) {
                 amount = parseFloat((parseFloat(amount) + parseFloat(transaction.Amount)).toFixed($CurrencyInfoStore.Decimals));
             }
-            dayList[dayIndex].Amount = amount;
-            dayList[dayIndex].amountFormatted = formatAmount(dayList[dayIndex].Amount);
-            dayList[dayIndex].Class = getDayClass(dayList[dayIndex].Amount);
+            summaryList[dayIndex].Amount = amount;
+            summaryList[dayIndex].amountFormatted = formatAmount(summaryList[dayIndex].Amount);
+            summaryList[dayIndex].Class = getDayClass(summaryList[dayIndex].Amount);
             dayIndex++;
         }
     }
@@ -101,7 +100,7 @@
     function changeSelectedStyle (style, daylist) {
         selectedStyle = style;
         let list = setHeatmapStyle(daylist);
-        dayList = applyHeatMapColor(list, dayList);
+        summaryList = applyHeatMapColor(list, summaryList);
     }
     /**
      * Apply the temp list color change to the main day list.
@@ -136,11 +135,11 @@
 
 </script>
 <div class="content">
-    <CalendarNavigation {selectedOption} {selectedStyle} list = {dayList} {changeSelectedOption} {changeSelectedStyle}  bind:selectedYear on:yearChange/>
+    <CalendarNavigation {selectedOption} {selectedStyle} list = {summaryList} {changeSelectedOption} {changeSelectedStyle}  bind:selectedYear on:yearChange/>
     <table class="cal-month">
         {#each Array(5) as _, mainIndex}
         <tr>
-            {#each dayList as day, index}
+            {#each summaryList as day, index}
                 {#if index < 7 & mainIndex === 0}
                     {#if day.Amount != 0}
                         <th class="{day.Class} populated" style="{day.Color}" on:click={() => dayClicked(day.dayOfMonth, day.displayName, day.amountFormatted)}><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><p class="date">{day.displayName}</p><p class="amount">{day.amountFormatted}</p></div></div></div></th>

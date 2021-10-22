@@ -26,7 +26,7 @@
                      {Number: 5, Word: 'May', Class: 'non-focused'}, {Number: 6, Word: 'Jun', Class: 'non-focused'}, {Number: 7, Word: 'Jul', Class: 'non-focused'}, {Number: 8, Word: 'Aug', Class: 'non-focused'}, 
                      {Number: 9, Word: 'Sep', Class: 'non-focused'}, {Number: 10, Word: 'Oct', Class: 'non-focused'}, {Number: 11, Word: 'Nov', Class: 'non-focused'}, {Number: 12, Word: 'Dec', Class: 'non-focused'}];
     
-    let yearDayList = [];
+    let summaryList = [];
     let transactionList = [];
     
     export let selectedYear;
@@ -37,9 +37,9 @@
     $: $CurrentTransactionsStore, refreshCalendar();
 
     /**
-     * Initialize the yearDayList which is just a summary of each day of the year.
+     * Initialize the summary list which is just a summary of each day of the year.
      */
-    function initializeYearDayList () {
+    function initializeSummaryList () {
         let list = [];
 
         for (let month = 1; month <= 12; month++) {
@@ -50,9 +50,12 @@
                 list.push(currentDay);
             }
         }
-        yearDayList = list;
+        summaryList = list;
     }
 
+    /**
+     * Initialize the transaction list which is an array of arrays for each day of the year.
+     */
     function initializeTransactionList () {
         transactionList = [];
         let daysInYear = isLeapYear(selectedYear) ? 366 : 365;
@@ -85,7 +88,7 @@
     /**
       * Calculates year provided to see if its a leap year and returns true or false.
       * @param {String} year the year calculated
-      * @return {Boolen} true if it is a leap year else false.
+      * @return {Boolean} true if it is a leap year else false.
     */
     function isLeapYear(year){
         return (year % 100 === 0) ? (year % 400 === 0) : (year % 4 === 0);
@@ -93,12 +96,12 @@
 
     function refreshCalendar () {
         populateTransactionList();
-        populateYearDayList();
-        changeSelectedStyle(selectedStyle, yearDayList);
+        populateSummaryList();
+        changeSelectedStyle(selectedStyle, summaryList);
     }
 
     /**
-     * Populates the daylist used to build the yearly calendar.
+     * Populates the transaction list.
      */
     function populateTransactionList () {
         initializeTransactionList();
@@ -115,18 +118,21 @@
         }
     }
 
-    function populateYearDayList () {
-        initializeYearDayList();
+    /**
+     * Populates the summary list.
+     */
+    function populateSummaryList () {
+        initializeSummaryList();
         let dayIndex = 0;
         for (let day of transactionList) {
             let amount = 0;
             for (let transaction of day) {
                 amount = parseFloat((parseFloat(amount) + parseFloat(transaction.Amount)).toFixed($CurrencyInfoStore.Decimals));
             }
-            yearDayList[dayIndex].dayOfYear = dayIndex;
-            yearDayList[dayIndex].Amount = amount;
-            yearDayList[dayIndex].amountFormatted = formatAmount(yearDayList[dayIndex].Amount);
-            yearDayList[dayIndex].Class = getDayClass(yearDayList[dayIndex].Amount);
+            summaryList[dayIndex].dayOfYear = dayIndex;
+            summaryList[dayIndex].Amount = amount;
+            summaryList[dayIndex].amountFormatted = formatAmount(summaryList[dayIndex].Amount);
+            summaryList[dayIndex].Class = getDayClass(summaryList[dayIndex].Amount);
             dayIndex++;
         }
     }
@@ -173,7 +179,7 @@
     function changeSelectedStyle (style, daylist) {
         selectedStyle = style;
         let list = setHeatmapStyle(daylist);
-        transactionList = applyHeatMapColor(list, yearDayList);
+        summaryList = applyHeatMapColor(list, summaryList);
     }
     /**
      * Takes a list and sets the colors for the heatmap style change and returns the list.
@@ -195,7 +201,7 @@
 </script>
 <div class="content">
     <div class="cal-year-container">
-        <CalendarNavigation {selectedOption} {selectedStyle} list = {yearDayList} {changeSelectedOption} {changeSelectedStyle} bind:selectedYear on:yearChange/>
+        <CalendarNavigation {selectedOption} {selectedStyle} list = {summaryList} {changeSelectedOption} {changeSelectedStyle} bind:selectedYear on:yearChange/>
         <table class="cal-year day-list">
             <tr>
             <th><p></p></th>
@@ -213,7 +219,7 @@
             <table class="cal-year cal-year-days">
                 {#each monthList as month}
                     <tr>
-                    {#each yearDayList as day}
+                    {#each summaryList as day}
                         {#if month.Number === day.Month}
                             {#if day.Amount != 0}
                                 <th class="{day.Class} populated" style="{day.Color}" on:click={() => dayClicked(day.Date, day.dateFormatted, day.amountFormatted)} on:mouseover={() => highlightMonthDay(day.Month, day.Day)} on:focus={() => highlightMonthDay() }><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><div class="amountPopup"><span class="amountPopupText">{day.amountFormatted}</span></div></div></div></div></th>
