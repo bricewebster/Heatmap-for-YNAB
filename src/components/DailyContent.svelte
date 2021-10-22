@@ -3,6 +3,7 @@
     import TransListPopup from '../components/TransListPopup.svelte';
     import CurrentTransactionsStore from '../stores/currentTransactionsStore';
     import CurrencyInfoStore from '../stores/currencyInfoStore';
+    import { fade } from 'svelte/transition';
 
     export let selectedYear;
     export let selectedOption;

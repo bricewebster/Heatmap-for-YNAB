@@ -3,6 +3,7 @@
     import TransListPopup from '../components/TransListPopup.svelte';
     import CurrentTransactionsStore from '../stores/currentTransactionsStore';
     import CurrencyInfoStore from '../stores/currencyInfoStore';
+    import { fade } from 'svelte/transition';
 
     var showPopup = false;
     var selectedDay;
@@ -232,7 +233,7 @@
             </table>
         </div>
         {#if showPopup}
-            <div class="backdrop" on:click|self={() => togglePopup()}>
+            <div class="backdrop" on:click|self={() => togglePopup()} transition:fade>
                 <TransListPopup {selectedDay} {selectedDayList} {selectedAmount} popupType = 'yearly' {togglePopup}/>
             </div>
         {/if}
@@ -267,18 +268,28 @@
     }
     .income {
         background-color: #00a567;
+
+        transition-duration: 350ms;
     }
     .expense {
         background-color: #de5d83;
+
+        transition-duration: 350ms;
     }
     .net-pos {
         background-color: #fdfd96;
+
+        transition-duration: 350ms;
     }
     .net-neg {
         background-color: #ffb347;
+
+        transition-duration: 350ms;
     }
     .none {
         background-color:  rgba(187, 167, 167, 0.842);
+
+        transition-duration: 350ms;
     }
     .focused {
         color: var(--ynab-light-green);

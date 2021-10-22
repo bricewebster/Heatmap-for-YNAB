@@ -59,15 +59,23 @@
     }
     .income-icon.selected, .income-icon:hover {
         color: #00a567;
+
+        transition-duration: 350ms;
     }
     .expense-icon.selected, .expense-icon:hover {
         color: #de5d83;
+
+        transition-duration: 350ms;
     }
     .net-icon.selected, .net-icon:hover {
         color: #ffb347;
+
+        transition-duration: 350ms;
     }
     .nonselected-icon {
         color:  rgba(187, 167, 167, 0.842);
+
+        transition-duration: 350ms;
     }
     .year-selector {
         float: left;

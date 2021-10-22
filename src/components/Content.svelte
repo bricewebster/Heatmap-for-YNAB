@@ -180,7 +180,7 @@
 
 <div class="content">
     {#if activeTab === 'Yearly'}
-        <YearlyContent {formatAmount} {getDayClass} {getSelectedDaysTransactions} {dayOfYear} {setHeatmapStyle} {convertToDate} {formatDate} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange/>
+        <YearlyContent {formatAmount} {getDayClass} {getSelectedDaysTransactions} {dayOfYear} {setHeatmapStyle} {convertToDate} {formatDate} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange />
     {:else if activeTab === 'Monthly'}
         <MonthlyContent {formatAmount} {dayOfYear} {getDayClass} {getSelectedDaysTransactions} {setHeatmapStyle} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange/>
     {:else}
