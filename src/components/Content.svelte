@@ -52,6 +52,8 @@
                 compare = day.Date.getTime() === date.getTime();
             } else if (tabOption === 'month') {
                 compare = day.dayOfMonth === date;
+            } else {
+                compare = day.dayOfWeek === date;
             }
             if (compare) {
                 if (selectedOption === 'income' & day.Amount > 0) {
@@ -182,7 +184,7 @@
     {:else if activeTab === 'Monthly'}
         <MonthlyContent {formatAmount} {dayOfYear} {getDayClass} {getSelectedDaysTransactions} {setHeatmapStyle} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange/>
     {:else}
-        <DailyContent />
+        <DailyContent {formatAmount} {dayOfYear} {getDayClass} {getSelectedDaysTransactions} {setHeatmapStyle} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange/>
     {/if}
 </div>
 

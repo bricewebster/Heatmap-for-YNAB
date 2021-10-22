@@ -181,7 +181,7 @@
     </table>
     {#if showPopup}
         <div class="backdrop" on:click|self={() => togglePopup()}>
-            <TransListPopup {selectedDay} {selectedDayList} {selectedAmount} {togglePopup}/>
+            <TransListPopup {selectedDay} {selectedDayList} {selectedAmount} popupType = 'monthly' {togglePopup}/>
         </div>
     {/if}
 </div>

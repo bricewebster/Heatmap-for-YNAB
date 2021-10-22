@@ -248,7 +248,7 @@
   		} else {
 			const amount = ynab.utils.convertMilliUnitsToCurrencyAmount(transaction.amount, $CurrencyInfoStore.Decimals); //Converts to users currency in decimals.
 			let memo = transaction.memo === null ? '' : transaction.memo; //Some memos are null for some reason. This makes them blank strings.
-			let currentTrans = {Date: transactionDate, dateFormatted: formatDate(transactionDate), dayOfMonth: transactionDate.getDate(), categoryName: transaction.category_name, accountName: transaction.account_name, payeeName: transaction.payee_name, Amount: amount, amountFormatted: formatAmount(amount), Memo: memo};
+			let currentTrans = {Date: transactionDate, dateFormatted: formatDate(transactionDate), dayOfMonth: transactionDate.getDate(), dayOfWeek: transactionDate.getDay(), categoryName: transaction.category_name, accountName: transaction.account_name, payeeName: transaction.payee_name, Amount: amount, amountFormatted: formatAmount(amount), Memo: memo};
 			return currentTrans;
 		}
 	}
@@ -349,9 +349,11 @@
 			sign = '-';
 		}
 		//Adds the group separator every after every 3 digits starting from right to left.
+		let digitCursor = 1;
         for (let index = beforeDecimal.length - 1; index >= 0; index--) {
-            index % 4 === 0 & beforeDecimal.length > 3? newBeforeDecimal = beforeDecimal[index] + $CurrencyInfoStore.groupSeparator + newBeforeDecimal : newBeforeDecimal = beforeDecimal[index] + newBeforeDecimal;
-        }
+            digitCursor === 4 & beforeDecimal.length > 3? newBeforeDecimal = beforeDecimal[index] + $CurrencyInfoStore.groupSeparator + newBeforeDecimal : newBeforeDecimal = beforeDecimal[index] + newBeforeDecimal;
+			digitCursor++
+		}
 		//Either displays the symbol first if that is set, otherwise its displayed last.
         if ($CurrencyInfoStore.displaySymbol) {
             $CurrencyInfoStore.symbolFirst ? finalAmount = sign + $CurrencyInfoStore.Symbol + newBeforeDecimal + newAfterDecimal : finalAmount = sign + newBeforeDecimal + newAfterDecimal + $CurrencyInfoStore.Symbol;

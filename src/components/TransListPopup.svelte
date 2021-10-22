@@ -5,9 +5,10 @@
     export let selectedDay;
     export let selectedDayList;
     export let selectedAmount;
+    export let popupType;
 </script>
 
-<div class="popup">
+<div class="popup {popupType}">
     <div class="content">
         <div class="title-container">
             <p class="title"><span class="material-icons-outlined md-24">event_note</span>{selectedDay}</p>
@@ -57,6 +58,12 @@
         box-shadow: 0 16px 64px rgba(0, 0, 0, 0.2);
 
         opacity: 1;
+    }
+    .popup.yearly, .popup.monthly {
+        margin: 520px auto 0 auto;
+    }
+    .popup.daily {
+        margin: 310px auto 0 auto;
     }
     .popup::after {
         content: " ";

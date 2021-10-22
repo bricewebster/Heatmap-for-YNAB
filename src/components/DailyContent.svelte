@@ -1,9 +1,346 @@
 <script>
-    // your script goes here
+    import CalendarNavigation from "./CalendarNavigation.svelte";
+    import TransListPopup from '../components/TransListPopup.svelte';
+    import CurrentTransactionsStore from '../stores/currentTransactionsStore';
+    import CurrencyInfoStore from '../stores/currencyInfoStore';
+
+    export let selectedYear;
+    export let selectedOption;
+    export let selectedStyle;
+    export let formatAmount = () => {};
+    export let dayOfYear = () => {};
+    export let getSelectedDaysTransactions = () => {};
+    export let getDayClass = () => {};
+    export let setHeatmapStyle = () => {};
+
+    var showPopup = false;
+    let selectedDay;
+    let selectedDayList = [];
+    let selectedAmount;
+
+    let summaryList = [{dayOfWeek: 0, Amount: 0, amountFormatted: '', displayName: 'Sunday', Rank: 0, Color: '', Class: 'none'}, 
+                       {dayOfWeek: 1, Amount: 0, amountFormatted: '', displayName: 'Monday', Rank: 0, Color: '', Class: 'none'},
+                       {dayOfWeek: 2, Amount: 0, amountFormatted: '', displayName: 'Tuesday', Rank: 0, Color: '', Class: 'none'},
+                       {dayOfWeek: 3, Amount: 0, amountFormatted: '', displayName: 'Wednesday', Rank: 0, Color: '', Class: 'none'},
+                       {dayOfWeek: 4, Amount: 0, amountFormatted: '', displayName: 'Thursday', Rank: 0, Color: '', Class: 'none'},
+                       {dayOfWeek: 5, Amount: 0, amountFormatted: '', displayName: 'Friday', Rank: 0, Color: '', Class: 'none'},
+                       {dayOfWeek: 6, Amount: 0, amountFormatted: '', displayName: 'Saturday', Rank: 0, Color: '', Class: 'none'}];
+    let transactionList;
+
+    //Reactively calls refreshCalendar when currentTransactionStore is updated anywhere in project.
+    $: $CurrentTransactionsStore, refreshCalendar();
+
+    /**
+     * Main function that refreshes the calendar. It is called when sections of the calendar are updated.
+     */
+     function refreshCalendar () {
+        populateTransactionList();
+        populateSummaryList()
+        changeSelectedStyle(selectedStyle, summaryList);
+    }
+
+     /**
+     * Populates the transaction List used to store all the transactions for each day in an array of arrays.
+     */
+    function populateTransactionList () {
+        transactionList = [[],[],[],[],[],[],[]];
+        for (let transaction of $CurrentTransactionsStore) {
+            if (selectedOption === 'income' & transaction.Amount > 0 || selectedOption === 'expense' & transaction.Amount < 0 || selectedOption === 'net' & transaction.Amount != 0) {
+                let amount = parseFloat(parseFloat(transaction.Amount).toFixed($CurrencyInfoStore.Decimals));
+                let formattedAmount = formatAmount(amount);
+                let dateFormatted = transaction.dateFormatted;
+                let dayIndex = transaction.Date.getDay();
+                let days = {Amount: amount, amountFormatted: formattedAmount, dateFormatted: dateFormatted, dayOfWeek: dayIndex};
+                transactionList[dayIndex].push(days);
+               // let dayClass = getDayClass(transInfo.Amount);
+            }
+        }
+    }
+
+    /**
+     *  Populate summary list which stores the summary of each day in an array.
+     */
+    function populateSummaryList() {
+        let dayIndex = 0;
+        for (let day of transactionList) {
+            let amount = 0;
+            for (let transaction of day) {
+                amount = parseFloat((parseFloat(amount) + parseFloat(transaction.Amount)).toFixed($CurrencyInfoStore.Decimals));
+            }
+            summaryList[dayIndex].Amount = amount;
+            summaryList[dayIndex].amountFormatted = formatAmount(summaryList[dayIndex].Amount);
+            summaryList[dayIndex].Class = getDayClass(summaryList[dayIndex].Amount);
+            dayIndex++;
+        }
+    }
+    /**
+     * Change selected option to what was choosen by the user.
+     * @param {String} option option choosen by user
+     */
+    function changeSelectedOption (option) {
+        selectedOption = option;
+        refreshCalendar();
+    }
+    /**
+     * Change selected style to what was choosen by user.
+     * @param {String} style style selected by user
+     * @param {Array of Objects} daylist list of days to change styles
+     */
+    function changeSelectedStyle (style, daylist) {
+        selectedStyle = style;
+        let list = setHeatmapStyle(daylist);
+        summaryList = applyHeatMapColor(list, summaryList);
+    }
+    /**
+     * Apply the temp list color change to the main day list.
+     * @param {Array of Objects} list temp list with color changes
+     * @param {Array of Objects} daylist main list to be changed
+     * @returns {Array of Objects} changed main list to new style color
+     */
+    function applyHeatMapColor (list, daylist) {
+        for (let day of list) {
+           daylist[day.dayOfWeek].Color = day.Color;
+        }
+        return daylist;
+    }
+    /**
+     * When a day is clicked on the calendar, set all the information to be passed to the trans list popup and then call it.
+     * @param {Date} day day clicked
+     * @param {String} dateFormatted day clicked in user settings format
+     * @param {String} amountFormatted amount for day clicked in user settings format
+     */
+     function dayClicked(day, displayName, amountFormatted) {
+        selectedDay = displayName;
+        selectedDayList = getSelectedDaysTransactions(day, 'day');
+        selectedAmount = amountFormatted;
+        togglePopup();
+    }
+    /**
+     * Opens and closes the trans list popup.
+     */
+     function togglePopup () {
+        showPopup = !showPopup;
+    }
+
+
 </script>
 <div class="content">
-    <p>Daily Content</p>
+    <CalendarNavigation {selectedOption} {selectedStyle} list = {summaryList} {changeSelectedOption} {changeSelectedStyle}  bind:selectedYear on:yearChange/>
+    <table class="cal-day">
+        {#each summaryList as day}
+            {#if day.Amount != 0}
+                <th class="{day.Class} populated" style="{day.Color}" on:click={() => dayClicked(day.dayOfWeek, day.displayName, day.amountFormatted)}><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><p class="date">{day.displayName}</p><p class="amount">{day.amountFormatted}</p></div></div></div></th>
+            {:else}
+                <th class="{day.Class}"><p>{day.displayName}</p></th>
+            {/if}
+        {/each}
+    </table>
+    {#if showPopup}
+        <div class="backdrop" on:click|self={() => togglePopup()}>
+            <TransListPopup {selectedDay} {selectedDayList} {selectedAmount} popupType = 'daily' {togglePopup}/>
+        </div>
+    {/if}    
 </div>
-<style>
-    /* your styles go here */
+<style lang="scss">
+    .content {
+        display: block;
+        
+        margin: 50px auto 0 auto;
+        width: 880px;
+    }
+    .cal-day {
+        display: block;
+
+        margin: 15px auto 0 auto;
+        width: 745px;
+        height: auto;
+
+        font-size: 12px;
+
+        border-spacing: 5px;
+    }
+    .cal-day tr {
+        width: 100%;
+        height: auto;
+    }
+    .cal-day th {
+        position: relative;
+        width: 100px;
+        height: 55px; 
+    }
+    .date {
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin: 5px 0 0 5px;
+    }
+    .amount {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+    }
+    .income {
+        background-color: #00a567;
+        color: white;
+    }
+    .expense {
+        background-color: #de5d83;
+        color: white;
+    }
+    .net-pos {
+        background-color: #fdfd96;
+    }
+    .net-neg {
+        background-color: #ffb347;
+    }
+    .none {
+        background-color:  rgba(187, 167, 167, 0.842);
+    }
+    .populated {
+        cursor: pointer;
+    }
+    .populated-main-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+    .populated-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+    .populated-subcontainer {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+    .populated-subcontainer::before {
+        /* Bottom Line */
+        content: '';
+        position: absolute;
+
+        bottom: -6px;
+        left: -6px;
+        width: 112.25%;
+        height: 5px;
+
+        background: var(--ynab-dark-green);
+
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+
+        transform: scaleX(0);
+        transform-origin: center;
+        transition: transform 250ms ease-in;
+        transition-delay: 500ms;
+    }
+    .populated-main-container:hover .populated-subcontainer::before {
+        transform: scaleX(1);
+        transition: transform 250ms ease-in;
+        transition-delay: 200ms;
+    }
+    .populated-subcontainer::after {
+        /* Left Line */
+        content: '';
+        position: absolute;
+
+        top: -6px;
+        left: -6px;
+        width: 5px;
+        height: 114%;
+
+        background: var(--ynab-dark-green);
+        border-top-left-radius: 5px;
+
+        transform: scaleY(0);
+        transform-origin: bottom;
+        transition: transform 250ms ease-in;
+        transition-delay: 300ms;
+    }
+    .populated-main-container:hover .populated-subcontainer::after {
+        transform: scaleY(1);
+        transition: transform 250ms ease-in;
+        transition-delay: 400ms;
+    }
+    .populated-container::before {
+        /* Right Line */
+        content: '';
+        position: absolute;
+
+        top: -6px;
+        right: -6px;
+        width: 5px;
+        height: 114%;
+
+        background: var(--ynab-dark-green);
+        border-top-right-radius: 5px;
+
+        transform: scaleY(0);
+        transform-origin: bottom;
+        transition: transform 250ms ease-in;
+        transition-delay: 300ms;
+    }
+    .populated-main-container:hover .populated-container::before {
+        transform: scaleY(1);
+        transform-origin: bottom;
+        transition: transform 250ms ease-in;
+        transition-delay: 400ms;
+    }
+    .populated-container::after {
+        /* Top Left Line */
+        content: '';
+        position: absolute;
+
+        top: -6px;
+        left: -6px;
+        width: 63.5%;
+        height: 5px;
+
+        background: var(--ynab-dark-green);
+        border-top-left-radius: 5px;
+
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 250ms ease-in;
+        transition-delay: 100ms;
+    }
+    .populated-main-container:hover .populated-container::after {
+        transform: scaleX(1);
+        transition: transform 250ms ease-in;
+        transition-delay: 600ms;
+    }
+    .populated-main-container::before {
+        /* Top Right Line */
+        content: '';
+        position: absolute;
+
+        top: -6px;
+        right: -6px;
+        width: 63.5%;
+        height: 5px;
+
+        background: var(--ynab-dark-green);
+        border-top-right-radius: 5px;
+
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 250ms ease-in;
+        transition-delay: 100ms;
+    }
+    .populated-main-container:hover::before {
+        transform: scaleX(1);
+        transition: transform 250ms ease-in;
+        transition-delay: 600ms;
+    }
+    .backdrop {
+        position: fixed;
+
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+
+        z-index: 10;
+    }
 </style>
