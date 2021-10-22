@@ -9,6 +9,7 @@
     export let selectedOption;
     export let selectedStyle;
     export let formatAmount = () => {};
+    export let formatDate = () => {};
 
     /**
      * Converts supplised month, year, and day into Date object.
@@ -177,7 +178,7 @@
 
 <div class="content">
     {#if activeTab === 'Yearly'}
-        <YearlyContent {formatAmount} {getDayClass} {getSelectedDaysTransactions} {dayOfYear} {setHeatmapStyle} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange/>
+        <YearlyContent {formatAmount} {getDayClass} {getSelectedDaysTransactions} {dayOfYear} {setHeatmapStyle} {convertToDate} {formatDate} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange/>
     {:else if activeTab === 'Monthly'}
         <MonthlyContent {formatAmount} {dayOfYear} {getDayClass} {getSelectedDaysTransactions} {setHeatmapStyle} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange/>
     {:else}

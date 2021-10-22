@@ -9,6 +9,7 @@
     var selectedDayList = [];
     var selectedAmount;
     export let formatAmount = () => {};
+    export let formatDate = () => {};
     export let convertToDate = () => {};
     export let getDayClass = () => {};
     export let getSelectedDaysTransactions = () => {};
@@ -40,24 +41,47 @@
      */
     function initializeYearDayList () {
         let list = [];
-        let daysInYear = isLeapYear() ? 366 : 365;
 
-        for (let index = 1; index <= daysInYear; index++) {
-            let day = {dayOfYear: index, Amount: 0, amountFormatted: '', Rank: 0, Color: '', Class: '', Date: '', dateFormatted: '', Month: 0, Day: 0};
-            list.push(day);
+        for (let month = 1; month <= 12; month++) {
+            let dayAmount = daysInMonth(selectedYear, month);
+            for (let day = 1; day <= dayAmount; day++) {
+                let currentDate = dayDate(selectedYear, month - 1, day);
+                let currentDay = {dayOfYear: 0, Amount: 0, amountFormatted: '', Rank: 0, Color: '', Class: 'none', Date: currentDate, dateFormatted: formatDate(currentDate), Month: month, Day: day};
+                list.push(currentDay);
+            }
         }
         yearDayList = list;
     }
 
     function initializeTransactionList () {
-        let daysInYear = isLeapYear() ? 366 : 365;
+        transactionList = [];
+        let daysInYear = isLeapYear(selectedYear) ? 366 : 365;
         
         for (let index = 1; index <= daysInYear; index++) {
             let transList = [];
             transactionList.push(transList);
         }
     }
+    /**
+     * Gets the amount of days in the supplied month.
+     * @param {Int} year selected year
+     * @param {Int} month supplied month
+     * @return {Int} number of days in the month 
+     */
+    function daysInMonth (year, month) {
+        return new Date(year, month, 0).getDate();
+    }
 
+    /**
+     * Converts supplied month, year and day into a date object.
+     * @param {Int} year selected year
+     * @param {Int} month supplied month
+     * @param {Int} day supplied day
+     * @return {Date} date object based on year, month and day
+     */
+    function dayDate (year, month, day) {
+        return new Date(year, month, day);
+    }
     /**
       * Calculates year provided to see if its a leap year and returns true or false.
       * @param {String} year the year calculated
@@ -70,8 +94,6 @@
     function refreshCalendar () {
         populateTransactionList();
         populateYearDayList();
-        // console.log(transactionList)
-        // console.log(yearDayList)
         changeSelectedStyle(selectedStyle, yearDayList);
     }
 
@@ -85,29 +107,12 @@
                 let amount = parseFloat(parseFloat(transaction.Amount).toFixed($CurrencyInfoStore.Decimals));
                 let formattedAmount = formatAmount(amount);
                 let dateFormatted = transaction.dateFormatted;
-                let dayInYear = dayOfYear(transaction.Date) - 1;
-                let day = {Amount: amount, amountFormatted: formattedAmount, date: transaction.date, dateFormatted: dateFormatted, Month: transaction.Date.getMonth() + 1, Day: transaction.Date.getDate()};
-                transactionList[dayInYear].push(day);
+                let dayIndex = dayOfYear(transaction.Date) - 1;
+                let day = {Amount: amount, amountFormatted: formattedAmount, Date: transaction.Date, dateFormatted: dateFormatted, Month: transaction.Date.getMonth() + 1, Day: transaction.Date.getDate()};
+                transactionList[dayIndex].push(day);
                // let dayClass = getDayClass(transInfo.Amount);
             }
         }
-        // let list = [];
-        // yearDayList = [];
-        // for (let calendarList = 1; calendarList <= 12; calendarList++) {
-        //     let dayAmount = daysInMonth(calendarList, selectedYear);
-        //     let sublist = [];
-        //     for (let day = 1; day <= dayAmount; day++) {
-        //         let date = convertToDate(calendarList - 1, selectedYear, day);
-        //         let transInfo = getTransactionsInfoForDay(date);
-        //         let dayClass = getDayClass(transInfo.Amount);
-        //         let days = {Amount: transInfo.Amount, amountFormatted: transInfo.formattedAmount, Rank: 0, Color: '', Class: dayClass, Date: date, dayOfYear: dayOfYear(date), Month: calendarList, Day: day, dateFormatted: transInfo.dateFormatted};
-        //         if (transInfo.Amount != 0) {
-        //             yearDayList.push(days);
-        //         }
-        //         sublist.push(days);
-        //     }
-        //     list.push(sublist);
-        // }
     }
 
     function populateYearDayList () {
@@ -118,33 +123,12 @@
             for (let transaction of day) {
                 amount = parseFloat((parseFloat(amount) + parseFloat(transaction.Amount)).toFixed($CurrencyInfoStore.Decimals));
             }
+            yearDayList[dayIndex].dayOfYear = dayIndex;
             yearDayList[dayIndex].Amount = amount;
             yearDayList[dayIndex].amountFormatted = formatAmount(yearDayList[dayIndex].Amount);
             yearDayList[dayIndex].Class = getDayClass(yearDayList[dayIndex].Amount);
             dayIndex++;
         }
-        console.log(yearDayList)
-    }
-    /**TODO:Function has two redundancies, one is it loops through the same list multiple times for each day and the other is it sets the date formatted multiple times. Need to improve this.
-     * Gets the total amount for the supplied day based on the selected option.
-     * @param {Date} calendarDate day supplied
-     * @returns {Int} total amount for the supplied day
-     */
-    function getTransactionsInfoForDay (calendarDate) {
-        let amount = 0;
-        let dateFormatted;
-        for (let transaction of $CurrentTransactionsStore) {
-            if (transaction.Date.getTime() === calendarDate.getTime()) {
-                
-                if (selectedOption === 'income' & transaction.Amount > 0 || selectedOption === 'expense' & transaction.Amount < 0 || selectedOption === 'net') {
-                    amount = parseFloat((parseFloat(amount) + parseFloat(transaction.Amount)).toFixed($CurrencyInfoStore.Decimals));
-                    dateFormatted = transaction.dateFormatted;
-                }
-            }
-        }
-        let formattedAmount = formatAmount(amount);
-        let finalAmount = {Amount: amount, formattedAmount: formattedAmount, dateFormatted: dateFormatted};
-        return finalAmount;
     }
     /**
      * When a day is clicked on the calendar, set all the information to be passed to the trans list popup and then call it.
@@ -164,7 +148,7 @@
      */
     function changeSelectedOption (option) {
         selectedOption = option;
-        populateDayList();
+        refreshCalendar();
     }
     /**
      * Highlights the month and day indicators based on the populated day that the users hovers over.
@@ -189,7 +173,7 @@
     function changeSelectedStyle (style, daylist) {
         selectedStyle = style;
         let list = setHeatmapStyle(daylist);
-        transactionList = applyHeatMapColor(list, transactionList);
+        transactionList = applyHeatMapColor(list, yearDayList);
     }
     /**
      * Takes a list and sets the colors for the heatmap style change and returns the list.
@@ -197,11 +181,8 @@
      * @param {Array of Objects} fullList list that is to be updated with new colors
      */
     function applyHeatMapColor (list, fullList) {
-        console.log(list)
-        console.log(fullList)
         for (let day of list) {
-            console.log(day)
-           //fullList[day.dayOfYear].Color = day.Color;
+           fullList[day.dayOfYear].Color = day.Color;
         }
         return fullList;
     }
@@ -230,13 +211,15 @@
                 {/each}
             </table>
             <table class="cal-year cal-year-days">
-                {#each transactionList as month}
+                {#each monthList as month}
                     <tr>
-                    {#each month as day}
-                        {#if day.Amount != 0}
-                            <th class="{day.Class} populated" style="{day.Color}" on:click={() => dayClicked(day.Date, day.dateFormatted, day.amountFormatted)} on:mouseover={() => highlightMonthDay(day.Month, day.Day)} on:focus={() => highlightMonthDay() }><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><div class="amountPopup"><span class="amountPopupText">{day.amountFormatted}</span></div></div></div></div></th>
-                        {:else}
-                            <th class="{day.Class}"></th>
+                    {#each yearDayList as day}
+                        {#if month.Number === day.Month}
+                            {#if day.Amount != 0}
+                                <th class="{day.Class} populated" style="{day.Color}" on:click={() => dayClicked(day.Date, day.dateFormatted, day.amountFormatted)} on:mouseover={() => highlightMonthDay(day.Month, day.Day)} on:focus={() => highlightMonthDay() }><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><div class="amountPopup"><span class="amountPopupText">{day.amountFormatted}</span></div></div></div></div></th>
+                            {:else}
+                                <th class="{day.Class}"></th>
+                            {/if}
                         {/if}
                     {/each}
                 {/each}

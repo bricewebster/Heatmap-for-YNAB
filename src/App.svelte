@@ -382,7 +382,7 @@
 <main>
 	{#if transactionsLoaded}
 		<Navbar bind:activeTab = {activeTab} on:filterChange={storeTransactionsMain}/>
-		<Content {activeTab} {selectedOption} {selectedStyle} {formatAmount}bind:selectedYear on:yearChange={storeTransactionsMain}/>
+		<Content {activeTab} {selectedOption} {selectedStyle} {formatAmount} {formatDate} bind:selectedYear on:yearChange={storeTransactionsMain}/>
 	{:else}
 		<Loading />	
 	{/if}
