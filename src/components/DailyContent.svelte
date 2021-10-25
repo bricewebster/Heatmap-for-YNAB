@@ -184,19 +184,29 @@
     .income {
         background-color: #00a567;
         color: white;
+        
+        transition-duration: 350ms;
     }
     .expense {
         background-color: #de5d83;
         color: white;
+        
+        transition-duration: 350ms;
     }
     .net-pos {
         background-color: #fdfd96;
+        
+        transition-duration: 350ms;
     }
     .net-neg {
         background-color: #ffb347;
+        
+        transition-duration: 350ms;
     }
     .none {
         background-color:  rgba(187, 167, 167, 0.842);
+        
+        transition-duration: 350ms;
     }
     .populated {
         cursor: pointer;

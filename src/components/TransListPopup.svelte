@@ -6,6 +6,70 @@
     export let selectedDayList;
     export let selectedAmount;
     export let popupType;
+
+    //Direction of true is descending and false is ascending.
+    let sectionSorted = {Section: 'Date', Direction: true};
+
+    /**
+     * Changes which section is being sorted and the directon of the sort.
+     * @param {String} sectionClicked section clicked
+     */
+    function changeSortedSection (sectionClicked) {
+        if (sectionClicked === sectionSorted.Section) {
+            sectionSorted.Direction = !sectionSorted.Direction;
+        } else {
+            sectionSorted = {Section: sectionClicked, Direction: true};
+        }
+        if (sectionSorted.Section === 'Category') {
+            if (sectionSorted.Direction) {
+                selectedDayList.sort((a,b) => (scrubCharacters(a.categoryName) < scrubCharacters(b.categoryName)) ? 1 : -1);
+            } else {
+                selectedDayList.sort((a,b) => (scrubCharacters(a.categoryName) > scrubCharacters(b.categoryName)) ? 1 : -1);
+            }
+        } else if (sectionSorted.Section === 'Account') {
+            if (sectionSorted.Direction) {
+                selectedDayList.sort((a,b) => (scrubCharacters(a.accountName) < scrubCharacters(b.accountName)) ? 1 : -1);
+            } else {
+                selectedDayList.sort((a,b) => (scrubCharacters(a.accountName) > scrubCharacters(b.accountName)) ? 1 : -1);
+            }
+        } else if (sectionSorted.Section === 'Date') {
+            if (sectionSorted.Direction) {
+                selectedDayList.sort((a,b) => (a.dateFormatted < b.dateFormatted) ? 1 : -1);
+            } else {
+                selectedDayList.sort((a,b) => (a.dateFormatted > b.dateFormatted) ? 1 : -1);
+            }
+        } else if (sectionSorted.Section === 'Payee') {
+            if (sectionSorted.Direction) {
+                selectedDayList.sort((a,b) => (scrubCharacters(a.payeeName) < scrubCharacters(b.payeeName)) ? 1 : -1);
+            } else {
+                selectedDayList.sort((a,b) => (scrubCharacters(a.payeeName) > scrubCharacters(b.payeeName)) ? 1 : -1);
+            }
+        } else if (sectionSorted.Section === 'Memo') {
+            if (sectionSorted.Direction) {
+                selectedDayList.sort((a,b) => (scrubCharacters(a.Memo) < scrubCharacters(b.Memo)) ? 1 : -1);
+            } else {
+                selectedDayList.sort((a,b) => (scrubCharacters(a.Memo) > scrubCharacters(b.Memo)) ? 1 : -1);
+            }
+        } else if (sectionSorted.Section === 'Amount') {
+            if (sectionSorted.Direction) {
+                selectedDayList.sort((a,b) => (a.Amount > b.Amount) ? 1 : -1);
+            } else {
+                selectedDayList.sort((a,b) => (a.Amount < b.Amount) ? 1 : -1);
+            }
+        }
+        selectedDayList = selectedDayList;
+    }
+
+    /**
+     * Scrubs the characters to only include numbers, letters and lowercase for easier sorting.
+     * @param {String} string string to be scrubbed
+     * @return {String} scrubbed string
+     */
+    function scrubCharacters (string) {
+        string = string.replace(/[^0-9a-z]/gi, '');
+        string = string.toLowerCase().trim();
+        return string;
+    }
 </script>
 
 <div class="popup {popupType}">
@@ -17,12 +81,78 @@
         <div class="trans-list">
             <table class="column-header">
                 <tr>
-                    <th>Category</th>
-                    <th>Account</th>
-                    <th>Date</th>
-                    <th>Payee</th>
-                    <th>Memo</th>
-                    <th>Amount</th>
+                    <th>
+                        <div class="label-container" on:click={() => changeSortedSection('Category')}>
+                            <p class="label">Category</p>
+                            {#if sectionSorted.Section === 'Category'}
+                                {#if sectionSorted.Direction}
+                                    <span class="material-icons-outlined md-24">arrow_drop_down</span>
+                                {:else}
+                                    <span class="material-icons-outlined md-24">arrow_drop_up</span>
+                                {/if}
+                            {/if}
+                        </div>
+                    </th>
+                    <th>
+                        <div class="label-container" on:click={() => changeSortedSection('Account')}>
+                            <p class="label">Account</p>
+                            {#if sectionSorted.Section === 'Account'}
+                                {#if sectionSorted.Direction}
+                                    <span class="material-icons-outlined md-24">arrow_drop_down</span>
+                                {:else}
+                                    <span class="material-icons-outlined md-24">arrow_drop_up</span>
+                                {/if}
+                            {/if}
+                        </div>
+                    </th>
+                    <th>
+                        <div class="label-container" on:click={() => changeSortedSection('Date')}>
+                            <p class="label">Date</p>
+                            {#if sectionSorted.Section === 'Date'}
+                                {#if sectionSorted.Direction}
+                                    <span class="material-icons-outlined md-24">arrow_drop_down</span>
+                                {:else}
+                                    <span class="material-icons-outlined md-24">arrow_drop_up</span>
+                                {/if}
+                            {/if}
+                        </div>
+                    </th>
+                    <th>
+                        <div class="label-container" on:click={() => changeSortedSection('Payee')}>
+                            <p class="label">Payee</p>
+                            {#if sectionSorted.Section === 'Payee'}
+                                {#if sectionSorted.Direction}
+                                    <span class="material-icons-outlined md-24">arrow_drop_down</span>
+                                {:else}
+                                    <span class="material-icons-outlined md-24">arrow_drop_up</span>
+                                {/if}
+                            {/if}
+                        </div>
+                    </th>
+                    <th>
+                        <div class="label-container" on:click={() => changeSortedSection('Memo')}>
+                            <p class="label">Memo</p>
+                            {#if sectionSorted.Section === 'Memo'}
+                                {#if sectionSorted.Direction}
+                                    <span class="material-icons-outlined md-24">arrow_drop_down</span>
+                                {:else}
+                                    <span class="material-icons-outlined md-24">arrow_drop_up</span>
+                                {/if}
+                            {/if}
+                        </div>
+                    </th>
+                    <th>
+                        <div class="label-container" on:click={() => changeSortedSection('Amount')}>
+                            <p class="label">Amount</p>
+                            {#if sectionSorted.Section === 'Amount'}
+                                {#if sectionSorted.Direction}
+                                    <span class="material-icons-outlined md-24">arrow_drop_down</span>
+                                {:else}
+                                    <span class="material-icons-outlined md-24">arrow_drop_up</span>
+                                {/if}
+                            {/if}
+                        </div>
+                    </th>
                 </tr>
             </table>
             <table class="list">
@@ -117,6 +247,16 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+    }
+    .label-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        cursor: pointer;
+    }
+    .label {
+        align-content: flex-start;
     }
     th:last-child {
             padding-right: .5rem;
