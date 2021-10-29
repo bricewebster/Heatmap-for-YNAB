@@ -25,9 +25,9 @@
 </script>
 <div class="cal-navigation">
     <div class="cal-options">
-        <button on:click={() => changeSelectedOption('income')}><span class="material-icons-outlined md-36 income-icon" class:selected={selectedOption === 'income'} class:nonselected-icon={selectedOption != 'income'}>savings</span></button>
-        <button on:click={() => changeSelectedOption('expense')}><span class="material-icons-outlined md-36 expense-icon" class:selected={selectedOption === 'expense'} class:nonselected-icon={selectedOption != 'expense'}>paid</span></button>
-        <button on:click={() => changeSelectedOption('net')}><span class="material-icons-outlined md-36 net-icon" class:selected={selectedOption === 'net'} class:nonselected-icon={selectedOption != 'net'}>request_quote</span></button>
+        <button on:click={() => changeSelectedOption('income')}><div class="desc-popup"><div class="desc-text income">Income</div><span class="material-icons-outlined md-36 income-icon" class:selected={selectedOption === 'income'} class:nonselected-icon={selectedOption != 'income'}>savings</span></div></button>
+        <button on:click={() => changeSelectedOption('expense')}><div class="desc-popup"><div class="desc-text expense">Expense</div><span class="material-icons-outlined md-36 expense-icon" class:selected={selectedOption === 'expense'} class:nonselected-icon={selectedOption != 'expense'}>paid</span></div></button>
+        <button on:click={() => changeSelectedOption('net')}><div class="desc-popup"><div class="desc-text net">Net</div><span class="material-icons-outlined md-36 net-icon" class:selected={selectedOption === 'net'} class:nonselected-icon={selectedOption != 'net'}>request_quote</span></div></button>
     </div>
     <div class="year-selector">
         <button on:click={() => toggleSelectedYear('previous')}><span class="material-icons-outlined md-24">chevron_left</span></button>
@@ -35,9 +35,9 @@
         <button on:click={() => toggleSelectedYear('next')}><span class="material-icons-outlined md-24">chevron_right</span></button>
     </div>
     <div class="cal-styles">
-        <button on:click={() => toggleSelectedStyle('regular')}><span class="material-icons-outlined md-36 style-regular-icon" class:selected={selectedStyle === 'regular'} class:nonselected-icon={selectedStyle != 'regular'}>local_fire_department</span></button>
-        <button on:click={() => toggleSelectedStyle('group')}><span class="material-icons-outlined md-36 style-group-icon" class:selected={selectedStyle === 'group'} class:nonselected-icon={selectedStyle != 'group'}>whatshot</span></button>
-        <button on:click={() => toggleSelectedStyle('simple')}><span class="material-icons-outlined md-36 style-simple-icon" class:selected={selectedStyle === 'simple'} class:nonselected-icon={selectedStyle != 'simple'}>fireplace</span></button>
+        <button on:click={() => toggleSelectedStyle('regular')}><div class="desc-popup"><div class="desc-text seq">Sequential</div><span class="material-icons-outlined md-36 style-regular-icon" class:selected={selectedStyle === 'regular'} class:nonselected-icon={selectedStyle != 'regular'}>local_fire_department</span></div></button>
+        <button on:click={() => toggleSelectedStyle('group')}><div class="desc-popup"><div class="desc-text group">Grouping</div><span class="material-icons-outlined md-36 style-group-icon" class:selected={selectedStyle === 'group'} class:nonselected-icon={selectedStyle != 'group'}>whatshot</span></div></button>
+        <button on:click={() => toggleSelectedStyle('simple')}><div class="desc-popup"><div class="desc-text simple">Simple</div><span class="material-icons-outlined md-36 style-simple-icon" class:selected={selectedStyle === 'simple'} class:nonselected-icon={selectedStyle != 'simple'}>fireplace</span></div></button>
     </div>
 </div>
 
@@ -120,5 +120,78 @@
     }
     .style-simple-icon.selected, .style-simple-icon:hover {
         color: #FEDE17;
+    }
+    .desc-popup {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+    .desc-popup .desc-text {
+        position: absolute;
+
+        bottom: 125%;
+        left: -90%;
+        padding: 5px;
+        width: 100px;
+
+        border-radius: 5px;
+  
+        color: white;
+        text-align: center;
+        font-size: 14px;
+        font-weight: bold;
+   
+        z-index: 1;
+        visibility: hidden;
+    }
+    .desc-popup .desc-text.income {
+        background-color: #00a567;
+    }
+    .desc-popup .desc-text.expense {
+        background-color: #de5d83;
+    }
+    .desc-popup .desc-text.net {
+        background-color: #ffb347;
+    }
+    .desc-popup .desc-text.seq {
+        background-color: #B31313;
+    }
+    .desc-popup .desc-text.group {
+        background-color: #FF9000;
+    }
+    .desc-popup .desc-text.simple {
+        background-color: #FEDE17;
+    }
+    .desc-popup .desc-text:after {
+        content: "";
+        position: absolute;
+
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+
+        border-width: 5px;
+        border-style: solid;
+    }
+    .desc-popup .desc-text.income:after {
+        border-color: #00a567 transparent transparent transparent;
+    }
+    .desc-popup .desc-text.expense:after {
+        border-color: #de5d83 transparent transparent transparent;
+    }
+    .desc-popup .desc-text.net:after {
+        border-color: #ffb347 transparent transparent transparent;
+    }
+    .desc-popup .desc-text.seq:after {
+        border-color: #B31313 transparent transparent transparent;
+    }
+    .desc-popup .desc-text.group:after {
+        border-color: #FF9000 transparent transparent transparent;
+    }
+    .desc-popup .desc-text.simple:after {
+        border-color: #FEDE17 transparent transparent transparent;
+    }
+    .desc-popup:hover .desc-text {
+        visibility: visible;
     }
 </style>
