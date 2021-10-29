@@ -12,8 +12,9 @@
     export let populateTransactionList = () => {};
     export let populateSummaryList = () => {};
     export let formatDate = () => {};
+    export let dayOfYear = () => {};
     export let getSelectedDaysTransactions = () => {};
-    export let setHeatmapStyle = () => {};
+    export let changeSelectedStyle = () => {};
 
     let dayList = [{Number: 1, Class: 'non-focused'}, {Number: 2, Class: 'non-focused'}, {Number: 3, Class: 'non-focused'}, {Number: 4, Class: 'non-focused'}, {Number: 5, Class: 'non-focused'}, {Number: 6, Class: 'non-focused'},
                     {Number: 7, Class: 'non-focused'}, {Number: 8, Class: 'non-focused'}, {Number: 9, Class: 'non-focused'}, {Number: 10, Class: 'non-focused'}, {Number: 11, Class: 'non-focused'}, {Number: 12, Class: 'non-focused'},
@@ -45,7 +46,7 @@
             let dayAmount = daysInMonth(selectedYear, month);
             for (let day = 1; day <= dayAmount; day++) {
                 let currentDate = dayDate(selectedYear, month - 1, day);
-                let currentDay = {dayOfYear: 0, Amount: 0, amountFormatted: '', Rank: 0, Color: '', Class: 'none', Date: currentDate, dateFormatted: formatDate(currentDate), Month: month, Day: day};
+                let currentDay = {dayOfYear: dayOfYear(currentDate) - 1, Amount: 0, amountFormatted: '', Rank: 0, Color: '', Class: 'none', Date: currentDate, dateFormatted: formatDate(currentDate), Month: month, Day: day};
                 list.push(currentDay);
             }
         }
@@ -98,7 +99,7 @@
         transactionList = populateTransactionList(transactionList);
         initializeSummaryList();
         summaryList = populateSummaryList(summaryList, transactionList);
-        changeSelectedStyle(selectedStyle, summaryList);
+        summaryList = changeSelectedStyle(summaryList);
     }
 
     /**
@@ -137,27 +138,6 @@
         dayList = dayList;
     }
     /**
-     * When a style button is clicked, the style is changed to that selected style.
-     * @param {String} style selected style
-     * @param {Array of Objects} daylist list of days of the year
-     */
-    function changeSelectedStyle (style, daylist) {
-        selectedStyle = style;
-        let list = setHeatmapStyle(daylist);
-        summaryList = applyHeatMapColor(list, summaryList);
-    }
-    /**
-     * Takes a list and sets the colors for the heatmap style change and returns the list.
-     * @param {Array of Objects} list list that will be applied to current list
-     * @param {Array of Objects} fullList list that is to be updated with new colors
-     */
-    function applyHeatMapColor (list, fullList) {
-        for (let day of list) {
-           fullList[day.dayOfYear].Color = day.Color;
-        }
-        return fullList;
-    }
-    /**
      * Opens and closes the trans list popup.
      */
     function togglePopup () {
@@ -166,7 +146,7 @@
 </script>
 <div class="content">
     <div class="cal-year-container">
-        <CalendarNavigation {selectedOption} {selectedStyle} list = {summaryList} {changeSelectedOption} {changeSelectedStyle} bind:selectedYear on:yearChange/>
+        <CalendarNavigation {selectedOption} {changeSelectedOption} {refreshCalendar} bind:selectedYear bind:selectedStyle on:yearChange/>
         <table class="cal-year day-list">
             <tr>
             <th><p></p></th>

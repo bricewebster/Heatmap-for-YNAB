@@ -2,39 +2,37 @@
     import CalendarNavigation from "./CalendarNavigation.svelte";
     import TransListPopup from '../components/TransListPopup.svelte';
     import CurrentTransactionsStore from '../stores/currentTransactionsStore';
-    import CurrencyInfoStore from '../stores/currencyInfoStore';
     import { fade } from 'svelte/transition';
 
     export let selectedYear;
     export let selectedOption;
     export let selectedStyle;
-    export let formatAmount = () => {};
-    export let dayOfYear = () => {};
+    export let populateTransactionList = () => {};
+    export let populateSummaryList = () => {};
     export let getSelectedDaysTransactions = () => {};
-    export let getDayClass = () => {};
-    export let setHeatmapStyle = () => {};
+    export let changeSelectedStyle = () => {};
 
     var showPopup = false;
     let selectedDay;
     let selectedDayList = [];
     let selectedAmount;
 
-    let summaryList = [{dayOfMonth: 1, Amount: 0, amountFormatted: '', displayName: '1st', Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 2, Amount: 0, amountFormatted: '', displayName: '2nd',  Rank: 0, Color: '', Class: 'none'},
-                       {dayOfMonth: 3, Amount: 0, amountFormatted: '', displayName: '3rd',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 4, Amount: 0, amountFormatted: '', displayName: '4th',  Rank: 0, Color: '', Class: 'none'},
-                       {dayOfMonth: 5, Amount: 0, amountFormatted: '', displayName: '5th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 6, Amount: 0, amountFormatted: '', displayName: '6th',  Rank: 0, Color: '', Class: 'none'},
-                       {dayOfMonth: 7, Amount: 0, amountFormatted: '', displayName: '7th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 8, Amount: 0, amountFormatted: '', displayName: '8th',  Rank: 0, Color: '', Class: 'none'},
-                       {dayOfMonth: 9, Amount: 0, amountFormatted: '', displayName: '9th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 10, Amount: 0, amountFormatted: '', displayName: '10th',  Rank: 0, Color: '', Class: 'none'},
-                       {dayOfMonth: 11, Amount: 0, amountFormatted: '', displayName: '11th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 12, Amount: 0, amountFormatted: '', displayName: '12th',  Rank: 0, Color: '', Class: 'none'},
-                       {dayOfMonth: 13, Amount: 0, amountFormatted: '', displayName: '13th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 14, Amount: 0, amountFormatted: '', displayName: '14th',  Rank: 0, Color: '', Class: 'none'},
-                       {dayOfMonth: 15, Amount: 0, amountFormatted: '', displayName: '15th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 16, Amount: 0, amountFormatted: '', displayName: '16th',  Rank: 0, Color: '', Class: 'none'},
-                       {dayOfMonth: 17, Amount: 0, amountFormatted: '', displayName: '17th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 18, Amount: 0, amountFormatted: '', displayName: '18th',  Rank: 0, Color: '', Class: 'none'},
-                       {dayOfMonth: 19, Amount: 0, amountFormatted: '', displayName: '19th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 20, Amount: 0, amountFormatted: '', displayName: '20th',  Rank: 0, Color: '', Class: 'none'},
-                       {dayOfMonth: 21, Amount: 0, amountFormatted: '', displayName: '21st',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 22, Amount: 0, amountFormatted: '', displayName: '22nd',  Rank: 0, Color: '', Class: 'none'},
-                       {dayOfMonth: 23, Amount: 0, amountFormatted: '', displayName: '23rd',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 24, Amount: 0, amountFormatted: '', displayName: '24th',  Rank: 0, Color: '', Class: 'none'},
-                       {dayOfMonth: 25, Amount: 0, amountFormatted: '', displayName: '25th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 26, Amount: 0, amountFormatted: '', displayName: '26th',  Rank: 0, Color: '', Class: 'none'},
-                       {dayOfMonth: 27, Amount: 0, amountFormatted: '', displayName: '27th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 28, Amount: 0, amountFormatted: '', displayName: '28th',  Rank: 0, Color: '', Class: 'none'},
-                       {dayOfMonth: 29, Amount: 0, amountFormatted: '', displayName: '29th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 30, Amount: 0, amountFormatted: '', displayName: '30th',  Rank: 0, Color: '', Class: 'none'},
-                       {dayOfMonth: 31, Amount: 0, amountFormatted: '', displayName: '31st',  Rank: 0, Color: '', Class: 'none'}];
+    let summaryList = [{dayOfMonth: 0, Amount: 0, amountFormatted: '', displayName: '1st', Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 1, Amount: 0, amountFormatted: '', displayName: '2nd',  Rank: 0, Color: '', Class: 'none'},
+                       {dayOfMonth: 2, Amount: 0, amountFormatted: '', displayName: '3rd',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 3, Amount: 0, amountFormatted: '', displayName: '4th',  Rank: 0, Color: '', Class: 'none'},
+                       {dayOfMonth: 4, Amount: 0, amountFormatted: '', displayName: '5th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 5, Amount: 0, amountFormatted: '', displayName: '6th',  Rank: 0, Color: '', Class: 'none'},
+                       {dayOfMonth: 6, Amount: 0, amountFormatted: '', displayName: '7th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 7, Amount: 0, amountFormatted: '', displayName: '8th',  Rank: 0, Color: '', Class: 'none'},
+                       {dayOfMonth: 8, Amount: 0, amountFormatted: '', displayName: '9th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 9, Amount: 0, amountFormatted: '', displayName: '10th',  Rank: 0, Color: '', Class: 'none'},
+                       {dayOfMonth: 10, Amount: 0, amountFormatted: '', displayName: '11th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 11, Amount: 0, amountFormatted: '', displayName: '12th',  Rank: 0, Color: '', Class: 'none'},
+                       {dayOfMonth: 12, Amount: 0, amountFormatted: '', displayName: '13th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 13, Amount: 0, amountFormatted: '', displayName: '14th',  Rank: 0, Color: '', Class: 'none'},
+                       {dayOfMonth: 14, Amount: 0, amountFormatted: '', displayName: '15th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 15, Amount: 0, amountFormatted: '', displayName: '16th',  Rank: 0, Color: '', Class: 'none'},
+                       {dayOfMonth: 16, Amount: 0, amountFormatted: '', displayName: '17th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 17, Amount: 0, amountFormatted: '', displayName: '18th',  Rank: 0, Color: '', Class: 'none'},
+                       {dayOfMonth: 18, Amount: 0, amountFormatted: '', displayName: '19th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 19, Amount: 0, amountFormatted: '', displayName: '20th',  Rank: 0, Color: '', Class: 'none'},
+                       {dayOfMonth: 20, Amount: 0, amountFormatted: '', displayName: '21st',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 21, Amount: 0, amountFormatted: '', displayName: '22nd',  Rank: 0, Color: '', Class: 'none'},
+                       {dayOfMonth: 22, Amount: 0, amountFormatted: '', displayName: '23rd',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 23, Amount: 0, amountFormatted: '', displayName: '24th',  Rank: 0, Color: '', Class: 'none'},
+                       {dayOfMonth: 24, Amount: 0, amountFormatted: '', displayName: '25th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 25, Amount: 0, amountFormatted: '', displayName: '26th',  Rank: 0, Color: '', Class: 'none'},
+                       {dayOfMonth: 26, Amount: 0, amountFormatted: '', displayName: '27th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 27, Amount: 0, amountFormatted: '', displayName: '28th',  Rank: 0, Color: '', Class: 'none'},
+                       {dayOfMonth: 28, Amount: 0, amountFormatted: '', displayName: '29th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 29, Amount: 0, amountFormatted: '', displayName: '30th',  Rank: 0, Color: '', Class: 'none'},
+                       {dayOfMonth: 30, Amount: 0, amountFormatted: '', displayName: '31st',  Rank: 0, Color: '', Class: 'none'}];
     
     let transactionList;
 
@@ -45,46 +43,11 @@
      * Main function that refreshes the calendar. It is called when sections of the calendar are updated.
      */
     function refreshCalendar () {
-        populateTransactionList();
-        populateSummaryList()
-        changeSelectedStyle(selectedStyle, summaryList);
-    }
-
-    /**
-     * Populates the transaction List used to store all the transactions for each day in an array of arrays.
-     */
-    function populateTransactionList () {
         transactionList = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]];
-        for (let transaction of $CurrentTransactionsStore) {
-            if (selectedOption === 'income' & transaction.Amount > 0 || selectedOption === 'expense' & transaction.Amount < 0 || selectedOption === 'net' & transaction.Amount != 0) {
-                let amount = parseFloat(parseFloat(transaction.Amount).toFixed($CurrencyInfoStore.Decimals));
-                let formattedAmount = formatAmount(amount);
-                let dateFormatted = transaction.dateFormatted;
-                let dayOfMonth = transaction.Date.getDate() - 1;
-                let days = {Amount: amount, amountFormatted: formattedAmount, dateFormatted: dateFormatted, dayOfMonth: dayOfMonth};
-                transactionList[dayOfMonth].push(days);
-               // let dayClass = getDayClass(transInfo.Amount);
-            }
-        }
+        transactionList = populateTransactionList(transactionList);
+        summaryList = populateSummaryList(summaryList, transactionList);
+        summaryList = changeSelectedStyle(summaryList);
     }
-
-    /**
-     *  Populate summary list which stores the summary of each day in an array.
-     */
-    function populateSummaryList() {
-        let dayIndex = 0;
-        for (let day of transactionList) {
-            let amount = 0;
-            for (let transaction of day) {
-                amount = parseFloat((parseFloat(amount) + parseFloat(transaction.Amount)).toFixed($CurrencyInfoStore.Decimals));
-            }
-            summaryList[dayIndex].Amount = amount;
-            summaryList[dayIndex].amountFormatted = formatAmount(summaryList[dayIndex].Amount);
-            summaryList[dayIndex].Class = getDayClass(summaryList[dayIndex].Amount);
-            dayIndex++;
-        }
-    }
-
     /**
      * Change selected option to what was choosen by the user.
      * @param {String} option option choosen by user
@@ -92,28 +55,6 @@
     function changeSelectedOption (option) {
         selectedOption = option;
         refreshCalendar();
-    }
-    /**
-     * Change selected style to what was choosen by user.
-     * @param {String} style style selected by user
-     * @param {Array of Objects} daylist list of days to change styles
-     */
-    function changeSelectedStyle (style, daylist) {
-        selectedStyle = style;
-        let list = setHeatmapStyle(daylist);
-        summaryList = applyHeatMapColor(list, summaryList);
-    }
-    /**
-     * Apply the temp list color change to the main day list.
-     * @param {Array of Objects} list temp list with color changes
-     * @param {Array of Objects} daylist main list to be changed
-     * @returns {Array of Objects} changed main list to new style color
-     */
-    function applyHeatMapColor (list, daylist) {
-        for (let day of list) {
-           daylist[day.dayOfMonth - 1].Color = day.Color;
-        }
-        return daylist;
     }
     /**
      * When a day is clicked on the calendar, set all the information to be passed to the trans list popup and then call it.
@@ -136,7 +77,7 @@
 
 </script>
 <div class="content">
-    <CalendarNavigation {selectedOption} {selectedStyle} list = {summaryList} {changeSelectedOption} {changeSelectedStyle}  bind:selectedYear on:yearChange/>
+    <CalendarNavigation {selectedOption} {changeSelectedOption} {refreshCalendar} bind:selectedYear bind:selectedStyle on:yearChange/>
     <table class="cal-month">
         {#each Array(5) as _, mainIndex}
         <tr>

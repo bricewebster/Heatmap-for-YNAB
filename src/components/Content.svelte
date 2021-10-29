@@ -16,14 +16,23 @@
      * Populates the transaction list.
      */
      function populateTransactionList (transactionList) {
-        console.log(transactionList)
         for (let transaction of $CurrentTransactionsStore) {
             if (selectedOption === 'income' & transaction.Amount > 0 || selectedOption === 'expense' & transaction.Amount < 0 || selectedOption === 'net' & transaction.Amount != 0) {
                 let amount = parseFloat(parseFloat(transaction.Amount).toFixed($CurrencyInfoStore.Decimals));
                 let formattedAmount = formatAmount(amount);
                 let dateFormatted = transaction.dateFormatted;
-                let dayIndex = dayOfYear(transaction.Date) - 1;
-                let day = {Amount: amount, amountFormatted: formattedAmount, Date: transaction.Date, dateFormatted: dateFormatted, Month: transaction.Date.getMonth() + 1, Day: transaction.Date.getDate()};
+                let day;
+                let dayIndex;
+                if (activeTab === 'Yearly') {
+                    dayIndex = dayOfYear(transaction.Date) - 1;
+                    day = {Amount: amount, amountFormatted: formattedAmount, Date: transaction.Date, dateFormatted: dateFormatted, Month: transaction.Date.getMonth() + 1, Day: transaction.Date.getDate()};
+                } else if (activeTab === 'Monthly') {
+                    dayIndex = transaction.Date.getDate() - 1;
+                    day = {Amount: amount, amountFormatted: formattedAmount, dateFormatted: dateFormatted, dayOfMonth: dayIndex};
+                } else {
+                    dayIndex = transaction.Date.getDay();
+                    day = {Amount: amount, amountFormatted: formattedAmount, dateFormatted: dateFormatted, dayOfWeek: dayIndex};
+                }
                 transactionList[dayIndex].push(day);
                // let dayClass = getDayClass(transInfo.Amount);
             }
@@ -40,7 +49,6 @@
             for (let transaction of day) {
                 amount = parseFloat((parseFloat(amount) + parseFloat(transaction.Amount)).toFixed($CurrencyInfoStore.Decimals));
             }
-            summaryList[dayIndex].dayOfYear = dayIndex;
             summaryList[dayIndex].Amount = amount;
             summaryList[dayIndex].amountFormatted = formatAmount(summaryList[dayIndex].Amount);
             summaryList[dayIndex].Class = getDayClass(summaryList[dayIndex].Amount);
@@ -114,6 +122,17 @@
      */
     function dayOfYear (transactionDate) {
         return (Date.UTC(transactionDate.getFullYear(), transactionDate.getMonth(), transactionDate.getDate()) - Date.UTC(transactionDate.getFullYear(), 0, 0)) / 24 / 60 / 60 / 1000;
+    }
+    /**
+     * When a style button is clicked, the style is changed to that selected style.
+     * @param {String} style selected style
+     * @param {Array of Objects} summaryList list to apply style change to
+     * @return {Array of Objects} list with changed style
+     */
+    function changeSelectedStyle (summaryList) {
+        let list = setHeatmapStyle(summaryList);
+        summaryList = applyHeatMapColor(list, summaryList);
+        return summaryList;
     }
     /**
      * Main function that sets the new heatmap style that was selected. If the selected style isn't simple then it breaks down the day list provided and ranks them smallest to largest.
@@ -213,15 +232,33 @@
             day.Color = background;
         }
     }
+    /**
+     * Takes a list and sets the colors for the heatmap style change and returns the list.
+     * @param {Array of Objects} list list that will be applied to current list
+     * @param {Array of Objects} fullList list that is to be updated with new colors
+     * @return {Array of Objects} changed main list to new style color
+     */
+     function applyHeatMapColor (list, summaryList) {
+        for (let day of list) {
+            if (activeTab === 'Yearly') {
+                summaryList[day.dayOfYear].Color = day.Color;
+            } else if (activeTab === 'Monthly') {
+                summaryList[day.dayOfMonth].Color = day.Color;
+            } else {
+                summaryList[day.dayOfWeek].Color = day.Color;
+            }
+        }
+        return summaryList;
+    }
 </script>
 
 <div class="content">
     {#if activeTab === 'Yearly'}
-        <YearlyContent {populateTransactionList} {populateSummaryList} {formatAmount} {getDayClass} {getSelectedDaysTransactions} {dayOfYear} {setHeatmapStyle} {convertToDate} {formatDate} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange />
+        <YearlyContent {populateTransactionList} {populateSummaryList} {getSelectedDaysTransactions} {changeSelectedStyle} {dayOfYear} {formatDate} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange />
     {:else if activeTab === 'Monthly'}
-        <MonthlyContent {formatAmount} {dayOfYear} {getDayClass} {getSelectedDaysTransactions} {setHeatmapStyle} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange/>
+        <MonthlyContent {populateTransactionList} {populateSummaryList} {getSelectedDaysTransactions} {changeSelectedStyle} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange/>
     {:else}
-        <DailyContent {formatAmount} {dayOfYear} {getDayClass} {getSelectedDaysTransactions} {setHeatmapStyle} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange/>
+        <DailyContent {populateTransactionList} {populateSummaryList} {getSelectedDaysTransactions} {changeSelectedStyle} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange/>
     {/if}
 </div>
 

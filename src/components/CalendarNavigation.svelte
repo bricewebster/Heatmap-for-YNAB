@@ -6,10 +6,9 @@
     export let selectedYear;
     export let selectedOption;
     export let selectedStyle;
-    export let list = [];
 
     export let changeSelectedOption = () => {};
-    export let changeSelectedStyle = () => {};
+    export let refreshCalendar = () => {};
 
     /**
      * Toggles the selected year based on button clicked and calls the update to transactions.
@@ -18,6 +17,10 @@
      function toggleSelectedYear (buttonSelected) {
         selectedYear = buttonSelected === 'previous' ? selectedYear = selectedYear - 1 : selectedYear = selectedYear + 1;
         dispatch('yearChange', );
+    }
+    function toggleSelectedStyle (style) {
+        selectedStyle = style;
+        refreshCalendar();
     }
 </script>
 <div class="cal-navigation">
@@ -32,9 +35,9 @@
         <button on:click={() => toggleSelectedYear('next')}><span class="material-icons-outlined md-24">chevron_right</span></button>
     </div>
     <div class="cal-styles">
-        <button on:click={() => changeSelectedStyle('regular', list)}><span class="material-icons-outlined md-36 style-regular-icon" class:selected={selectedStyle === 'regular'} class:nonselected-icon={selectedStyle != 'regular'}>local_fire_department</span></button>
-        <button on:click={() => changeSelectedStyle('group', list)}><span class="material-icons-outlined md-36 style-group-icon" class:selected={selectedStyle === 'group'} class:nonselected-icon={selectedStyle != 'group'}>whatshot</span></button>
-        <button on:click={() => changeSelectedStyle('simple', list)}><span class="material-icons-outlined md-36 style-simple-icon" class:selected={selectedStyle === 'simple'} class:nonselected-icon={selectedStyle != 'simple'}>fireplace</span></button>
+        <button on:click={() => toggleSelectedStyle('regular')}><span class="material-icons-outlined md-36 style-regular-icon" class:selected={selectedStyle === 'regular'} class:nonselected-icon={selectedStyle != 'regular'}>local_fire_department</span></button>
+        <button on:click={() => toggleSelectedStyle('group')}><span class="material-icons-outlined md-36 style-group-icon" class:selected={selectedStyle === 'group'} class:nonselected-icon={selectedStyle != 'group'}>whatshot</span></button>
+        <button on:click={() => toggleSelectedStyle('simple')}><span class="material-icons-outlined md-36 style-simple-icon" class:selected={selectedStyle === 'simple'} class:nonselected-icon={selectedStyle != 'simple'}>fireplace</span></button>
     </div>
 </div>
 
