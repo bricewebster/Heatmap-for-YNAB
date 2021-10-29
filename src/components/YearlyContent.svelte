@@ -9,12 +9,10 @@
     var selectedDay;
     var selectedDayList = [];
     var selectedAmount;
-    export let formatAmount = () => {};
+    export let populateTransactionList = () => {};
+    export let populateSummaryList = () => {};
     export let formatDate = () => {};
-    export let convertToDate = () => {};
-    export let getDayClass = () => {};
     export let getSelectedDaysTransactions = () => {};
-    export let dayOfYear = () => {};
     export let setHeatmapStyle = () => {};
 
     let dayList = [{Number: 1, Class: 'non-focused'}, {Number: 2, Class: 'non-focused'}, {Number: 3, Class: 'non-focused'}, {Number: 4, Class: 'non-focused'}, {Number: 5, Class: 'non-focused'}, {Number: 6, Class: 'non-focused'},
@@ -96,47 +94,13 @@
     }
 
     function refreshCalendar () {
-        populateTransactionList();
-        populateSummaryList();
+        initializeTransactionList();
+        transactionList = populateTransactionList(transactionList);
+        initializeSummaryList();
+        summaryList = populateSummaryList(summaryList, transactionList);
         changeSelectedStyle(selectedStyle, summaryList);
     }
 
-    /**
-     * Populates the transaction list.
-     */
-    function populateTransactionList () {
-        initializeTransactionList();
-        for (let transaction of $CurrentTransactionsStore) {
-            if (selectedOption === 'income' & transaction.Amount > 0 || selectedOption === 'expense' & transaction.Amount < 0 || selectedOption === 'net' & transaction.Amount != 0) {
-                let amount = parseFloat(parseFloat(transaction.Amount).toFixed($CurrencyInfoStore.Decimals));
-                let formattedAmount = formatAmount(amount);
-                let dateFormatted = transaction.dateFormatted;
-                let dayIndex = dayOfYear(transaction.Date) - 1;
-                let day = {Amount: amount, amountFormatted: formattedAmount, Date: transaction.Date, dateFormatted: dateFormatted, Month: transaction.Date.getMonth() + 1, Day: transaction.Date.getDate()};
-                transactionList[dayIndex].push(day);
-               // let dayClass = getDayClass(transInfo.Amount);
-            }
-        }
-    }
-
-    /**
-     * Populates the summary list.
-     */
-    function populateSummaryList () {
-        initializeSummaryList();
-        let dayIndex = 0;
-        for (let day of transactionList) {
-            let amount = 0;
-            for (let transaction of day) {
-                amount = parseFloat((parseFloat(amount) + parseFloat(transaction.Amount)).toFixed($CurrencyInfoStore.Decimals));
-            }
-            summaryList[dayIndex].dayOfYear = dayIndex;
-            summaryList[dayIndex].Amount = amount;
-            summaryList[dayIndex].amountFormatted = formatAmount(summaryList[dayIndex].Amount);
-            summaryList[dayIndex].Class = getDayClass(summaryList[dayIndex].Amount);
-            dayIndex++;
-        }
-    }
     /**
      * When a day is clicked on the calendar, set all the information to be passed to the trans list popup and then call it.
      * @param {Date} date date clicked

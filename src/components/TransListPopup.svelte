@@ -9,7 +9,7 @@
 
     //Direction of true is descending and false is ascending.
     let sectionSorted = {Section: 'Date', Direction: true};
-
+    
     /**
      * Changes which section is being sorted and the directon of the sort.
      * @param {String} sectionClicked section clicked

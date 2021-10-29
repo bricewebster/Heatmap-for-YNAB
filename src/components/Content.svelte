@@ -3,6 +3,7 @@
     import MonthlyContent from "./MonthlyContent.svelte";
     import DailyContent from "./DailyContent.svelte";
     import CurrentTransactionsStore from '../stores/currentTransactionsStore';
+    import CurrencyInfoStore from '../stores/currencyInfoStore';
 
     export let activeTab
     export let selectedYear;
@@ -11,6 +12,42 @@
     export let formatAmount = () => {};
     export let formatDate = () => {};
 
+     /**
+     * Populates the transaction list.
+     */
+     function populateTransactionList (transactionList) {
+        console.log(transactionList)
+        for (let transaction of $CurrentTransactionsStore) {
+            if (selectedOption === 'income' & transaction.Amount > 0 || selectedOption === 'expense' & transaction.Amount < 0 || selectedOption === 'net' & transaction.Amount != 0) {
+                let amount = parseFloat(parseFloat(transaction.Amount).toFixed($CurrencyInfoStore.Decimals));
+                let formattedAmount = formatAmount(amount);
+                let dateFormatted = transaction.dateFormatted;
+                let dayIndex = dayOfYear(transaction.Date) - 1;
+                let day = {Amount: amount, amountFormatted: formattedAmount, Date: transaction.Date, dateFormatted: dateFormatted, Month: transaction.Date.getMonth() + 1, Day: transaction.Date.getDate()};
+                transactionList[dayIndex].push(day);
+               // let dayClass = getDayClass(transInfo.Amount);
+            }
+        }
+        return transactionList;
+    }
+     /**
+     * Populates the summary list.
+     */
+     function populateSummaryList (summaryList, transactionList) {
+        let dayIndex = 0;
+        for (let day of transactionList) {
+            let amount = 0;
+            for (let transaction of day) {
+                amount = parseFloat((parseFloat(amount) + parseFloat(transaction.Amount)).toFixed($CurrencyInfoStore.Decimals));
+            }
+            summaryList[dayIndex].dayOfYear = dayIndex;
+            summaryList[dayIndex].Amount = amount;
+            summaryList[dayIndex].amountFormatted = formatAmount(summaryList[dayIndex].Amount);
+            summaryList[dayIndex].Class = getDayClass(summaryList[dayIndex].Amount);
+            dayIndex++;
+        }
+        return summaryList;
+    }
     /**
      * Converts supplised month, year, and day into Date object.
      * @param {String} month supplied month
@@ -180,7 +217,7 @@
 
 <div class="content">
     {#if activeTab === 'Yearly'}
-        <YearlyContent {formatAmount} {getDayClass} {getSelectedDaysTransactions} {dayOfYear} {setHeatmapStyle} {convertToDate} {formatDate} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange />
+        <YearlyContent {populateTransactionList} {populateSummaryList} {formatAmount} {getDayClass} {getSelectedDaysTransactions} {dayOfYear} {setHeatmapStyle} {convertToDate} {formatDate} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange />
     {:else if activeTab === 'Monthly'}
         <MonthlyContent {formatAmount} {dayOfYear} {getDayClass} {getSelectedDaysTransactions} {setHeatmapStyle} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange/>
     {:else}
