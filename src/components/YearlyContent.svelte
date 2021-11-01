@@ -4,6 +4,7 @@
     import CurrentTransactionsStore from '../stores/currentTransactionsStore';
     import CurrencyInfoStore from '../stores/currencyInfoStore';
     import { fade } from 'svelte/transition';
+import navOptionsStore from "../stores/navOptionsStore";
 
     var showPopup = false;
     var selectedDay;
@@ -30,6 +31,8 @@
     let transactionList = [];
     
     export let selectedYear;
+    export let selectedStartDate;
+    export let selectedEndDate;
     export let selectedOption;
     export let selectedStyle;
 
@@ -43,7 +46,7 @@
         let list = [];
 
         for (let month = 1; month <= 12; month++) {
-            let dayAmount = daysInMonth(selectedYear, month);
+            let dayAmount = daysInMonth(2020, month);
             for (let day = 1; day <= dayAmount; day++) {
                 let currentDate = dayDate(selectedYear, month - 1, day);
                 let currentDay = {dayOfYear: dayOfYear(currentDate) - 1, Amount: 0, amountFormatted: '', Rank: 0, Color: '', Class: 'none', Date: currentDate, dateFormatted: formatDate(currentDate), Month: month, Day: day};
@@ -58,7 +61,7 @@
      */
     function initializeTransactionList () {
         transactionList = [];
-        let daysInYear = isLeapYear(selectedYear) ? 366 : 365;
+        let daysInYear = 366;
         
         for (let index = 1; index <= daysInYear; index++) {
             let transList = [];
@@ -85,15 +88,7 @@
     function dayDate (year, month, day) {
         return new Date(year, month, day);
     }
-    /**
-      * Calculates year provided to see if its a leap year and returns true or false.
-      * @param {String} year the year calculated
-      * @return {Boolean} true if it is a leap year else false.
-    */
-    function isLeapYear(year){
-        return (year % 100 === 0) ? (year % 400 === 0) : (year % 4 === 0);
-    }
-
+   
     function refreshCalendar () {
         initializeTransactionList();
         transactionList = populateTransactionList(transactionList);
@@ -119,7 +114,7 @@
      * @param {String} option option selected
      */
     function changeSelectedOption (option) {
-        selectedOption = option;
+        $navOptionsStore.selectedOption = option;
         refreshCalendar();
     }
     /**
@@ -146,7 +141,7 @@
 </script>
 <div class="content">
     <div class="cal-year-container">
-        <CalendarNavigation {selectedOption} {changeSelectedOption} {refreshCalendar} bind:selectedYear bind:selectedStyle on:yearChange/>
+        <CalendarNavigation {selectedOption} {changeSelectedOption} {refreshCalendar} bind:selectedYear bind:selectedStartDate bind:selectedEndDate bind:selectedStyle on:yearChange/>
         <table class="cal-year day-list">
             <tr>
             <th><p></p></th>

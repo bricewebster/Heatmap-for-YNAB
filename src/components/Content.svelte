@@ -2,11 +2,14 @@
     import YearlyContent from "./YearlyContent.svelte";
     import MonthlyContent from "./MonthlyContent.svelte";
     import DailyContent from "./DailyContent.svelte";
+    import navOptionsStore from '../stores/navOptionsStore';
     import CurrentTransactionsStore from '../stores/currentTransactionsStore';
     import CurrencyInfoStore from '../stores/currencyInfoStore';
 
     export let activeTab
     export let selectedYear;
+    export let selectedStartDate;
+    export let selectedEndDate;
     export let selectedOption;
     export let selectedStyle;
     export let formatAmount = () => {};
@@ -17,14 +20,15 @@
      */
      function populateTransactionList (transactionList) {
         for (let transaction of $CurrentTransactionsStore) {
-            if (selectedOption === 'income' & transaction.Amount > 0 || selectedOption === 'expense' & transaction.Amount < 0 || selectedOption === 'net' & transaction.Amount != 0) {
+            if ($navOptionsStore.selectedOption === 'income' & transaction.Amount > 0 || $navOptionsStore.selectedOption === 'expense' & transaction.Amount < 0 || $navOptionsStore.selectedOption === 'net' & transaction.Amount != 0) {
                 let amount = parseFloat(parseFloat(transaction.Amount).toFixed($CurrencyInfoStore.Decimals));
                 let formattedAmount = formatAmount(amount);
                 let dateFormatted = transaction.dateFormatted;
                 let day;
                 let dayIndex;
                 if (activeTab === 'Yearly') {
-                    dayIndex = dayOfYear(transaction.Date) - 1;
+                    dayIndex = dayOfYear(transaction.Date);
+                    dayIndex = !isLeapYear(transaction.Date.getFullYear()) & dayIndex >= 60 ? dayIndex : dayIndex - 1;
                     day = {Amount: amount, amountFormatted: formattedAmount, Date: transaction.Date, dateFormatted: dateFormatted, Month: transaction.Date.getMonth() + 1, Day: transaction.Date.getDate()};
                 } else if (activeTab === 'Monthly') {
                     dayIndex = transaction.Date.getDate() - 1;
@@ -37,6 +41,7 @@
                // let dayClass = getDayClass(transInfo.Amount);
             }
         }
+        console.log(transactionList)
         return transactionList;
     }
      /**
@@ -54,6 +59,7 @@
             summaryList[dayIndex].Class = getDayClass(summaryList[dayIndex].Amount);
             dayIndex++;
         }
+        console.log(summaryList)
         return summaryList;
     }
     /**
@@ -73,11 +79,11 @@
      */
     function getDayClass (amount) {
         let dayClass;
-        if (selectedOption === 'income' & amount != 0) {
+        if ($navOptionsStore.selectedOption === 'income' & amount != 0) {
             dayClass = 'income';
-        } else if (selectedOption === 'expense' & amount != 0) {
+        } else if ($navOptionsStore.selectedOption === 'expense' & amount != 0) {
             dayClass = 'expense';
-        } else if (selectedOption === 'net' & amount != 0) {
+        } else if ($navOptionsStore.selectedOption === 'net' & amount != 0) {
             dayClass = amount > 0 ? 'net-pos' : 'net-neg';
         } else {
             dayClass = "none";
@@ -94,25 +100,26 @@
         for (let day of $CurrentTransactionsStore) {
             let compare;
             if (tabOption === 'year') {
-                compare = day.Date.getTime() === date.getTime();
+                compare = (day.Date.getMonth() === date.getMonth() & day.Date.getDate() === date.getDate());
             } else if (tabOption === 'month') {
                 compare = day.dayOfMonth === date;
             } else {
                 compare = day.dayOfWeek === date;
             }
             if (compare) {
-                if (selectedOption === 'income' & day.Amount > 0) {
+                if ($navOptionsStore.selectedOption === 'income' & day.Amount > 0) {
                     day.amountFormatted = formatAmount(day.Amount);
                     transactionList.push(day);
-                } else if (selectedOption === 'expense' & day.Amount < 0) {
+                } else if ($navOptionsStore.selectedOption === 'expense' & day.Amount < 0) {
                     day.amountFormatted = formatAmount(day.Amount);
                     transactionList.push(day);
-                } else if (selectedOption === 'net') {
+                } else if ($navOptionsStore.selectedOption === 'net') {
                     day.amountFormatted = formatAmount(day.Amount);
                     transactionList.push(day);
                 }
             }
         }
+        console.log(transactionList)
         return transactionList;
     }
     /**
@@ -122,6 +129,14 @@
      */
     function dayOfYear (transactionDate) {
         return (Date.UTC(transactionDate.getFullYear(), transactionDate.getMonth(), transactionDate.getDate()) - Date.UTC(transactionDate.getFullYear(), 0, 0)) / 24 / 60 / 60 / 1000;
+    }
+     /**
+      * Calculates year provided to see if its a leap year and returns true or false.
+      * @param {String} year the year calculated
+      * @return {Boolean} true if it is a leap year else false.
+    */
+    function isLeapYear(year){
+        return (year % 100 === 0) ? (year % 400 === 0) : (year % 4 === 0);
     }
     /**
      * When a style button is clicked, the style is changed to that selected style.
@@ -184,35 +199,35 @@
             let s;
             if (selectedStyle === 'regular') {
                 s = increment * day.Rank;
-                if (selectedOption === 'income') {
+                if ($navOptionsStore.selectedOption === 'income') {
                     background = 'background: hsl(157,' + s + '%, 32%)';
-                } else if (selectedOption === 'expense') {
+                } else if ($navOptionsStore.selectedOption === 'expense') {
                     background = 'background: hsl(342,' + s + '%, 62%)';
                 }
             } else if (selectedStyle === 'group') {
                 let placement = (day.Rank / amountToColor) * 100;
                 if (placement >= 90) {
-                    if (selectedOption === 'expense') {
+                    if ($navOptionsStore.selectedOption === 'expense') {
                         background = 'background: hsl(343,63%,54%)';
-                    } else if (selectedOption === 'income') {
+                    } else if ($navOptionsStore.selectedOption === 'income') {
                         background = 'background: hsl(52, 84%, 73%)';
                     }
                 } else if (placement >= 50 & placement < 90) {
-                    if (selectedOption === 'expense') {
+                    if ($navOptionsStore.selectedOption === 'expense') {
                         background = 'background: hsl(4,66%,60%)';
-                    } else if (selectedOption === 'income') {
+                    } else if ($navOptionsStore.selectedOption  === 'income') {
                         background = 'background: hsl(76, 52%, 63%)';
                     }
                 } else if (placement >= 10 & placement < 50) {
-                    if (selectedOption === 'expense') {
+                    if ($navOptionsStore.selectedOption === 'expense') {
                         background = 'background: hsl(22,75%,57%)';
-                    } else if (selectedOption === 'income') {
+                    } else if ($navOptionsStore.selectedOption === 'income') {
                         background = 'background: hsl(111, 39%, 57%)';
                     }
                 } else {
-                    if (selectedOption === 'expense') {
+                    if ($navOptionsStore.selectedOption === 'expense') {
                         background = 'background: hsl(34,81%,54%)';
-                    } else if (selectedOption === 'income') {
+                    } else if ($navOptionsStore.selectedOption === 'income') {
                      
                         background = 'background: hsl(157, 100%, 32%)';
                     }
@@ -223,9 +238,9 @@
                 //     background = 'background: hsl(334,' + s + '%, 55%)';
                 // }
             } else {
-                if (selectedOption === 'income') {
+                if ($navOptionsStore.selectedOption === 'income') {
                     background = 'background: #00a567';
-                } else if (selectedOption === 'expense') {
+                } else if ($navOptionsStore.selectedOption === 'expense') {
                     background = 'background: #de5d83';
                 }
             }
@@ -254,7 +269,7 @@
 
 <div class="content">
     {#if activeTab === 'Yearly'}
-        <YearlyContent {populateTransactionList} {populateSummaryList} {getSelectedDaysTransactions} {changeSelectedStyle} {dayOfYear} {formatDate} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange />
+        <YearlyContent {populateTransactionList} {populateSummaryList} {getSelectedDaysTransactions} {changeSelectedStyle} {dayOfYear} {formatDate} bind:selectedOption bind:selectedStyle bind:selectedYear bind:selectedStartDate bind:selectedEndDate on:yearChange />
     {:else if activeTab === 'Monthly'}
         <MonthlyContent {populateTransactionList} {populateSummaryList} {getSelectedDaysTransactions} {changeSelectedStyle} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange/>
     {:else}

@@ -3,6 +3,7 @@
 	import Content from "./components/Content.svelte";
 	import Loading from "./components/Loading.svelte";
 	import { onMount } from 'svelte';
+	import navOptionsStore from './stores/navOptionsStore';
 	import CategorySectionStore from './stores/categorySectionStore';
 	import CategoryListStore from './stores/categoryListStore';
 	import AccountListStore from './stores/accountListStore';
@@ -11,13 +12,15 @@
 	import CurrentTransactionsStore from './stores/currentTransactionsStore';
 	import CurrencyInfoStore from './stores/currencyInfoStore';
 	
-	let transactionsLoaded = true;
+	let transactionsLoaded = false;
 	let activeTab = 'Yearly';
 
 	let ynabAPIReady = false;
     let mounted = false;
 
 	var selectedYear = new Date().getFullYear();
+	var selectedStartDate = new Date(selectedYear, 0, 1);
+	var selectedEndDate = new Date(selectedYear, 11, 31);
 
 	let selectedOption = 'income';
 	let selectedStyle = 'regular';
@@ -26,7 +29,7 @@
 	onMount(() => {
         mounted = true;
         if (ynabAPIReady) {
-          // main();
+        	main();
         }
     });
 
@@ -36,7 +39,7 @@
 	function ynabAPILoaded() {
         ynabAPIReady = true;
         if (mounted) {
-         //  main();
+        	main();
         }
     }
 	
@@ -212,8 +215,13 @@
 	 * Main function for taking the transactions and storing them based on filters, options, and selected year.
 	 */
 	function storeTransactionsMain() {
-		let currentTransList = []
+		let currentTransList = [];
+		let firstDateCheckSet = true;
 		for(let transaction of $AllTransactionsStore) {
+			if (firstDateCheckSet)  {
+				$navOptionsStore.firstDate = newNormalizedDate(transaction.date);
+				firstDateCheckSet = false;
+			}
 			//If there are subtransctions(which are just split transactions) then it loops through those
 			if(transaction.subtransactions.length > 0) {
 				for(let subtransaction of transaction.subtransactions) {
@@ -261,7 +269,7 @@
 	 * @return {Boolen} true if transaction is to be skipped else false
 	 */
 	function transactionSkipCheck(transaction, transactionDate) {
-		let withinYearCheck = transactionDate.getFullYear() !== selectedYear;
+		let withinYearCheck = !(transactionDate >= $navOptionsStore.startDate & transactionDate <= $navOptionsStore.endDate);
 		let transferAccountCheck = transaction.transfer_account_id !== null;
 		let categorySelectedFind = $CategoryListStore.find(item => item.subId === transaction.category_id);
 		let categorySelectedCheck = categorySelectedFind === undefined ? true : !categorySelectedFind.Checked;
@@ -316,7 +324,6 @@
         } else {
             newDate = date;
         }
-
         return newDate;
     }
 	/**
@@ -384,7 +391,7 @@
 <main>
 	{#if transactionsLoaded}
 		<Navbar bind:activeTab = {activeTab} on:filterChange={storeTransactionsMain}/>
-		<Content {activeTab} {selectedOption} {selectedStyle} {formatAmount} {formatDate} bind:selectedYear on:yearChange={storeTransactionsMain}/>
+		<Content {activeTab} {selectedOption} {selectedStyle} {formatAmount} {formatDate} bind:selectedYear bind:selectedStartDate bind:selectedEndDate on:yearChange={storeTransactionsMain}/>
 	{:else}
 		<Loading />	
 	{/if}

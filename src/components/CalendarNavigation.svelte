@@ -4,11 +4,16 @@
     const dispatch = createEventDispatcher();
 
     export let selectedYear;
+    export let selectedStartDate;
+    export let selectedEndDate;
     export let selectedOption;
     export let selectedStyle;
 
     export let changeSelectedOption = () => {};
     export let refreshCalendar = () => {};
+
+    let formattedStartDate = formatSelectedDate(selectedStartDate);
+    let formattedEndDate = formatSelectedDate(selectedEndDate);
 
     /**
      * Toggles the selected year based on button clicked and calls the update to transactions.
@@ -22,6 +27,40 @@
         selectedStyle = style;
         refreshCalendar();
     }
+
+    function formatSelectedDate (date) {
+        let year = date.getFullYear();
+        let month = date.getMonth() + 1;
+        let newDate;
+
+        if (month === 1) {
+            newDate = 'Jan ' + year;
+        } else if (month === 2) {
+            newDate = 'Feb ' + year;
+        } else if (month === 3) {
+            newDate = 'Mar ' + year; 
+        } else if (month === 4) {
+            newDate = 'Apr ' + year;
+        } else if (month === 5) {
+            newDate = 'May ' + year;
+        } else if (month === 6) {
+            newDate = 'Jun ' + year;
+        } else if (month === 7) {
+            newDate = 'Jul ' + year; 
+        } else if (month === 8) {
+            newDate = 'Aug ' + year;
+        } else if (month === 9) {
+            newDate = 'Sep ' + year;
+        } else if (month === 10) {
+            newDate = 'Oct ' + year; 
+        } else if (month === 11) {
+            newDate = 'Nov ' + year;
+        } else {
+            newDate = 'Dec ' + year;
+        }
+
+        return newDate;
+    }
 </script>
 <div class="cal-navigation">
     <div class="cal-options">
@@ -29,10 +68,9 @@
         <button on:click={() => changeSelectedOption('expense')}><div class="desc-popup"><div class="desc-text expense">Expense</div><span class="material-icons-outlined md-36 expense-icon" class:selected={selectedOption === 'expense'} class:nonselected-icon={selectedOption != 'expense'}>paid</span></div></button>
         <button on:click={() => changeSelectedOption('net')}><div class="desc-popup"><div class="desc-text net">Net</div><span class="material-icons-outlined md-36 net-icon" class:selected={selectedOption === 'net'} class:nonselected-icon={selectedOption != 'net'}>request_quote</span></div></button>
     </div>
-    <div class="year-selector">
-        <button on:click={() => toggleSelectedYear('previous')}><span class="material-icons-outlined md-24">chevron_left</span></button>
-        <p>{selectedYear}</p>
-        <button on:click={() => toggleSelectedYear('next')}><span class="material-icons-outlined md-24">chevron_right</span></button>
+    <div class="cal-date">
+        <p>{formattedStartDate} - {formattedEndDate}</p>
+        <button on:click={() => toggleSelectedYear('next')}><span class="material-icons-outlined md-24">arrow_drop_down</span></button>
     </div>
     <div class="cal-styles">
         <button on:click={() => toggleSelectedStyle('regular')}><div class="desc-popup"><div class="desc-text seq">Sequential</div><span class="material-icons-outlined md-36 style-regular-icon" class:selected={selectedStyle === 'regular'} class:nonselected-icon={selectedStyle != 'regular'}>local_fire_department</span></div></button>
@@ -80,20 +118,20 @@
 
         transition-duration: 350ms;
     }
-    .year-selector {
+    .cal-date {
         float: left;
 
-        margin-left: 118px;
-        width: 245px;
+        margin-left: 98px;
+        width: 300px;
     }
-    .year-selector p{
+    .cal-date p{
         display: inline-block;
 
         margin: 0 5px;
 
-        font-size: 2.2em;
+        font-size: 1.5em;
     }
-    .year-selector button{
+    .cal-date button{
         background: none;
         border: none;
      
@@ -142,7 +180,8 @@
         font-weight: bold;
    
         z-index: 1;
-        visibility: hidden;
+        opacity: 0;
+        transition-duration: 350ms;
     }
     .desc-popup .desc-text.income {
         background-color: #00a567;
@@ -192,6 +231,7 @@
         border-color: #FEDE17 transparent transparent transparent;
     }
     .desc-popup:hover .desc-text {
-        visibility: visible;
+        opacity: 1;
+        transition-duration: 350ms;
     }
 </style>
