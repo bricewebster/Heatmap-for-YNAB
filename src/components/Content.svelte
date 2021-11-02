@@ -57,9 +57,10 @@
             summaryList[dayIndex].Amount = amount;
             summaryList[dayIndex].amountFormatted = formatAmount(summaryList[dayIndex].Amount);
             summaryList[dayIndex].Class = getDayClass(summaryList[dayIndex].Amount);
+            console.log(summaryList[dayIndex])
             dayIndex++;
         }
-        console.log(summaryList)
+
         return summaryList;
     }
     /**
@@ -167,6 +168,7 @@
                 day.Rank = rank.get(day.Amount);
             }
         }
+        console.log(list)
         setHeatmapColors(amountToColor, list);
         return list;
     }

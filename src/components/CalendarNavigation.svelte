@@ -1,19 +1,18 @@
 <script>
     import { createEventDispatcher } from 'svelte';
+    import navOptionsStore from "../stores/navOptionsStore";
 
     const dispatch = createEventDispatcher();
 
     export let selectedYear;
-    export let selectedStartDate;
-    export let selectedEndDate;
     export let selectedOption;
     export let selectedStyle;
 
     export let changeSelectedOption = () => {};
     export let refreshCalendar = () => {};
 
-    let formattedStartDate = formatSelectedDate(selectedStartDate);
-    let formattedEndDate = formatSelectedDate(selectedEndDate);
+    let formattedStartDate = formatSelectedDate($navOptionsStore.startDate);
+    let formattedEndDate = formatSelectedDate($navOptionsStore.endDate);
 
     /**
      * Toggles the selected year based on button clicked and calls the update to transactions.
@@ -70,7 +69,7 @@
     </div>
     <div class="cal-date">
         <p>{formattedStartDate} - {formattedEndDate}</p>
-        <button on:click={() => toggleSelectedYear('next')}><span class="material-icons-outlined md-24">arrow_drop_down</span></button>
+        <button on:click={() => toggleSelectedYear('next')}><span class="material-icons-outlined md-36">arrow_drop_down</span></button>
     </div>
     <div class="cal-styles">
         <button on:click={() => toggleSelectedStyle('regular')}><div class="desc-popup"><div class="desc-text seq">Sequential</div><span class="material-icons-outlined md-36 style-regular-icon" class:selected={selectedStyle === 'regular'} class:nonselected-icon={selectedStyle != 'regular'}>local_fire_department</span></div></button>

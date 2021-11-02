@@ -4,7 +4,7 @@
     import CurrentTransactionsStore from '../stores/currentTransactionsStore';
     import CurrencyInfoStore from '../stores/currencyInfoStore';
     import { fade } from 'svelte/transition';
-import navOptionsStore from "../stores/navOptionsStore";
+    import navOptionsStore from "../stores/navOptionsStore";
 
     var showPopup = false;
     var selectedDay;
@@ -48,7 +48,7 @@ import navOptionsStore from "../stores/navOptionsStore";
         for (let month = 1; month <= 12; month++) {
             let dayAmount = daysInMonth(2020, month);
             for (let day = 1; day <= dayAmount; day++) {
-                let currentDate = dayDate(selectedYear, month - 1, day);
+                let currentDate = dayDate(2020, month - 1, day);
                 let currentDay = {dayOfYear: dayOfYear(currentDate) - 1, Amount: 0, amountFormatted: '', Rank: 0, Color: '', Class: 'none', Date: currentDate, dateFormatted: formatDate(currentDate), Month: month, Day: day};
                 list.push(currentDay);
             }
