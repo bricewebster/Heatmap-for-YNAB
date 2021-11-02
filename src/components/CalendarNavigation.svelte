@@ -1,6 +1,7 @@
 <script>
     import { createEventDispatcher } from 'svelte';
-    import navOptionsStore from "../stores/navOptionsStore";
+    import NavOptionsStore from "../stores/navOptionsStore";
+    import DateSelectionPopup from '../components/DateSelectionPopup.svelte';
 
     const dispatch = createEventDispatcher();
 
@@ -9,10 +10,11 @@
     export let selectedStyle;
 
     export let changeSelectedOption = () => {};
-    export let refreshCalendar = () => {};
+    
+    var showPopup = false;
 
-    let formattedStartDate = formatSelectedDate($navOptionsStore.startDate);
-    let formattedEndDate = formatSelectedDate($navOptionsStore.endDate);
+    let formattedStartDate = formatSelectedDate($NavOptionsStore.startDate);
+    let formattedEndDate = formatSelectedDate($NavOptionsStore.endDate);
 
     /**
      * Toggles the selected year based on button clicked and calls the update to transactions.
@@ -60,6 +62,12 @@
 
         return newDate;
     }
+    /**
+     * Opens and closes the trans list popup.
+     */
+     function togglePopup () {
+        showPopup = !showPopup;
+    }
 </script>
 <div class="cal-navigation">
     <div class="cal-options">
@@ -67,15 +75,22 @@
         <button on:click={() => changeSelectedOption('expense')}><div class="desc-popup"><div class="desc-text expense">Expense</div><span class="material-icons-outlined md-36 expense-icon" class:selected={selectedOption === 'expense'} class:nonselected-icon={selectedOption != 'expense'}>paid</span></div></button>
         <button on:click={() => changeSelectedOption('net')}><div class="desc-popup"><div class="desc-text net">Net</div><span class="material-icons-outlined md-36 net-icon" class:selected={selectedOption === 'net'} class:nonselected-icon={selectedOption != 'net'}>request_quote</span></div></button>
     </div>
-    <div class="cal-date">
-        <p>{formattedStartDate} - {formattedEndDate}</p>
-        <button on:click={() => toggleSelectedYear('next')}><span class="material-icons-outlined md-36">arrow_drop_down</span></button>
+    <div class="cal-date" on:click={() => togglePopup()}>
+        <div class="cal-date-container">
+            <p>{formattedStartDate} - {formattedEndDate}</p>
+            <button on:click={() => toggleSelectedYear('next')}><span class="material-icons-outlined md-36">arrow_drop_down</span></button>
+        </div>
     </div>
     <div class="cal-styles">
         <button on:click={() => toggleSelectedStyle('regular')}><div class="desc-popup"><div class="desc-text seq">Sequential</div><span class="material-icons-outlined md-36 style-regular-icon" class:selected={selectedStyle === 'regular'} class:nonselected-icon={selectedStyle != 'regular'}>local_fire_department</span></div></button>
         <button on:click={() => toggleSelectedStyle('group')}><div class="desc-popup"><div class="desc-text group">Grouping</div><span class="material-icons-outlined md-36 style-group-icon" class:selected={selectedStyle === 'group'} class:nonselected-icon={selectedStyle != 'group'}>whatshot</span></div></button>
         <button on:click={() => toggleSelectedStyle('simple')}><div class="desc-popup"><div class="desc-text simple">Simple</div><span class="material-icons-outlined md-36 style-simple-icon" class:selected={selectedStyle === 'simple'} class:nonselected-icon={selectedStyle != 'simple'}>fireplace</span></div></button>
     </div>
+    {#if showPopup}
+        <div class="backdrop" on:click|self={() => togglePopup()}>
+            <DateSelectionPopup {togglePopup}/>
+        </div>
+    {/if}
 </div>
 
 <style lang="scss">
@@ -120,17 +135,32 @@
     .cal-date {
         float: left;
 
-        margin-left: 98px;
+        margin-left: 90px;
         width: 300px;
+
+        cursor: pointer;
+    }
+    .cal-date:hover {
+        color: var(--ynab-light-green);
+    }
+    .cal-date:hover span {
+        color: var(--ynab-light-green);
+    }
+    .cal-date-container {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
     }
     .cal-date p{
-        display: inline-block;
-
         margin: 0 5px;
 
         font-size: 1.5em;
     }
     .cal-date button{
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+
         background: none;
         border: none;
      
@@ -232,5 +262,15 @@
     .desc-popup:hover .desc-text {
         opacity: 1;
         transition-duration: 350ms;
+    }
+    .backdrop {
+        position: fixed;
+
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+
+        z-index: 10;
     }
 </style>

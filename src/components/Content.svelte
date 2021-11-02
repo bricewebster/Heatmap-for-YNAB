@@ -41,7 +41,6 @@
                // let dayClass = getDayClass(transInfo.Amount);
             }
         }
-        console.log(transactionList)
         return transactionList;
     }
      /**
@@ -57,7 +56,6 @@
             summaryList[dayIndex].Amount = amount;
             summaryList[dayIndex].amountFormatted = formatAmount(summaryList[dayIndex].Amount);
             summaryList[dayIndex].Class = getDayClass(summaryList[dayIndex].Amount);
-            console.log(summaryList[dayIndex])
             dayIndex++;
         }
 
@@ -120,7 +118,6 @@
                 }
             }
         }
-        console.log(transactionList)
         return transactionList;
     }
     /**
@@ -168,7 +165,6 @@
                 day.Rank = rank.get(day.Amount);
             }
         }
-        console.log(list)
         setHeatmapColors(amountToColor, list);
         return list;
     }
