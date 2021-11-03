@@ -13,22 +13,64 @@
 
     let Years = [];
 
-    populateYearLists()
+    let selected = {startMonth: $NavOptionsStore.startDate.getMonth(), startYear: $NavOptionsStore.startDate.getFullYear(), endMonth: $NavOptionsStore.endDate.getMonth(), endYear: $NavOptionsStore.endDate.getFullYear()};
+    let currentYear = new Date().getFullYear();
+    let currentMonth = new Date().getMonth();
+    populateLists()
 
-    function populateYearLists () {
-        let startYear = $NavOptionsStore.firstDate.getFullYear();
-        let startMonth = $NavOptionsStore.firstDate.getMonth();
-        let endYear = $NavOptionsStore.endDate.getFullYear();
-        let endMonth = $NavOptionsStore.endDate.getFullYear();
-        let currentYear = new Date().getFullYear();
+    function populateLists () {
+        populateYears();
+        populateMonths();
+    }
 
-
+    function populateYears () {
+        let startYear = selected.startYear;
+        Years = [];
         for (let index = startYear; index <= currentYear; index ++) {
             Years.push(index);
         }
+    }
 
+    function populateMonths (selectedDate) {
+        let fromStartMonth;
+        let fromEndMonth;
+        let toStartMonth;
+        let toEndMonth;
+
+        //startYear and endYear are equal and startMonth is greater than endMonth and startYear was selected then it'll adjust the endMonth.
+        if (selected.startYear === selected.endYear & selected.startMonth > selected.endMonth & selectedDate === 'start') {
+            selected.endMonth = selected.startMonth;
+        }
+        //startYear and endYear are equal and startMonth is greater than endMonth and endYear was selected then it'll adjust the startMonth.
+        if (selected.startYear === selected.endYear & selected.startMonth > selected.endMonth & selectedDate === 'end') {
+            selected.startMonth = selected.endMonth;
+        }
+
+        if (selected.startYear === $NavOptionsStore.firstDate.getFullYear()) {
+            fromStartMonth = $NavOptionsStore.firstDate.getMonth();
+            fromEndMonth = 11;
+        } else if (selected.startYear === currentYear) {
+            fromStartMonth = 0
+            fromEndMonth = currentMonth;
+        } else {
+            fromStartMonth = 0;
+            fromEndMonth = 11;
+        }
+
+        if (selected.endYear === $NavOptionsStore.firstDate.getFullYear()) {
+            console.log('here')
+            toStartMonth = $NavOptionsStore.firstDate.getMonth();
+            toEndMonth = 11;
+        } else if (selected.endYear === currentYear) {
+            toStartMonth = 0;
+            toEndMonth = currentMonth;
+        } else {
+            toStartMonth = 0;
+            toEndMonth = 11;
+        }
+        
         for (let month of startMonths) {
-            if (month.Number < startMonth) {
+            if (month.Number < fromStartMonth || month.Number > fromEndMonth & selected.startYear === currentYear) {
                 month.Disabled = true;
             } else {
                 month.Disabled = '';
@@ -36,15 +78,55 @@
         }
 
         for (let month of endMonths) {
-            if (month.Number > endMonth) {
+            if (month.Number < toStartMonth & selected.endYear === selected.startYear|| month.Number > toEndMonth) {
                 month.Disabled = 'Disabled';
             } else {
                 month.Disabled = '';
             }
         }
-
+    console.log(selected.startMonth)
+    startMonths = startMonths;
+    endMonths = endMonths;
 
     }
+
+    function yearSelectChange (selectedDate) {
+        //startYear greater than endYear and selected new startYear then End year adjusted. Ex. May 2021 June 2020 -> May 2021 June 2021
+        if (selected.startYear > selected.endYear & selectedDate === 'start') {
+            selected.endYear = selected.startYear;    
+        }
+        //endYear less than startYear and selected new endYear then startYear adjusted. Ex. May 2020 June 2019 -> May 2019 June 2019
+        if (selected.endYear < selected.startYear & selectedDate === 'end') {
+            selected.startYear = selected.endYear;    
+        }
+        //startYear equals firstDate(year) and if startMonth is before firstDate(month) then it'll change the startMonth to the firstDate(month).
+        if (selected.startYear === $NavOptionsStore.firstDate.getFullYear() & selected.startMonth < $NavOptionsStore.firstDate.getMonth()) {
+            selected.startMonth = $NavOptionsStore.firstDate.getMonth();
+        }
+        //startYear equals currentYear and startMonth is after currentMonth then it'll change the startMonth to the currentMonth .
+        if (selected.startYear === currentYear & selected.startMonth > currentMonth) {
+            selected.startMonth = currentMonth;
+        }
+        //endYear equals firstDate(year) and endMonth is before firstDate(month) then it'll change the endMonth to the firstDate(month).
+        if (selected.endYear === $NavOptionsStore.firstDate.getFullYear() & selected.endMonth < $NavOptionsStore.firstDate.getMonth()) {
+            selected.endMonth = $NavOptionsStore.firstDate.getMonth();
+        }
+        //endYear equals currentYear and endMonth is after currentMonth then it'll change the endMonth to the currentMonth.
+        if (selected.endYear === currentYear & selected.endMonth > currentMonth) {
+            selected.endMonth = currentMonth;
+        }
+        //startYear and endYear are equal and startMonth is greater than endMonth and startYear was selected then it'll adjust the endMonth.
+        if (selected.startYear === selected.endYear & selected.startMonth > selected.endMonth & selectedDate === 'start') {
+            selected.endMonth = selected.startMonth;
+        }
+        //startYear and endYear are equal and startMonth is greater than endMonth and endYear was selected then it'll adjust the startMonth.
+        if (selected.startYear === selected.endYear & selected.startMonth > selected.endMonth & selectedDate === 'end') {
+            selected.startMonth = selected.endMonth;
+        }
+
+        populateMonths();
+    }
+
 </script>
 
 <div class="popup">
@@ -62,14 +144,14 @@
         <ul>
             <li class="label from">From: </li>
             <li>
-                <select name="startmonths">
+                <select name="startmonths" bind:value={selected.startMonth} on:change="{() => populateMonths('start')}">
                     {#each startMonths as month}
                         <option value={month.Number} disabled={month.Disabled}>{month.Name}</option>
                     {/each}
                 </select>
             </li>
             <li>
-                <select name="startYears">
+                <select name="startYears" bind:value={selected.startYear} on:change="{() => yearSelectChange('start')}">
                     {#each Years as year}
                         <option value={year}>{year}</option>
                     {/each}
@@ -77,14 +159,14 @@
             </li>
             <li class="label to">To: </li>
             <li>
-                <select name="endmonths">
+                <select name="endmonths" bind:value={selected.endMonth} on:change="{() => populateMonths('end')}">
                     {#each endMonths as month}
                         <option value={month.Number} disabled={month.Disabled}>{month.Name}</option>
                     {/each}
                 </select>
             </li>
             <li>
-                <select name="endYears">
+                <select name="endYears" bind:value={selected.endYear} on:change="{() => yearSelectChange('end')}">
                     {#each Years as year}
                         <option value={year}>{year}</option>
                     {/each}
