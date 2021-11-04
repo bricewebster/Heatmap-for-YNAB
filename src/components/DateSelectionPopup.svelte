@@ -1,6 +1,9 @@
 <script>
     import Button from "./Button.svelte";
     import NavOptionsStore from "../stores/navOptionsStore";
+    import { createEventDispatcher } from 'svelte';
+
+    const dispatch = createEventDispatcher();
 
     export let togglePopup = () => {};
 
@@ -15,7 +18,9 @@
 
     let selected = {startMonth: $NavOptionsStore.startDate.getMonth(), startYear: $NavOptionsStore.startDate.getFullYear(), endMonth: $NavOptionsStore.endDate.getMonth(), endYear: $NavOptionsStore.endDate.getFullYear()};
     let currentYear = new Date().getFullYear();
-    let currentMonth = new Date().getMonth();
+    console.log(currentYear)
+    let currentMonth = new Date().getMonth() + 1;
+    console.log(currentMonth)
     populateLists()
 
     function populateLists () {
@@ -84,7 +89,6 @@
                 month.Disabled = '';
             }
         }
-    console.log(selected.startMonth)
     startMonths = startMonths;
     endMonths = endMonths;
 
@@ -127,17 +131,56 @@
         populateMonths();
     }
 
+    function dateOptionSelected(option) {
+        if (option === 'currentMonth') {
+            selected.startMonth = currentMonth;
+            selected.endMonth = currentMonth ;
+            selected.startYear = currentYear;
+            selected.endYear = currentYear;
+        } else if (option === 'currentQuarter') {
+            selected.startMonth = new Date(currentYear, currentMonth - 2, 0).getMonth();
+            selected.endMonth = currentMonth;
+            selected.startYear = new Date(currentYear, currentMonth - 2, 0).getFullYear();
+            selected.endYear = currentYear;
+        } else if (option === 'currentYear') {
+            selected.startMonth = 0;
+            selected.endMonth = currentMonth;
+            selected.startYear = currentYear;
+            selected.endYear = currentYear;
+        } else if (option === 'lastYear') {
+            selected.startMonth = 0;
+            selected.endMonth = 12;
+            selected.startYear = currentYear - 1;
+            selected.endYear = currentYear - 1;
+        } else {
+            selected.startMonth = $NavOptionsStore.firstDate.getMonth();
+            selected.endMonth = currentMonth;
+            selected.startYear = $NavOptionsStore.firstDate.getFullYear();
+            selected.endYear = currentYear;
+        }
+        saveChanges();
+    }
+
+    function saveChanges () {
+        $NavOptionsStore.startDate = new Date(selected.startYear, selected.startMonth);
+        $NavOptionsStore.endDate = new Date(selected.endYear, selected.endMonth, 0);
+        console.log('end date: ' + $NavOptionsStore.endDate)
+        dispatch('dateChange', );
+        console.log('saving')
+        togglePopup();
+    }
+
 </script>
 
 <div class="popup">
     <p class="title">Timeframe</p>
     <div class="selection">
         <ul>
-            <li on:click={() => selectToggle('all')}>This Month</li>
-            <li on:click={() => selectToggle('none')}>Latest 3 Months</li>
-            <li on:click={() => selectToggle('none')}>This Year</li>
-            <li on:click={() => selectToggle('none')}>Last Year</li>
-            <li on:click={() => selectToggle('none')}>All Dates</li>
+            <li on:click={() => dateOptionSelected('currentMonth')}>This Month</li>
+            <li on:click={() => dateOptionSelected('currentQuarter')}>Latest 3 Months</li>
+            <li on:click={() => dateOptionSelected('currentYear')}>This Year</li>
+            <li on:click={() => dateOptionSelected('lastYear')}>Last Year</li>
+            <li on:click={() => dateOptionSelected('all')}>All Dates</li>
         </ul>
     </div>
     <div class="date-selection">

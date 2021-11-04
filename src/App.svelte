@@ -12,7 +12,7 @@
 	import CurrentTransactionsStore from './stores/currentTransactionsStore';
 	import CurrencyInfoStore from './stores/currencyInfoStore';
 	
-	let transactionsLoaded = true;
+	let transactionsLoaded = false;
 	let activeTab = 'Yearly';
 
 	let ynabAPIReady = false;
@@ -29,7 +29,7 @@
 	onMount(() => {
         mounted = true;
         if (ynabAPIReady) {
-        	//main();
+        	main();
         }
     });
 
@@ -39,7 +39,7 @@
 	function ynabAPILoaded() {
         ynabAPIReady = true;
         if (mounted) {
-        	//main();
+        	main();
         }
     }
 	
@@ -241,6 +241,7 @@
 		}
 		$CurrentTransactionsStore = currentTransList;
 		transactionsLoaded = true;
+		console.log('here ya')
 	}
 	/**
 	 * Takes a transaction, makes sure it meets the criteria and returns nothing or a new transaction object with needed information.
@@ -391,7 +392,7 @@
 <main>
 	{#if transactionsLoaded}
 		<Navbar bind:activeTab = {activeTab} on:filterChange={storeTransactionsMain}/>
-		<Content {activeTab} {selectedOption} {selectedStyle} {formatAmount} {formatDate} bind:selectedYear bind:selectedStartDate bind:selectedEndDate on:yearChange={storeTransactionsMain}/>
+		<Content {activeTab} {selectedOption} {selectedStyle} {formatAmount} {formatDate} bind:selectedYear bind:selectedStartDate bind:selectedEndDate on:dateChange={storeTransactionsMain}/>
 	{:else}
 		<Loading />	
 	{/if}

@@ -77,7 +77,7 @@
 
 </script>
 <div class="content">
-    <CalendarNavigation {selectedOption} {changeSelectedOption} {refreshCalendar} bind:selectedYear bind:selectedStyle on:yearChange/>
+    <CalendarNavigation {selectedOption} {changeSelectedOption} {refreshCalendar} bind:selectedYear bind:selectedStyle on:dateChange/>
     <table class="cal-month">
         {#each Array(5) as _, mainIndex}
         <tr>

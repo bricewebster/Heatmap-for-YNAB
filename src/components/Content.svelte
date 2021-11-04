@@ -267,11 +267,11 @@
 
 <div class="content">
     {#if activeTab === 'Yearly'}
-        <YearlyContent {populateTransactionList} {populateSummaryList} {getSelectedDaysTransactions} {changeSelectedStyle} {dayOfYear} {formatDate} bind:selectedOption bind:selectedStyle bind:selectedYear bind:selectedStartDate bind:selectedEndDate on:yearChange />
+        <YearlyContent {populateTransactionList} {populateSummaryList} {getSelectedDaysTransactions} {changeSelectedStyle} {dayOfYear} {formatDate} bind:selectedOption bind:selectedStyle bind:selectedYear bind:selectedStartDate bind:selectedEndDate on:dateChange/>
     {:else if activeTab === 'Monthly'}
-        <MonthlyContent {populateTransactionList} {populateSummaryList} {getSelectedDaysTransactions} {changeSelectedStyle} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange/>
+        <MonthlyContent {populateTransactionList} {populateSummaryList} {getSelectedDaysTransactions} {changeSelectedStyle} bind:selectedOption bind:selectedStyle bind:selectedYear on:dateChange/>
     {:else}
-        <DailyContent {populateTransactionList} {populateSummaryList} {getSelectedDaysTransactions} {changeSelectedStyle} bind:selectedOption bind:selectedStyle bind:selectedYear on:yearChange/>
+        <DailyContent {populateTransactionList} {populateSummaryList} {getSelectedDaysTransactions} {changeSelectedStyle} bind:selectedOption bind:selectedStyle bind:selectedYear on:dateChange/>
     {/if}
 </div>
 

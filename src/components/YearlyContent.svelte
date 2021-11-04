@@ -141,7 +141,7 @@
 </script>
 <div class="content">
     <div class="cal-year-container">
-        <CalendarNavigation {selectedOption} {changeSelectedOption} {refreshCalendar} bind:selectedYear bind:selectedStartDate bind:selectedEndDate bind:selectedStyle on:yearChange/>
+        <CalendarNavigation {selectedOption} {changeSelectedOption} {refreshCalendar} bind:selectedYear bind:selectedStartDate bind:selectedEndDate bind:selectedStyle on:dateChange/>
         <table class="cal-year day-list">
             <tr>
             <th><p></p></th>

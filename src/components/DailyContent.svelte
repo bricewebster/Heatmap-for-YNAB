@@ -86,7 +86,7 @@
 
 </script>
 <div class="content">
-    <CalendarNavigation {selectedOption} {changeSelectedOption} {refreshCalendar} bind:selectedYear bind:selectedStyle on:yearChange/>
+    <CalendarNavigation {selectedOption} {changeSelectedOption} {refreshCalendar} bind:selectedYear bind:selectedStyle on:dateChange/>
     <table class="cal-day">
         {#each summaryList as day}
             {#if day.Amount != 0}

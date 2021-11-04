@@ -10,20 +10,15 @@
     export let selectedStyle;
 
     export let changeSelectedOption = () => {};
+    export let refreshCalendar = () => {};
     
     var showPopup = false;
 
-    let formattedStartDate = formatSelectedDate($NavOptionsStore.startDate);
-    let formattedEndDate = formatSelectedDate($NavOptionsStore.endDate);
+    let formattedStartDate, formattedEndDate;
 
-    /**
-     * Toggles the selected year based on button clicked and calls the update to transactions.
-     * @param {String} buttonSelected name of button selected
-     */
-     function toggleSelectedYear (buttonSelected) {
-        selectedYear = buttonSelected === 'previous' ? selectedYear = selectedYear - 1 : selectedYear = selectedYear + 1;
-        dispatch('yearChange', );
-    }
+    $: $NavOptionsStore.startDate, formattedStartDate = formatSelectedDate($NavOptionsStore.startDate);
+    $: $NavOptionsStore.endDate, formattedEndDate = formatSelectedDate($NavOptionsStore.endDate);
+
     function toggleSelectedStyle (style) {
         selectedStyle = style;
         refreshCalendar();
@@ -77,8 +72,7 @@
     </div>
     <div class="cal-date" on:click={() => togglePopup()}>
         <div class="cal-date-container">
-            <p>{formattedStartDate} - {formattedEndDate}</p>
-            <button on:click={() => toggleSelectedYear('next')}><span class="material-icons-outlined md-36">arrow_drop_down</span></button>
+            <p>{formattedStartDate} - {formattedEndDate}</p><span class="material-icons-outlined md-36">arrow_drop_down</span>
         </div>
     </div>
     <div class="cal-styles">
@@ -88,7 +82,7 @@
     </div>
     {#if showPopup}
         <div class="backdrop" on:click|self={() => togglePopup()}>
-            <DateSelectionPopup {togglePopup}/>
+            <DateSelectionPopup {togglePopup} on:dateChange/>
         </div>
     {/if}
 </div>
@@ -155,16 +149,6 @@
         margin: 0 5px;
 
         font-size: 1.5em;
-    }
-    .cal-date button{
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-
-        background: none;
-        border: none;
-     
-        cursor: pointer;
     }
     .cal-styles {
         float: right;
