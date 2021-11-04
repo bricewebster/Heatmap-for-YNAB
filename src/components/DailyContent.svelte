@@ -3,11 +3,9 @@
     import TransListPopup from '../components/TransListPopup.svelte';
     import CurrentTransactionsStore from '../stores/currentTransactionsStore';
     import CurrencyInfoStore from '../stores/currencyInfoStore';
+    import NavOptionsStore from "../stores/navOptionsStore";
     import { fade } from 'svelte/transition';
 
-    export let selectedYear;
-    export let selectedOption;
-    export let selectedStyle;
     export let populateTransactionList = () => {};
     export let populateSummaryList = () => {};
     export let getSelectedDaysTransactions = () => {};
@@ -39,23 +37,6 @@
         summaryList = populateSummaryList(summaryList, transactionList);
         summaryList = changeSelectedStyle(summaryList);
     }
-
-    // /**
-    //  *  Populate summary list which stores the summary of each day in an array.
-    //  */
-    // function populateSummaryList() {
-    //     let dayIndex = 0;
-    //     for (let day of transactionList) {
-    //         let amount = 0;
-    //         for (let transaction of day) {
-    //             amount = parseFloat((parseFloat(amount) + parseFloat(transaction.Amount)).toFixed($CurrencyInfoStore.Decimals));
-    //         }
-    //         summaryList[dayIndex].Amount = amount;
-    //         summaryList[dayIndex].amountFormatted = formatAmount(summaryList[dayIndex].Amount);
-    //         summaryList[dayIndex].Class = getDayClass(summaryList[dayIndex].Amount);
-    //         dayIndex++;
-    //     }
-    // }
     /**
      * Change selected option to what was choosen by the user.
      * @param {String} option option choosen by user
@@ -82,11 +63,9 @@
      function togglePopup () {
         showPopup = !showPopup;
     }
-
-
 </script>
 <div class="content">
-    <CalendarNavigation {selectedOption} {changeSelectedOption} {refreshCalendar} bind:selectedYear bind:selectedStyle on:dateChange/>
+    <CalendarNavigation {changeSelectedOption} {refreshCalendar} on:dateChange/>
     <table class="cal-day">
         {#each summaryList as day}
             {#if day.Amount != 0}

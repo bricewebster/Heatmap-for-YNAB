@@ -3,8 +3,8 @@
     import TransListPopup from '../components/TransListPopup.svelte';
     import CurrentTransactionsStore from '../stores/currentTransactionsStore';
     import CurrencyInfoStore from '../stores/currencyInfoStore';
+    import NavOptionsStore from "../stores/navOptionsStore";
     import { fade } from 'svelte/transition';
-    import navOptionsStore from "../stores/navOptionsStore";
 
     var showPopup = false;
     var selectedDay;
@@ -29,12 +29,6 @@
     
     let summaryList = [];
     let transactionList = [];
-    
-    export let selectedYear;
-    export let selectedStartDate;
-    export let selectedEndDate;
-    export let selectedOption;
-    export let selectedStyle;
 
     //Reactively calls populateDayList when currentTransactionStore is updated anywhere in project.
     $: $CurrentTransactionsStore, refreshCalendar();
@@ -114,7 +108,7 @@
      * @param {String} option option selected
      */
     function changeSelectedOption (option) {
-        $navOptionsStore.selectedOption = option;
+        $NavOptionsStore.selectedOption = option;
         refreshCalendar();
     }
     /**
@@ -141,7 +135,7 @@
 </script>
 <div class="content">
     <div class="cal-year-container">
-        <CalendarNavigation {selectedOption} {changeSelectedOption} {refreshCalendar} bind:selectedYear bind:selectedStartDate bind:selectedEndDate bind:selectedStyle on:dateChange/>
+        <CalendarNavigation {changeSelectedOption} {refreshCalendar} on:dateChange/>
         <table class="cal-year day-list">
             <tr>
             <th><p></p></th>

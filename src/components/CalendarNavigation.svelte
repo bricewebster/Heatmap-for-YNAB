@@ -5,10 +5,6 @@
 
     const dispatch = createEventDispatcher();
 
-    export let selectedYear;
-    export let selectedOption;
-    export let selectedStyle;
-
     export let changeSelectedOption = () => {};
     export let refreshCalendar = () => {};
     
@@ -19,11 +15,18 @@
     $: $NavOptionsStore.startDate, formattedStartDate = formatSelectedDate($NavOptionsStore.startDate);
     $: $NavOptionsStore.endDate, formattedEndDate = formatSelectedDate($NavOptionsStore.endDate);
 
+    /**
+     * Changes the selected style based on the style selected by the user.
+     * @param {String} style style selected by user
+    */
     function toggleSelectedStyle (style) {
-        selectedStyle = style;
+        $NavOptionsStore.selectedStyle = style;
         refreshCalendar();
     }
-
+    /**
+     * Takes the supplied date object and formats it to be displayed as the main date range.
+     * @param {Date} date date to be formatted
+    */
     function formatSelectedDate (date) {
         let year = date.getFullYear();
         let month = date.getMonth() + 1;
@@ -66,19 +69,19 @@
 </script>
 <div class="cal-navigation">
     <div class="cal-options">
-        <button on:click={() => changeSelectedOption('income')}><div class="desc-popup"><div class="desc-text income">Income</div><span class="material-icons-outlined md-36 income-icon" class:selected={selectedOption === 'income'} class:nonselected-icon={selectedOption != 'income'}>savings</span></div></button>
-        <button on:click={() => changeSelectedOption('expense')}><div class="desc-popup"><div class="desc-text expense">Expense</div><span class="material-icons-outlined md-36 expense-icon" class:selected={selectedOption === 'expense'} class:nonselected-icon={selectedOption != 'expense'}>paid</span></div></button>
-        <button on:click={() => changeSelectedOption('net')}><div class="desc-popup"><div class="desc-text net">Net</div><span class="material-icons-outlined md-36 net-icon" class:selected={selectedOption === 'net'} class:nonselected-icon={selectedOption != 'net'}>request_quote</span></div></button>
+        <button on:click={() => changeSelectedOption('income')}><div class="desc-popup"><div class="desc-text income">Income</div><span class="material-icons-outlined md-36 income-icon" class:selected={$NavOptionsStore.selectedOption === 'income'} class:nonselected-icon={$NavOptionsStore.selectedOption != 'income'}>savings</span></div></button>
+        <button on:click={() => changeSelectedOption('expense')}><div class="desc-popup"><div class="desc-text expense">Expense</div><span class="material-icons-outlined md-36 expense-icon" class:selected={$NavOptionsStore.selectedOption === 'expense'} class:nonselected-icon={$NavOptionsStore.selectedOption != 'expense'}>paid</span></div></button>
+        <button on:click={() => changeSelectedOption('net')}><div class="desc-popup"><div class="desc-text net">Net</div><span class="material-icons-outlined md-36 net-icon" class:selected={$NavOptionsStore.selectedOption === 'net'} class:nonselected-icon={$NavOptionsStore.selectedOption != 'net'}>request_quote</span></div></button>
     </div>
     <div class="cal-date" on:click={() => togglePopup()}>
         <div class="cal-date-container">
-            <p>{formattedStartDate} - {formattedEndDate}</p><span class="material-icons-outlined md-36">arrow_drop_down</span>
+            <p>{formattedStartDate} - {formattedEndDate}</p><span class="material-icons-round md-36">arrow_drop_down</span>
         </div>
     </div>
     <div class="cal-styles">
-        <button on:click={() => toggleSelectedStyle('regular')}><div class="desc-popup"><div class="desc-text seq">Sequential</div><span class="material-icons-outlined md-36 style-regular-icon" class:selected={selectedStyle === 'regular'} class:nonselected-icon={selectedStyle != 'regular'}>local_fire_department</span></div></button>
-        <button on:click={() => toggleSelectedStyle('group')}><div class="desc-popup"><div class="desc-text group">Grouping</div><span class="material-icons-outlined md-36 style-group-icon" class:selected={selectedStyle === 'group'} class:nonselected-icon={selectedStyle != 'group'}>whatshot</span></div></button>
-        <button on:click={() => toggleSelectedStyle('simple')}><div class="desc-popup"><div class="desc-text simple">Simple</div><span class="material-icons-outlined md-36 style-simple-icon" class:selected={selectedStyle === 'simple'} class:nonselected-icon={selectedStyle != 'simple'}>fireplace</span></div></button>
+        <button on:click={() => toggleSelectedStyle('regular')}><div class="desc-popup"><div class="desc-text seq">Sequential</div><span class="material-icons-outlined md-36 style-regular-icon" class:selected={$NavOptionsStore.selectedStyle === 'regular'} class:nonselected-icon={$NavOptionsStore.selectedStyle != 'regular'}>local_fire_department</span></div></button>
+        <button on:click={() => toggleSelectedStyle('group')}><div class="desc-popup"><div class="desc-text group">Grouping</div><span class="material-icons-outlined md-36 style-group-icon" class:selected={$NavOptionsStore.selectedStyle === 'group'} class:nonselected-icon={$NavOptionsStore.selectedStyle != 'group'}>whatshot</span></div></button>
+        <button on:click={() => toggleSelectedStyle('simple')}><div class="desc-popup"><div class="desc-text simple">Simple</div><span class="material-icons-outlined md-36 style-simple-icon" class:selected={$NavOptionsStore.selectedStyle === 'simple'} class:nonselected-icon={$NavOptionsStore.selectedStyle != 'simple'}>fireplace</span></div></button>
     </div>
     {#if showPopup}
         <div class="backdrop" on:click|self={() => togglePopup()}>

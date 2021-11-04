@@ -13,29 +13,35 @@
     let endMonths = [{Number: 0, Name: 'January', Disabled: ''}, {Number: 1, Name: 'February', Disabled: ''}, {Number: 2, Name: 'March', Disabled: ''},  {Number: 3, Name: 'April', Disabled: ''},  {Number: 4, Name: 'May', Disabled: ''},
                   {Number: 5, Name: 'June', Disabled: ''}, {Number: 6, Name: 'July', Disabled: ''}, {Number: 7, Name: 'August', Disabled: ''},  {Number: 8, Name: 'September', Disabled: ''},  {Number: 9, Name: 'October', Disabled: ''},
                   {Number: 10, Name: 'November', Disabled: ''}, {Number: 11, Name: 'December', Disabled: ''}];
-
     let Years = [];
 
     let selected = {startMonth: $NavOptionsStore.startDate.getMonth(), startYear: $NavOptionsStore.startDate.getFullYear(), endMonth: $NavOptionsStore.endDate.getMonth(), endYear: $NavOptionsStore.endDate.getFullYear()};
     let currentYear = new Date().getFullYear();
-    console.log(currentYear)
-    let currentMonth = new Date().getMonth() + 1;
-    console.log(currentMonth)
+    let currentMonth = new Date().getMonth();
+
     populateLists()
 
+    /**
+     * Main function for populating the month and years lists.
+    */
     function populateLists () {
         populateYears();
         populateMonths();
     }
-
+    /**
+     * Populates the year list starting from first transaction year to current year.
+    */
     function populateYears () {
-        let startYear = selected.startYear;
+        let startYear = $NavOptionsStore.firstDate.getFullYear();
         Years = [];
         for (let index = startYear; index <= currentYear; index ++) {
             Years.push(index);
         }
     }
-
+    /**
+     * Populates the month lists and disables them depending on the year and months.
+     * @param {String} selectedDate which month dropdown was selected
+     */
     function populateMonths (selectedDate) {
         let fromStartMonth;
         let fromEndMonth;
@@ -51,6 +57,7 @@
             selected.startMonth = selected.endMonth;
         }
 
+        //Sets the from start and end month indexes.
         if (selected.startYear === $NavOptionsStore.firstDate.getFullYear()) {
             fromStartMonth = $NavOptionsStore.firstDate.getMonth();
             fromEndMonth = 11;
@@ -62,8 +69,8 @@
             fromEndMonth = 11;
         }
 
+        //Sets the to start and end month indexes.
         if (selected.endYear === $NavOptionsStore.firstDate.getFullYear()) {
-            console.log('here')
             toStartMonth = $NavOptionsStore.firstDate.getMonth();
             toEndMonth = 11;
         } else if (selected.endYear === currentYear) {
@@ -89,11 +96,13 @@
                 month.Disabled = '';
             }
         }
-    startMonths = startMonths;
-    endMonths = endMonths;
-
+        startMonths = startMonths;
+        endMonths = endMonths;
     }
-
+    /**
+     * Function called when a year select dropdown is changed. Contains a lot of logic checks to make sure dates aren't illogical which will cause errors.
+     * @param {String} selectedDate which year dropdown was selected
+     */
     function yearSelectChange (selectedDate) {
         //startYear greater than endYear and selected new startYear then End year adjusted. Ex. May 2021 June 2020 -> May 2021 June 2021
         if (selected.startYear > selected.endYear & selectedDate === 'start') {
@@ -127,14 +136,17 @@
         if (selected.startYear === selected.endYear & selected.startMonth > selected.endMonth & selectedDate === 'end') {
             selected.startMonth = selected.endMonth;
         }
-
+        
         populateMonths();
     }
-
+    /**
+     * Changes the dates when a date option is selected such as Current Month or All Dates.
+     * @param {String} option date option selected
+     */
     function dateOptionSelected(option) {
         if (option === 'currentMonth') {
             selected.startMonth = currentMonth;
-            selected.endMonth = currentMonth ;
+            selected.endMonth = currentMonth;
             selected.startYear = currentYear;
             selected.endYear = currentYear;
         } else if (option === 'currentQuarter') {
@@ -149,7 +161,7 @@
             selected.endYear = currentYear;
         } else if (option === 'lastYear') {
             selected.startMonth = 0;
-            selected.endMonth = 12;
+            selected.endMonth = 11;
             selected.startYear = currentYear - 1;
             selected.endYear = currentYear - 1;
         } else {
@@ -160,13 +172,13 @@
         }
         saveChanges();
     }
-
+    /**
+     * Save the changes that were made to the dates.
+    */
     function saveChanges () {
         $NavOptionsStore.startDate = new Date(selected.startYear, selected.startMonth);
-        $NavOptionsStore.endDate = new Date(selected.endYear, selected.endMonth, 0);
-        console.log('end date: ' + $NavOptionsStore.endDate)
+        $NavOptionsStore.endDate = new Date(selected.endYear, selected.endMonth + 1, 0);
         dispatch('dateChange', );
-        console.log('saving')
         togglePopup();
     }
 

@@ -2,11 +2,9 @@
     import CalendarNavigation from "./CalendarNavigation.svelte";
     import TransListPopup from '../components/TransListPopup.svelte';
     import CurrentTransactionsStore from '../stores/currentTransactionsStore';
+    import NavOptionsStore from "../stores/navOptionsStore";
     import { fade } from 'svelte/transition';
 
-    export let selectedYear;
-    export let selectedOption;
-    export let selectedStyle;
     export let populateTransactionList = () => {};
     export let populateSummaryList = () => {};
     export let getSelectedDaysTransactions = () => {};
@@ -53,7 +51,7 @@
      * @param {String} option option choosen by user
      */
     function changeSelectedOption (option) {
-        selectedOption = option;
+        $NavOptionsStore.selectedOption = option;
         refreshCalendar();
     }
     /**
@@ -77,7 +75,7 @@
 
 </script>
 <div class="content">
-    <CalendarNavigation {selectedOption} {changeSelectedOption} {refreshCalendar} bind:selectedYear bind:selectedStyle on:dateChange/>
+    <CalendarNavigation {changeSelectedOption} {refreshCalendar} on:dateChange/>
     <table class="cal-month">
         {#each Array(5) as _, mainIndex}
         <tr>

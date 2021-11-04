@@ -18,13 +18,6 @@
 	let ynabAPIReady = false;
     let mounted = false;
 
-	var selectedYear = new Date().getFullYear();
-	var selectedStartDate = new Date(selectedYear, 0, 1);
-	var selectedEndDate = new Date(selectedYear, 11, 31);
-
-	let selectedOption = 'income';
-	let selectedStyle = 'regular';
-
 	//Once the component mounts, it will run the main function if the YNAB API js file has downloaded.
 	onMount(() => {
         mounted = true;
@@ -241,7 +234,6 @@
 		}
 		$CurrentTransactionsStore = currentTransList;
 		transactionsLoaded = true;
-		console.log('here ya')
 	}
 	/**
 	 * Takes a transaction, makes sure it meets the criteria and returns nothing or a new transaction object with needed information.
@@ -392,7 +384,7 @@
 <main>
 	{#if transactionsLoaded}
 		<Navbar bind:activeTab = {activeTab} on:filterChange={storeTransactionsMain}/>
-		<Content {activeTab} {selectedOption} {selectedStyle} {formatAmount} {formatDate} bind:selectedYear bind:selectedStartDate bind:selectedEndDate on:dateChange={storeTransactionsMain}/>
+		<Content {activeTab} {formatAmount} {formatDate} on:dateChange={storeTransactionsMain}/>
 	{:else}
 		<Loading />	
 	{/if}
