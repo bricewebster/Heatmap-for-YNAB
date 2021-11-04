@@ -11,29 +11,20 @@
     export let changeSelectedStyle = () => {};
 
     var showPopup = false;
-    let selectedDay;
-    let selectedDayList = [];
+    let selectedSquare;
+    let selectedList = [];
     let selectedAmount;
 
-    let summaryList = [{dayOfMonth: 0, Amount: 0, amountFormatted: '', displayName: '1st', Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 1, Amount: 0, amountFormatted: '', displayName: '2nd',  Rank: 0, Color: '', Class: 'none'},
-                       {dayOfMonth: 2, Amount: 0, amountFormatted: '', displayName: '3rd',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 3, Amount: 0, amountFormatted: '', displayName: '4th',  Rank: 0, Color: '', Class: 'none'},
-                       {dayOfMonth: 4, Amount: 0, amountFormatted: '', displayName: '5th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 5, Amount: 0, amountFormatted: '', displayName: '6th',  Rank: 0, Color: '', Class: 'none'},
-                       {dayOfMonth: 6, Amount: 0, amountFormatted: '', displayName: '7th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 7, Amount: 0, amountFormatted: '', displayName: '8th',  Rank: 0, Color: '', Class: 'none'},
-                       {dayOfMonth: 8, Amount: 0, amountFormatted: '', displayName: '9th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 9, Amount: 0, amountFormatted: '', displayName: '10th',  Rank: 0, Color: '', Class: 'none'},
-                       {dayOfMonth: 10, Amount: 0, amountFormatted: '', displayName: '11th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 11, Amount: 0, amountFormatted: '', displayName: '12th',  Rank: 0, Color: '', Class: 'none'},
-                       {dayOfMonth: 12, Amount: 0, amountFormatted: '', displayName: '13th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 13, Amount: 0, amountFormatted: '', displayName: '14th',  Rank: 0, Color: '', Class: 'none'},
-                       {dayOfMonth: 14, Amount: 0, amountFormatted: '', displayName: '15th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 15, Amount: 0, amountFormatted: '', displayName: '16th',  Rank: 0, Color: '', Class: 'none'},
-                       {dayOfMonth: 16, Amount: 0, amountFormatted: '', displayName: '17th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 17, Amount: 0, amountFormatted: '', displayName: '18th',  Rank: 0, Color: '', Class: 'none'},
-                       {dayOfMonth: 18, Amount: 0, amountFormatted: '', displayName: '19th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 19, Amount: 0, amountFormatted: '', displayName: '20th',  Rank: 0, Color: '', Class: 'none'},
-                       {dayOfMonth: 20, Amount: 0, amountFormatted: '', displayName: '21st',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 21, Amount: 0, amountFormatted: '', displayName: '22nd',  Rank: 0, Color: '', Class: 'none'},
-                       {dayOfMonth: 22, Amount: 0, amountFormatted: '', displayName: '23rd',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 23, Amount: 0, amountFormatted: '', displayName: '24th',  Rank: 0, Color: '', Class: 'none'},
-                       {dayOfMonth: 24, Amount: 0, amountFormatted: '', displayName: '25th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 25, Amount: 0, amountFormatted: '', displayName: '26th',  Rank: 0, Color: '', Class: 'none'},
-                       {dayOfMonth: 26, Amount: 0, amountFormatted: '', displayName: '27th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 27, Amount: 0, amountFormatted: '', displayName: '28th',  Rank: 0, Color: '', Class: 'none'},
-                       {dayOfMonth: 28, Amount: 0, amountFormatted: '', displayName: '29th',  Rank: 0, Color: '', Class: 'none'}, {dayOfMonth: 29, Amount: 0, amountFormatted: '', displayName: '30th',  Rank: 0, Color: '', Class: 'none'},
-                       {dayOfMonth: 30, Amount: 0, amountFormatted: '', displayName: '31st',  Rank: 0, Color: '', Class: 'none'}];
+    let summaryList = [{Month: 0, Amount: 0, amountFormatted: '', displayName: 'January', Rank: 0, Color: '', Class: 'none'}, {Month: 1, Amount: 0, amountFormatted: '', displayName: 'February',  Rank: 0, Color: '', Class: 'none'},
+                       {Month: 2, Amount: 0, amountFormatted: '', displayName: 'March',  Rank: 0, Color: '', Class: 'none'}, {Month: 3, Amount: 0, amountFormatted: '', displayName: 'April',  Rank: 0, Color: '', Class: 'none'},
+                       {Month: 4, Amount: 0, amountFormatted: '', displayName: 'May',  Rank: 0, Color: '', Class: 'none'}, {Month: 5, Amount: 0, amountFormatted: '', displayName: 'June',  Rank: 0, Color: '', Class: 'none'},
+                       {Month: 6, Amount: 0, amountFormatted: '', displayName: 'July',  Rank: 0, Color: '', Class: 'none'}, {Month: 7, Amount: 0, amountFormatted: '', displayName: 'August',  Rank: 0, Color: '', Class: 'none'},
+                       {Month: 8, Amount: 0, amountFormatted: '', displayName: 'September',  Rank: 0, Color: '', Class: 'none'}, {Month: 9, Amount: 0, amountFormatted: '', displayName: 'October',  Rank: 0, Color: '', Class: 'none'},
+                       {Month: 10, Amount: 0, amountFormatted: '', displayName: 'November',  Rank: 0, Color: '', Class: 'none'}, {Month: 11, Amount: 0, amountFormatted: '', displayName: 'December',  Rank: 0, Color: '', Class: 'none'}];
     
     let transactionList;
 
+    
     //Reactively calls refreshCalendar when currentTransactionStore is updated anywhere in project.
     $: $CurrentTransactionsStore, refreshCalendar();
 
@@ -41,7 +32,7 @@
      * Main function that refreshes the calendar. It is called when sections of the calendar are updated.
      */
     function refreshCalendar () {
-        transactionList = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]];
+        transactionList = [[],[],[],[],[],[],[],[],[],[],[],[]];
         transactionList = populateTransactionList(transactionList);
         summaryList = populateSummaryList(summaryList, transactionList);
         summaryList = changeSelectedStyle(summaryList);
@@ -55,14 +46,14 @@
         refreshCalendar();
     }
     /**
-     * When a day is clicked on the calendar, set all the information to be passed to the trans list popup and then call it.
-     * @param {Date} day day clicked
-     * @param {String} dateFormatted day clicked in user settings format
-     * @param {String} amountFormatted amount for day clicked in user settings format
+     * When a month is clicked on the calendar, set all the information to be passed to the trans list popup and then call it.
+     * @param {Date} month month clicked
+     * @param {String} dateFormatted month clicked in user settings format
+     * @param {String} amountFormatted amount for month clicked in user settings format
      */
-     function dayClicked(day, displayName, amountFormatted) {
-        selectedDay = displayName + ' of the month';
-        selectedDayList = getSelectedDaysTransactions(day, 'month');
+     function dayClicked(month, displayName, amountFormatted) {
+        selectedSquare = displayName;
+        selectedList = getSelectedDaysTransactions(month);
         selectedAmount = amountFormatted;
         togglePopup();
     }
@@ -72,47 +63,26 @@
      function togglePopup () {
         showPopup = !showPopup;
     }
-
 </script>
+
 <div class="content">
     <CalendarNavigation {changeSelectedOption} {refreshCalendar} on:dateChange/>
     <table class="cal-month">
-        {#each Array(5) as _, mainIndex}
+        {#each Array(2) as _, mainIndex}
         <tr>
-            {#each summaryList as day, index}
-                {#if index < 7 & mainIndex === 0}
-                    {#if day.Amount != 0}
-                        <th class="{day.Class} populated" style="{day.Color}" on:click={() => dayClicked(day.dayOfMonth, day.displayName, day.amountFormatted)}><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><p class="date">{day.displayName}</p><p class="amount">{day.amountFormatted}</p></div></div></div></th>
+            {#each summaryList as month, index}
+                {#if index < 6 & mainIndex === 0}
+                    {#if month.Amount != 0}
+                        <th class="{month.Class} populated" style="{month.Color}" on:click={() => dayClicked(month.Month, month.displayName, month.amountFormatted)}><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><p class="date">{month.displayName}</p><p class="amount">{month.amountFormatted}</p></div></div></div></th>
                     {:else}
-                        <th class="{day.Class}"><p>{day.displayName}</p></th>
+                        <th class="{month.Class}"><p>{month.displayName}</p></th>
                     {/if}
                 {/if}
-                {#if index >= 7 & index <= 13 & mainIndex === 1}
-                    {#if day.Amount != 0}
-                        <th class="{day.Class} populated" style="{day.Color}" on:click={() => dayClicked(day.dayOfMonth, day.displayName, day.amountFormatted)}><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><p class="date">{day.displayName}</p><p class="amount">{day.amountFormatted}</p></div></div></div></th>
+                {#if index >= 6 & mainIndex === 1}
+                    {#if month.Amount != 0}
+                        <th class="{month.Class} populated" style="{month.Color}" on:click={() => dayClicked(month.Month, month.displayName, month.amountFormatted)}><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><p class="date">{month.displayName}</p><p class="amount">{month.amountFormatted}</p></div></div></div></th>
                     {:else}
-                        <th class="{day.Class}"><p>{day.displayName}</p></th>
-                    {/if}
-                {/if}
-                {#if index > 13 & index <= 20 & mainIndex === 2}
-                    {#if day.Amount != 0}
-                        <th class="{day.Class} populated" style="{day.Color}" on:click={() => dayClicked(day.dayOfMonth, day.displayName, day.amountFormatted)}><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><p class="date">{day.displayName}</p><p class="amount">{day.amountFormatted}</p></div></div></div></th>
-                    {:else}
-                        <th class="{day.Class}"><p>{day.displayName}</p></th>
-                    {/if}
-                {/if}
-                {#if index > 20 & index <= 27 & mainIndex === 3}
-                    {#if day.Amount != 0}
-                        <th class="{day.Class} populated" style="{day.Color}" on:click={() => dayClicked(day.dayOfMonth, day.displayName, day.amountFormatted)}><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><p class="date">{day.displayName}</p><p class="amount">{day.amountFormatted}</p></div></div></div></th>
-                    {:else}
-                        <th class="{day.Class}"><p>{day.displayName}</p></th>
-                    {/if}
-                {/if}
-                {#if index > 28 & mainIndex === 4}
-                    {#if day.Amount != 0}
-                        <th class="{day.Class} populated" style="{day.Color}" on:click={() => dayClicked(day.dayOfMonth, day.displayName, day.amountFormatted)}><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><p class="date">{day.displayName}</p><p class="amount">{day.amountFormatted}</p></div></div></div></th>
-                    {:else}
-                        <th class="{day.Class}"><p>{day.displayName}</p></th>
+                        <th class="{month.Class}"><p>{month.displayName}</p></th>
                     {/if}
                 {/if}
             {/each}
@@ -121,10 +91,11 @@
     </table>
     {#if showPopup}
         <div class="backdrop" on:click|self={() => togglePopup()}>
-            <TransListPopup {selectedDay} {selectedDayList} {selectedAmount} popupType = 'monthly' {togglePopup}/>
+            <TransListPopup {selectedSquare} {selectedList} {selectedAmount} popupType = 'monthly' {togglePopup}/>
         </div>
     {/if}
 </div>
+
 <style>
     .content {
         display: block;
@@ -136,7 +107,7 @@
         display: block;
 
         margin: 15px auto 0 auto;
-        width: 745px;
+        width: 635px;
         height: auto;
 
         font-size: 12px;
@@ -338,3 +309,5 @@
         z-index: 10;
     }
 </style>
+
+<!-- markup (zero or more items) goes here -->

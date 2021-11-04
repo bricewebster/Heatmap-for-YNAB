@@ -7,8 +7,8 @@
     import { fade } from 'svelte/transition';
 
     var showPopup = false;
-    var selectedDay;
-    var selectedDayList = [];
+    var selectedSquare;
+    var selectedList = [];
     var selectedAmount;
     export let populateTransactionList = () => {};
     export let populateSummaryList = () => {};
@@ -98,8 +98,8 @@
      * @param {String} amountFormatted amount for day clicked in user settings format
      */
     function dayClicked(date, dateFormatted, amountFormatted) {
-        selectedDay = dateFormatted;
-        selectedDayList = getSelectedDaysTransactions(date, 'year');
+        selectedSquare = dateFormatted;
+        selectedList = getSelectedDaysTransactions(date);
         selectedAmount = amountFormatted;
         togglePopup();
     }
@@ -167,7 +167,7 @@
         </div>
         {#if showPopup}
             <div class="backdrop" on:click|self={() => togglePopup()} transition:fade>
-                <TransListPopup {selectedDay} {selectedDayList} {selectedAmount} popupType = 'yearly' {togglePopup}/>
+                <TransListPopup {selectedSquare} {selectedList} {selectedAmount} popupType = 'yearly' {togglePopup}/>
             </div>
         {/if}
     </div>

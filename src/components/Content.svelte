@@ -1,6 +1,7 @@
 <script>
     import YearlyContent from "./YearlyContent.svelte";
     import MonthlyContent from "./MonthlyContent.svelte";
+    import DaysOfMonthContent from "./DaysOfMonthContent.svelte";
     import DailyContent from "./DailyContent.svelte";
     import NavOptionsStore from "../stores/navOptionsStore";
     import CurrentTransactionsStore from '../stores/currentTransactionsStore';
@@ -14,6 +15,7 @@
      * Populates the transaction list.
      */
      function populateTransactionList (transactionList) {
+         console.log(transactionList)
         for (let transaction of $CurrentTransactionsStore) {
             if ($NavOptionsStore.selectedOption === 'income' & transaction.Amount > 0 || $NavOptionsStore.selectedOption === 'expense' & transaction.Amount < 0 || $NavOptionsStore.selectedOption === 'net' & transaction.Amount != 0) {
                 let amount = parseFloat(parseFloat(transaction.Amount).toFixed($CurrencyInfoStore.Decimals));
@@ -26,7 +28,11 @@
                     dayIndex = !isLeapYear(transaction.Date.getFullYear()) & dayIndex >= 60 ? dayIndex : dayIndex - 1;
                     day = {Amount: amount, amountFormatted: formattedAmount, Date: transaction.Date, dateFormatted: dateFormatted, Month: transaction.Date.getMonth() + 1, Day: transaction.Date.getDate()};
                 } else if (activeTab === 'Monthly') {
+                    dayIndex = transaction.Date.getMonth();
+                    day = {Amount: amount, amountFormatted: formattedAmount, dateFormatted: dateFormatted, Month: dayIndex};
+                } else if (activeTab === 'Days of Month') {
                     dayIndex = transaction.Date.getDate() - 1;
+                    console.log(dayIndex)
                     day = {Amount: amount, amountFormatted: formattedAmount, dateFormatted: dateFormatted, dayOfMonth: dayIndex};
                 } else {
                     dayIndex = transaction.Date.getDay();
@@ -89,13 +95,15 @@
      * @param {Date} date day selected
      * @return {Array of Objects} transactions for day selected
      */
-    function getSelectedDaysTransactions (date, tabOption) {
+    function getSelectedDaysTransactions (date) {
         let transactionList = [];
         for (let day of $CurrentTransactionsStore) {
             let compare;
-            if (tabOption === 'year') {
+            if (activeTab === 'Yearly') {
                 compare = (day.Date.getMonth() === date.getMonth() & day.Date.getDate() === date.getDate());
-            } else if (tabOption === 'month') {
+            } else if (activeTab === 'Monthly') {
+                compare = day.Month === date;
+            } else if (activeTab === 'Day of Month') {
                 compare = day.dayOfMonth === date;
             } else {
                 compare = day.dayOfWeek === date;
@@ -251,6 +259,8 @@
             if (activeTab === 'Yearly') {
                 summaryList[day.dayOfYear].Color = day.Color;
             } else if (activeTab === 'Monthly') {
+                summaryList[day.Month].Color = day.Color;
+            } else if (activeTab === 'Days of Month') {
                 summaryList[day.dayOfMonth].Color = day.Color;
             } else {
                 summaryList[day.dayOfWeek].Color = day.Color;
@@ -265,6 +275,8 @@
         <YearlyContent {populateTransactionList} {populateSummaryList} {getSelectedDaysTransactions} {changeSelectedStyle} {dayOfYear} {formatDate} on:dateChange/>
     {:else if activeTab === 'Monthly'}
         <MonthlyContent {populateTransactionList} {populateSummaryList} {getSelectedDaysTransactions} {changeSelectedStyle} on:dateChange/>
+    {:else if activeTab === 'Days of Month'}
+        <DaysOfMonthContent {populateTransactionList} {populateSummaryList} {getSelectedDaysTransactions} {changeSelectedStyle} on:dateChange/>
     {:else}
         <DailyContent {populateTransactionList} {populateSummaryList} {getSelectedDaysTransactions} {changeSelectedStyle} on:dateChange/>
     {/if}

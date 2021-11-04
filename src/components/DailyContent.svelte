@@ -12,8 +12,8 @@
     export let changeSelectedStyle = () => {};
 
     var showPopup = false;
-    let selectedDay;
-    let selectedDayList = [];
+    let selectedSquare;
+    let selectedList = [];
     let selectedAmount;
 
     let summaryList = [{dayOfWeek: 0, Amount: 0, amountFormatted: '', displayName: 'Sunday', Rank: 0, Color: '', Class: 'none'}, 
@@ -52,8 +52,8 @@
      * @param {String} amountFormatted amount for day clicked in user settings format
      */
      function dayClicked(day, displayName, amountFormatted) {
-        selectedDay = displayName;
-        selectedDayList = getSelectedDaysTransactions(day, 'day');
+        selectedSquare = displayName;
+        selectedList = getSelectedDaysTransactions(day);
         selectedAmount = amountFormatted;
         togglePopup();
     }
@@ -77,7 +77,7 @@
     </table>
     {#if showPopup}
         <div class="backdrop" on:click|self={() => togglePopup()}>
-            <TransListPopup {selectedDay} {selectedDayList} {selectedAmount} popupType = 'daily' {togglePopup}/>
+            <TransListPopup {selectedSquare} {selectedList} {selectedAmount} popupType = 'daily' {togglePopup}/>
         </div>
     {/if}    
 </div>

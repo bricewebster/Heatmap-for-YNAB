@@ -2,8 +2,8 @@
     import Button from "./Button.svelte";
 
     export let togglePopup = () => {};
-    export let selectedDay;
-    export let selectedDayList;
+    export let selectedSquare;
+    export let selectedList;
     export let selectedAmount;
     export let popupType;
 
@@ -22,42 +22,42 @@
         }
         if (sectionSorted.Section === 'Category') {
             if (sectionSorted.Direction) {
-                selectedDayList.sort((a,b) => (scrubCharacters(a.categoryName) < scrubCharacters(b.categoryName)) ? 1 : -1);
+                selectedList.sort((a,b) => (scrubCharacters(a.categoryName) < scrubCharacters(b.categoryName)) ? 1 : -1);
             } else {
-                selectedDayList.sort((a,b) => (scrubCharacters(a.categoryName) > scrubCharacters(b.categoryName)) ? 1 : -1);
+                selectedList.sort((a,b) => (scrubCharacters(a.categoryName) > scrubCharacters(b.categoryName)) ? 1 : -1);
             }
         } else if (sectionSorted.Section === 'Account') {
             if (sectionSorted.Direction) {
-                selectedDayList.sort((a,b) => (scrubCharacters(a.accountName) < scrubCharacters(b.accountName)) ? 1 : -1);
+                selectedList.sort((a,b) => (scrubCharacters(a.accountName) < scrubCharacters(b.accountName)) ? 1 : -1);
             } else {
-                selectedDayList.sort((a,b) => (scrubCharacters(a.accountName) > scrubCharacters(b.accountName)) ? 1 : -1);
+                selectedList.sort((a,b) => (scrubCharacters(a.accountName) > scrubCharacters(b.accountName)) ? 1 : -1);
             }
         } else if (sectionSorted.Section === 'Date') {
             if (sectionSorted.Direction) {
-                selectedDayList.sort((a,b) => (a.dateFormatted < b.dateFormatted) ? 1 : -1);
+                selectedList.sort((a,b) => (a.dateFormatted < b.dateFormatted) ? 1 : -1);
             } else {
-                selectedDayList.sort((a,b) => (a.dateFormatted > b.dateFormatted) ? 1 : -1);
+                selectedList.sort((a,b) => (a.dateFormatted > b.dateFormatted) ? 1 : -1);
             }
         } else if (sectionSorted.Section === 'Payee') {
             if (sectionSorted.Direction) {
-                selectedDayList.sort((a,b) => (scrubCharacters(a.payeeName) < scrubCharacters(b.payeeName)) ? 1 : -1);
+                selectedList.sort((a,b) => (scrubCharacters(a.payeeName) < scrubCharacters(b.payeeName)) ? 1 : -1);
             } else {
-                selectedDayList.sort((a,b) => (scrubCharacters(a.payeeName) > scrubCharacters(b.payeeName)) ? 1 : -1);
+                selectedList.sort((a,b) => (scrubCharacters(a.payeeName) > scrubCharacters(b.payeeName)) ? 1 : -1);
             }
         } else if (sectionSorted.Section === 'Memo') {
             if (sectionSorted.Direction) {
-                selectedDayList.sort((a,b) => (scrubCharacters(a.Memo) < scrubCharacters(b.Memo)) ? 1 : -1);
+                selectedList.sort((a,b) => (scrubCharacters(a.Memo) < scrubCharacters(b.Memo)) ? 1 : -1);
             } else {
-                selectedDayList.sort((a,b) => (scrubCharacters(a.Memo) > scrubCharacters(b.Memo)) ? 1 : -1);
+                selectedList.sort((a,b) => (scrubCharacters(a.Memo) > scrubCharacters(b.Memo)) ? 1 : -1);
             }
         } else if (sectionSorted.Section === 'Amount') {
             if (sectionSorted.Direction) {
-                selectedDayList.sort((a,b) => (a.Amount > b.Amount) ? 1 : -1);
+                selectedList.sort((a,b) => (a.Amount > b.Amount) ? 1 : -1);
             } else {
-                selectedDayList.sort((a,b) => (a.Amount < b.Amount) ? 1 : -1);
+                selectedList.sort((a,b) => (a.Amount < b.Amount) ? 1 : -1);
             }
         }
-        selectedDayList = selectedDayList;
+        selectedList = selectedList;
     }
 
     /**
@@ -75,7 +75,7 @@
 <div class="popup {popupType}">
     <div class="content">
         <div class="title-container">
-            <p class="title"><span class="material-icons-outlined md-24">event_note</span>{selectedDay}</p>
+            <p class="title"><span class="material-icons-outlined md-24">event_note</span>{selectedSquare}</p>
             <p class="amount">{selectedAmount}</p>
         </div>
         <div class="trans-list">
@@ -156,7 +156,7 @@
                 </tr>
             </table>
             <table class="list">
-                {#each selectedDayList as day}
+                {#each selectedList as day}
                     <tr>
                         <th title="{day.categoryName}">{day.categoryName}</th>
                         <th title="{day.accountName}">{day.accountName}</th>
@@ -189,8 +189,11 @@
 
         opacity: 1;
     }
-    .popup.yearly, .popup.monthly {
+    .popup.yearly, .popup.dayofmonth {
         margin: 520px auto 0 auto;
+    }
+    .popup.monthly {
+        margin: 380px auto 0 auto;
     }
     .popup.daily {
         margin: 310px auto 0 auto;
