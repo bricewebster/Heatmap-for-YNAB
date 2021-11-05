@@ -150,9 +150,9 @@
             selected.startYear = currentYear;
             selected.endYear = currentYear;
         } else if (option === 'currentQuarter') {
-            selected.startMonth = new Date(currentYear, currentMonth - 2, 0).getMonth();
+            selected.startMonth = new Date(currentYear, currentMonth - 2).getMonth();
             selected.endMonth = currentMonth;
-            selected.startYear = new Date(currentYear, currentMonth - 2, 0).getFullYear();
+            selected.startYear = new Date(currentYear, currentMonth - 2).getFullYear();
             selected.endYear = currentYear;
         } else if (option === 'currentYear') {
             selected.startMonth = 0;
@@ -338,9 +338,6 @@
         border-width: 15px;
         border-style: solid;
         border-color: transparent transparent white transparent;
-    }
-    .showpopup {
-        opacity: 1;
     }
 </style>
 

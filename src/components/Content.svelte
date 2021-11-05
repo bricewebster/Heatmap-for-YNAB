@@ -2,6 +2,7 @@
     import YearlyContent from "./YearlyContent.svelte";
     import MonthlyContent from "./MonthlyContent.svelte";
     import DaysOfMonthContent from "./DaysOfMonthContent.svelte";
+    import WeeksOfMonthContent from "./WeeksOfMonthContent.svelte";
     import DailyContent from "./DailyContent.svelte";
     import NavOptionsStore from "../stores/navOptionsStore";
     import CurrentTransactionsStore from '../stores/currentTransactionsStore';
@@ -10,6 +11,7 @@
     export let activeTab
     export let formatAmount = () => {};
     export let formatDate = () => {};
+    export let dayToWeek = () => {};
 
      /**
      * Populates the transaction list.
@@ -32,8 +34,10 @@
                     day = {Amount: amount, amountFormatted: formattedAmount, dateFormatted: dateFormatted, Month: dayIndex};
                 } else if (activeTab === 'Days of Month') {
                     dayIndex = transaction.Date.getDate() - 1;
-                    console.log(dayIndex)
                     day = {Amount: amount, amountFormatted: formattedAmount, dateFormatted: dateFormatted, dayOfMonth: dayIndex};
+                } else if (activeTab === 'Weeks of Month') {
+                    dayIndex = dayToWeek(transaction.Date);
+                    day = {Amount: amount, amountFormatted: formattedAmount, dateFormatted: dateFormatted, Week: dayIndex};
                 } else {
                     dayIndex = transaction.Date.getDay();
                     day = {Amount: amount, amountFormatted: formattedAmount, dateFormatted: dateFormatted, dayOfWeek: dayIndex};
@@ -103,8 +107,10 @@
                 compare = (day.Date.getMonth() === date.getMonth() & day.Date.getDate() === date.getDate());
             } else if (activeTab === 'Monthly') {
                 compare = day.Month === date;
-            } else if (activeTab === 'Day of Month') {
+            } else if (activeTab === 'Days of Month') {
                 compare = day.dayOfMonth === date;
+            } else if (activeTab === 'Weeks of Month') {
+                compare = day.Week === date;
             } else {
                 compare = day.dayOfWeek === date;
             }
@@ -262,6 +268,8 @@
                 summaryList[day.Month].Color = day.Color;
             } else if (activeTab === 'Days of Month') {
                 summaryList[day.dayOfMonth].Color = day.Color;
+            } else if (activeTab === 'Weeks of Month') {
+                summaryList[day.Week].Color = day.Color;
             } else {
                 summaryList[day.dayOfWeek].Color = day.Color;
             }
@@ -277,6 +285,8 @@
         <MonthlyContent {populateTransactionList} {populateSummaryList} {getSelectedDaysTransactions} {changeSelectedStyle} on:dateChange/>
     {:else if activeTab === 'Days of Month'}
         <DaysOfMonthContent {populateTransactionList} {populateSummaryList} {getSelectedDaysTransactions} {changeSelectedStyle} on:dateChange/>
+    {:else if activeTab === 'Weeks of Month'}
+        <WeeksOfMonthContent {populateTransactionList} {populateSummaryList} {getSelectedDaysTransactions} {changeSelectedStyle} on:dateChange/>
     {:else}
         <DailyContent {populateTransactionList} {populateSummaryList} {getSelectedDaysTransactions} {changeSelectedStyle} on:dateChange/>
     {/if}

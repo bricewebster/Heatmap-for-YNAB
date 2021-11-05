@@ -109,7 +109,7 @@
                         <th class="{day.Class}"><p>{day.displayName}</p></th>
                     {/if}
                 {/if}
-                {#if index > 28 & mainIndex === 4}
+                {#if index >= 28 & mainIndex === 4}
                     {#if day.Amount != 0}
                         <th class="{day.Class} populated" style="{day.Color}" on:click={() => dayClicked(day.dayOfMonth, day.displayName, day.amountFormatted)}><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><p class="date">{day.displayName}</p><p class="amount">{day.amountFormatted}</p></div></div></div></th>
                     {:else}

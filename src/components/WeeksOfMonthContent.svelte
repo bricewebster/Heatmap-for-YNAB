@@ -15,13 +15,11 @@
     let selectedList = [];
     let selectedAmount;
 
-    let summaryList = [{dayOfWeek: 0, Amount: 0, amountFormatted: '', displayName: 'Sunday', Rank: 0, Color: '', Class: 'none'}, 
-                       {dayOfWeek: 1, Amount: 0, amountFormatted: '', displayName: 'Monday', Rank: 0, Color: '', Class: 'none'},
-                       {dayOfWeek: 2, Amount: 0, amountFormatted: '', displayName: 'Tuesday', Rank: 0, Color: '', Class: 'none'},
-                       {dayOfWeek: 3, Amount: 0, amountFormatted: '', displayName: 'Wednesday', Rank: 0, Color: '', Class: 'none'},
-                       {dayOfWeek: 4, Amount: 0, amountFormatted: '', displayName: 'Thursday', Rank: 0, Color: '', Class: 'none'},
-                       {dayOfWeek: 5, Amount: 0, amountFormatted: '', displayName: 'Friday', Rank: 0, Color: '', Class: 'none'},
-                       {dayOfWeek: 6, Amount: 0, amountFormatted: '', displayName: 'Saturday', Rank: 0, Color: '', Class: 'none'}];
+    let summaryList = [{Week: 0, Amount: 0, amountFormatted: '', displayName: 'Week 1 \n(1-7)', Rank: 0, Color: '', Class: 'none'}, 
+                       {Week: 1, Amount: 0, amountFormatted: '', displayName: 'Week 2 \n(8-14)', Rank: 0, Color: '', Class: 'none'},
+                       {Week: 2, Amount: 0, amountFormatted: '', displayName: 'Week 3 \n(15-21)', Rank: 0, Color: '', Class: 'none'},
+                       {Week: 3, Amount: 0, amountFormatted: '', displayName: 'Week 4 \n(22-28)', Rank: 0, Color: '', Class: 'none'},
+                       {Week: 4, Amount: 0, amountFormatted: '', displayName: 'Week 5 \n(29-31)', Rank: 0, Color: '', Class: 'none'}];
     let transactionList;
 
     //Reactively calls refreshCalendar when currentTransactionStore is updated anywhere in project.
@@ -31,7 +29,7 @@
      * Main function that refreshes the calendar. It is called when sections of the calendar are updated.
      */
      function refreshCalendar () {
-        transactionList = [[],[],[],[],[],[],[]];
+        transactionList = [[],[],[],[],[]];
         transactionList = populateTransactionList(transactionList);
         summaryList = populateSummaryList(summaryList, transactionList);
         summaryList = changeSelectedStyle(summaryList);
@@ -46,13 +44,13 @@
     }
     /**
      * When a day is clicked on the calendar, set all the information to be passed to the trans list popup and then call it.
-     * @param {Date} day day clicked
-     * @param {String} dateFormatted day clicked in user settings format
-     * @param {String} amountFormatted amount for day clicked in user settings format
+     * @param {Date} week week clicked
+     * @param {String} dateFormatted week clicked in user settings format
+     * @param {String} amountFormatted amount for week clicked in user settings format
      */
-     function dayClicked(day, displayName, amountFormatted) {
+     function dayClicked(week, displayName, amountFormatted) {
         selectedSquare = displayName;
-        selectedList = getSelectedDaysTransactions(day);
+        selectedList = getSelectedDaysTransactions(week);
         selectedAmount = amountFormatted;
         togglePopup();
     }
@@ -65,12 +63,12 @@
 </script>
 <div class="content">
     <CalendarNavigation {changeSelectedOption} {refreshCalendar} on:dateChange/>
-    <table class="cal-day">
-        {#each summaryList as day}
-            {#if day.Amount != 0}
-                <th class="{day.Class} populated" style="{day.Color}" on:click={() => dayClicked(day.dayOfWeek, day.displayName, day.amountFormatted)}><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><p class="date">{day.displayName}</p><p class="amount">{day.amountFormatted}</p></div></div></div></th>
+    <table class="cal-week">
+        {#each summaryList as week}
+            {#if week.Amount != 0}
+                <th class="{week.Class} populated" style="{week.Color}" on:click={() => dayClicked(week.Week, week.displayName, week.amountFormatted)}><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><p class="date">{week.displayName}</p><p class="amount">{week.amountFormatted}</p></div></div></div></th>
             {:else}
-                <th class="{day.Class}"><p>{day.displayName}</p></th>
+                <th class="{week.Class}"><p>{week.displayName}</p></th>
             {/if}
         {/each}
     </table>
@@ -80,39 +78,43 @@
         </div>
     {/if}    
 </div>
-<style lang="scss">
+<style>
     .content {
         display: block;
         
         margin: 50px auto 0 auto;
         width: 880px;
     }
-    .cal-day {
+    .cal-week {
         display: block;
 
         margin: 15px auto 0 auto;
-        width: 745px;
+        width: 535px;
         height: auto;
 
         font-size: 12px;
 
         border-spacing: 5px;
     }
-    .cal-day th {
+    .cal-week th {
         position: relative;
         width: 100px;
-        height: 55px; 
+        height: 65px; 
     }
     .date {
         position: absolute;
         top: 0;
-        left: 0;
+        left: 25px;
         margin: 5px 0 0 5px;
+        
+        white-space: pre-line;
     }
     .amount {
         display: flex;
         justify-content: center;
-        align-items: center;
+        align-items: flex-end;
+
+        padding-bottom: 10px;
         height: 100%;
     }
     .income {
