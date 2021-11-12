@@ -127,14 +127,9 @@
         
         transition-duration: 350ms;
     }
-    .net-pos {
-        background-color: #fdfd96;
-        
-        transition-duration: 350ms;
-    }
-    .net-neg {
-        background-color: #ffb347;
-        
+    .net {
+        color: white;
+
         transition-duration: 350ms;
     }
     .none {

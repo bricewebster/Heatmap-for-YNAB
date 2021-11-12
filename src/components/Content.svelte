@@ -17,7 +17,6 @@
      * Populates the transaction list.
      */
      function populateTransactionList (transactionList) {
-         console.log(transactionList)
         for (let transaction of $CurrentTransactionsStore) {
             if ($NavOptionsStore.selectedOption === 'income' & transaction.Amount > 0 || $NavOptionsStore.selectedOption === 'expense' & transaction.Amount < 0 || $NavOptionsStore.selectedOption === 'net' & transaction.Amount != 0) {
                 let amount = parseFloat(parseFloat(transaction.Amount).toFixed($CurrencyInfoStore.Decimals));
@@ -88,7 +87,7 @@
         } else if ($NavOptionsStore.selectedOption === 'expense' & amount != 0) {
             dayClass = 'expense';
         } else if ($NavOptionsStore.selectedOption === 'net' & amount != 0) {
-            dayClass = amount > 0 ? 'net-pos' : 'net-neg';
+            dayClass = 'net';
         } else {
             dayClass = "none";
         }
@@ -152,8 +151,71 @@
      * @return {Array of Objects} list with changed style
      */
     function changeSelectedStyle (summaryList) {
-        let list = setHeatmapStyle(summaryList);
-        summaryList = applyHeatMapColor(list, summaryList);
+        let list = [];
+        if ($NavOptionsStore.selectedOption === 'net') {
+            let posList = getSignList('positive', summaryList);
+            let tempPosList = setHeatmapStyle(posList);
+            let negList = getSignList('negative', summaryList);
+            let tempNegList = setHeatmapStyle(negList);
+            summaryList = combineSignLists(tempPosList, tempNegList, summaryList);
+        } else {
+            list = setHeatmapStyle(summaryList);
+            summaryList = applyHeatMapColor(list, summaryList);
+        }
+        return summaryList;
+    }
+    function getSignList (sign, summaryList) {
+        let signList = [];
+        if (sign === 'positive') {
+            for (let list of summaryList) {
+                if (list.Amount >= 0) {
+                    signList.push(list);
+                }
+            }
+        } else {
+            for (let list of summaryList) {
+                if (list.Amount < 0) {
+                    signList.push(list);
+                }
+            }
+        }
+        return signList;
+    }
+    function combineSignLists (posList, negList, summaryList) {
+        let posLength = posList.length;
+        let negLength = negList.length;
+        let length = posLength + negLength;
+        let posIndex = 0;
+        let negIndex = 0;
+        let combinedList = [];
+
+        for (let list of posList) {
+            if (activeTab === 'Yearly') {
+                summaryList[list.dayOfYear] = list;
+            } else if (activeTab === 'Monthly') {
+                summaryList[list.Month] = list;
+            } else if (activeTab === 'Days of Month') {
+                summaryList[list.dayOfMonth] = list;
+            } else if (activeTab === 'Weeks of Month') {
+                summaryList[list.Week] = list;
+            } else {
+                summaryList[list.dayOfWeek] = list;
+            }
+        }
+
+        for (let list of negList) {
+            if (activeTab === 'Yearly') {
+                summaryList[list.dayOfYear] = list;
+            } else if (activeTab === 'Monthly') {
+                summaryList[list.Month] = list;
+            } else if (activeTab === 'Days of Month') {
+                summaryList[list.dayOfMonth] = list;
+            } else if (activeTab === 'Weeks of Month') {
+                summaryList[list.Week] = list;
+            } else {
+                summaryList[list.dayOfWeek] = list;
+            }
+        }
         return summaryList;
     }
     /**
@@ -210,32 +272,39 @@
                     background = 'background: hsl(157,' + s + '%, 32%)';
                 } else if ($NavOptionsStore.selectedOption === 'expense') {
                     background = 'background: hsl(342,' + s + '%, 62%)';
+                } else {
+                    if (day.Amount < 0) {
+                        background = 'background: hsl(342,' + s + '%, 62%)';
+                       // background = 'background: hsl(35,' + s + '%, 64%)';
+                    } else {
+                        background = 'background: hsl(157,' + s + '%, 32%)';
+                      //  background = 'background: hsl(20,' + s + '%, 79%)';
+                    }
                 }
             } else if ($NavOptionsStore.selectedStyle === 'group') {
                 let placement = (day.Rank / amountToColor) * 100;
                 if (placement >= 90) {
-                    if ($NavOptionsStore.selectedOption === 'expense') {
+                    if ($NavOptionsStore.selectedOption === 'expense' || $NavOptionsStore.selectedOption === 'net' & day.Amount < 0) {
                         background = 'background: hsl(343,63%,54%)';
-                    } else if ($NavOptionsStore.selectedOption === 'income') {
+                    } else {
                         background = 'background: hsl(52, 84%, 73%)';
                     }
                 } else if (placement >= 50 & placement < 90) {
-                    if ($NavOptionsStore.selectedOption === 'expense') {
+                    if ($NavOptionsStore.selectedOption === 'expense' || $NavOptionsStore.selectedOption === 'net' & day.Amount < 0) {
                         background = 'background: hsl(4,66%,60%)';
-                    } else if ($NavOptionsStore.selectedOption  === 'income') {
+                    } else {
                         background = 'background: hsl(76, 52%, 63%)';
                     }
                 } else if (placement >= 10 & placement < 50) {
-                    if ($NavOptionsStore.selectedOption === 'expense') {
+                    if ($NavOptionsStore.selectedOption === 'expense' || $NavOptionsStore.selectedOption === 'net' & day.Amount < 0) {
                         background = 'background: hsl(22,75%,57%)';
-                    } else if ($NavOptionsStore.selectedOption === 'income') {
+                    } else {
                         background = 'background: hsl(111, 39%, 57%)';
                     }
                 } else {
-                    if ($NavOptionsStore.selectedOption === 'expense') {
+                    if ($NavOptionsStore.selectedOption === 'expense' || $NavOptionsStore.selectedOption === 'net' & day.Amount < 0) {
                         background = 'background: hsl(34,81%,54%)';
-                    } else if ($NavOptionsStore.selectedOption === 'income') {
-                     
+                    } else {
                         background = 'background: hsl(157, 100%, 32%)';
                     }
                 }
@@ -245,9 +314,9 @@
                 //     background = 'background: hsl(334,' + s + '%, 55%)';
                 // }
             } else {
-                if ($NavOptionsStore.selectedOption === 'income') {
+                if ($NavOptionsStore.selectedOption === 'income' || $NavOptionsStore.selectedOption === 'net' & day.Amount >= 0) {
                     background = 'background: #00a567';
-                } else if ($NavOptionsStore.selectedOption === 'expense') {
+                } else{
                     background = 'background: #de5d83';
                 }
             }

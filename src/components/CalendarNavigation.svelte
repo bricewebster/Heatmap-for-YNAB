@@ -120,7 +120,7 @@
         transition-duration: 350ms;
     }
     .net-icon.selected, .net-icon:hover {
-        color: #ffb347;
+        color: #6f8175;
 
         transition-duration: 350ms;
     }
@@ -206,7 +206,7 @@
         background-color: #de5d83;
     }
     .desc-popup .desc-text.net {
-        background-color: #ffb347;
+        background-color: #6f8175;
     }
     .desc-popup .desc-text.seq {
         background-color: #B31313;
@@ -235,7 +235,7 @@
         border-color: #de5d83 transparent transparent transparent;
     }
     .desc-popup .desc-text.net:after {
-        border-color: #ffb347 transparent transparent transparent;
+        border-color: #6f8175 transparent transparent transparent;
     }
     .desc-popup .desc-text.seq:after {
         border-color: #B31313 transparent transparent transparent;

@@ -83,6 +83,9 @@
         return new Date(year, month, day);
     }
    
+    /**
+     * Called when there is a change to where the calendar needs refreshed such as option, style or date change.
+     */
     function refreshCalendar () {
         initializeTransactionList();
         transactionList = populateTransactionList(transactionList);
@@ -102,6 +105,24 @@
         selectedList = getSelectedDaysTransactions(date);
         selectedAmount = amountFormatted;
         togglePopup();
+    }
+    /**
+	 * Removes the year from the date formatted to be used when displaying the transactions popup title date.
+	 * @param {String} date date to remove year from
+	 * @return {String} a date as a string with year removed
+	 */
+	function removeYearFromDate (date) {
+        let userDateFormat = $CurrencyInfoStore.dateFormat;
+        let newDate;
+
+        if (userDateFormat === 'YYYY/MM/DD' || userDateFormat === 'YYYY-MM-DD' || userDateFormat === 'YYYY.MM.DD') {
+            newDate = date.substring(5,10);
+        } else if (userDateFormat === 'DD-MM-YYYY' || userDateFormat === 'DD/MM/YYYY' || userDateFormat === 'DD.MM.YYYY' || userDateFormat === 'MM/DD/YYYY') {
+            newDate = date.substring(0,5);
+        } else {
+            newDate = date;
+        }
+        return newDate;
     }
     /**
      * Changes the selected option based on what was selected and calls the update to the calendar.
@@ -156,7 +177,7 @@
                     {#each summaryList as day}
                         {#if month.Number === day.Month}
                             {#if day.Amount != 0}
-                                <th class="{day.Class} populated" style="{day.Color}" on:click={() => dayClicked(day.Date, day.dateFormatted, day.amountFormatted)} on:mouseover={() => highlightMonthDay(day.Month, day.Day)} on:focus={() => highlightMonthDay() }><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><div class="amountPopup"><span class="amountPopupText">{day.amountFormatted}</span></div></div></div></div></th>
+                                <th class="{day.Class} populated" style="{day.Color}" on:click={() => dayClicked(day.Date, removeYearFromDate(day.dateFormatted), day.amountFormatted)} on:mouseover={() => highlightMonthDay(day.Month, day.Day)} on:focus={() => highlightMonthDay() }><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><div class="amountPopup"><span class="amountPopupText">{day.amountFormatted}</span></div></div></div></div></th>
                             {:else}
                                 <th class="{day.Class}"></th>
                             {/if}
@@ -209,14 +230,7 @@
 
         transition-duration: 350ms;
     }
-    .net-pos {
-        background-color: #fdfd96;
-
-        transition-duration: 350ms;
-    }
-    .net-neg {
-        background-color: #ffb347;
-
+    .net {
         transition-duration: 350ms;
     }
     .none {

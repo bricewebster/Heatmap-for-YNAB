@@ -249,7 +249,7 @@
   		} else {
 			const amount = ynab.utils.convertMilliUnitsToCurrencyAmount(transaction.amount, $CurrencyInfoStore.Decimals); //Converts to users currency in decimals.
 			let memo = transaction.memo === null ? '' : transaction.memo; //Some memos are null for some reason. This makes them blank strings.
-			let currentTrans = {Date: transactionDate, dateFormatted: formatDate(transactionDate), Month: transactionDate.getMonth(), dayOfMonth: transactionDate.getDate() - 1, dayOfWeek: transactionDate.getDay(), categoryName: transaction.category_name, accountName: transaction.account_name, payeeName: transaction.payee_name, Amount: amount, amountFormatted: formatAmount(amount), Memo: memo};
+			let currentTrans = {Date: transactionDate, dateFormatted: formatDate(transactionDate), Month: transactionDate.getMonth(), dayOfMonth: transactionDate.getDate() - 1, Week: dayToWeek(transactionDate), dayOfWeek: transactionDate.getDay(), categoryName: transaction.category_name, accountName: transaction.account_name, payeeName: transaction.payee_name, Amount: amount, amountFormatted: formatAmount(amount), Memo: memo};
 			return currentTrans;
 		}
 	}
@@ -286,7 +286,24 @@
 	function newNormalizedDate(date){
   		return new Date(new Date(date).getTime() - new Date(date).getTimezoneOffset() * - 60000); //https://stackoverflow.com/a/14569783
 	}
+	function dayToWeek (date) {
+		let day = date.getDate();
+		let week;
 
+		if (day >= 1 & day <= 7) {
+			week = 0;
+		} else if (day >= 8 & day <= 14) {
+			week = 1;
+		} else if (day >= 15 & day <= 21) {
+			week = 2;
+		} else if (day >= 22 & day <= 28) {
+			week = 3;
+		} else {
+			week = 4;
+		}
+
+		return week;
+	}
 	/**
 	 * Formats the supplied date based on the User's settings.
 	 * @param {Date} date date to be formatted
@@ -384,7 +401,7 @@
 <main>
 	{#if transactionsLoaded}
 		<Navbar bind:activeTab = {activeTab} on:filterChange={storeTransactionsMain}/>
-		<Content {activeTab} {formatAmount} {formatDate} on:dateChange={storeTransactionsMain}/>
+		<Content {activeTab} {formatAmount} {formatDate} {dayToWeek} on:dateChange={storeTransactionsMain}/>
 	{:else}
 		<Loading />	
 	{/if}
