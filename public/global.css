@@ -53,6 +53,7 @@ main {
 .material-icons { font-family: 'Material Icons';}
 .material-icons-round { font-family: 'Material Icons Round';}
 .material-icons-outlined { font-family: 'Material Icons Outlined';}
+.material-icons.md-12, .material-icons-round.md-12, .material-icons-outlined.md-12 { font-size: 1em;}
 .material-icons.md-24, .material-icons-round.md-24, .material-icons-outlined.md-24 { font-size: 1.5em;}
 .material-icons.md-36, .material-icons-round.md-36, .material-icons-outlined.md-36 { font-size: 2.25em;}
 .material-icons.md-48, .material-icons-round.md-48, .material-icons-outlined.md-48 { font-size: 3em;}
