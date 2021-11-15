@@ -12,7 +12,7 @@
 	import CurrentTransactionsStore from './stores/currentTransactionsStore';
 	import CurrencyInfoStore from './stores/currencyInfoStore';
 	
-	let transactionsLoaded = true;
+	let transactionsLoaded = false;
 	let activeTab = 'Yearly';
 
 	let ynabAPIReady = false;
@@ -22,7 +22,7 @@
 	onMount(() => {
         mounted = true;
         if (ynabAPIReady) {
-        //	main();
+        	main();
         }
     });
 
@@ -32,7 +32,7 @@
 	function ynabAPILoaded() {
         ynabAPIReady = true;
         if (mounted) {
-        	//main();
+        	main();
         }
     }
 	
@@ -400,7 +400,7 @@
 
 <main>
 	{#if transactionsLoaded}
-		<Navbar bind:activeTab = {activeTab} on:filterChange={storeTransactionsMain}/>
+		<Navbar bind:activeTab = {activeTab} on:filterChange={storeTransactionsMain} on:settingsChange={storeTransactionsMain}/>
 		<Content {activeTab} {formatAmount} {formatDate} {dayToWeek} on:dateChange={storeTransactionsMain}/>
 	{:else}
 		<Loading />	

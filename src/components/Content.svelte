@@ -7,6 +7,7 @@
     import NavOptionsStore from "../stores/navOptionsStore";
     import CurrentTransactionsStore from '../stores/currentTransactionsStore';
     import CurrencyInfoStore from '../stores/currencyInfoStore';
+    import HeatmapSettingsStore from '../stores/heatmapSettingsStore';
 
     export let activeTab
     export let formatAmount = () => {};
@@ -268,56 +269,43 @@
             let s;
             if ($NavOptionsStore.selectedStyle === 'regular') {
                 s = increment * day.Rank;
-                if ($NavOptionsStore.selectedOption === 'income') {
-                    background = 'background: hsl(157,' + s + '%, 32%)';
-                } else if ($NavOptionsStore.selectedOption === 'expense') {
-                    background = 'background: hsl(342,' + s + '%, 62%)';
-                } else {
-                    if (day.Amount < 0) {
-                        background = 'background: hsl(342,' + s + '%, 62%)';
-                       // background = 'background: hsl(35,' + s + '%, 64%)';
-                    } else {
-                        background = 'background: hsl(157,' + s + '%, 32%)';
-                      //  background = 'background: hsl(20,' + s + '%, 79%)';
-                    }
+                if ($NavOptionsStore.selectedOption === 'income' || $NavOptionsStore.selectedOption === 'net' & day.Amount >= 0) {
+                    background = `background: hsl(${$HeatmapSettingsStore.Colors.incomeHue}, ${s}%, ${$HeatmapSettingsStore.Colors.incomeLum}%)`;
+                } else if ($NavOptionsStore.selectedOption === 'expense' || $NavOptionsStore.selectedOption === 'net' & day.Amount < 0) {
+                    background = `background: hsl(${$HeatmapSettingsStore.Colors.expenseHue}, ${s}%, ${$HeatmapSettingsStore.Colors.expenseLum}%)`;
                 }
             } else if ($NavOptionsStore.selectedStyle === 'group') {
                 let placement = (day.Rank / amountToColor) * 100;
                 if (placement >= 90) {
                     if ($NavOptionsStore.selectedOption === 'expense' || $NavOptionsStore.selectedOption === 'net' & day.Amount < 0) {
-                        background = 'background: hsl(343,63%,54%)';
+                        background = `background: hsl(${$HeatmapSettingsStore.Colors.expenseTopHue}, ${$HeatmapSettingsStore.Colors.expenseTopSat}%, ${$HeatmapSettingsStore.Colors.expenseTopLum}%)`;
                     } else {
-                        background = 'background: hsl(52, 84%, 73%)';
+                        background = `background: hsl(${$HeatmapSettingsStore.Colors.incomeBottomHue}, ${$HeatmapSettingsStore.Colors.incomeBottomSat}%, ${$HeatmapSettingsStore.Colors.incomeBottomLum}%)`;
                     }
                 } else if (placement >= 50 & placement < 90) {
                     if ($NavOptionsStore.selectedOption === 'expense' || $NavOptionsStore.selectedOption === 'net' & day.Amount < 0) {
-                        background = 'background: hsl(4,66%,60%)';
+                        background = `background: hsl(${$HeatmapSettingsStore.Colors.expenseHighHue}, ${$HeatmapSettingsStore.Colors.expenseHighSat}%, ${$HeatmapSettingsStore.Colors.expenseHighLum}%)`;
                     } else {
-                        background = 'background: hsl(76, 52%, 63%)';
+                        background = `background: hsl(${$HeatmapSettingsStore.Colors.incomeLowHue}, ${$HeatmapSettingsStore.Colors.incomeLowSat}%, ${$HeatmapSettingsStore.Colors.incomeLowLum}%)`;
                     }
                 } else if (placement >= 10 & placement < 50) {
                     if ($NavOptionsStore.selectedOption === 'expense' || $NavOptionsStore.selectedOption === 'net' & day.Amount < 0) {
-                        background = 'background: hsl(22,75%,57%)';
+                        background = `background: hsl(${$HeatmapSettingsStore.Colors.expenseLowHue}, ${$HeatmapSettingsStore.Colors.expenseLowSat}%, ${$HeatmapSettingsStore.Colors.expenseLowLum}%)`;
                     } else {
-                        background = 'background: hsl(111, 39%, 57%)';
+                        background = `background: hsl(${$HeatmapSettingsStore.Colors.incomeHighHue}, ${$HeatmapSettingsStore.Colors.incomeHighSat}%, ${$HeatmapSettingsStore.Colors.incomeHighLum}%)`;
                     }
                 } else {
                     if ($NavOptionsStore.selectedOption === 'expense' || $NavOptionsStore.selectedOption === 'net' & day.Amount < 0) {
-                        background = 'background: hsl(34,81%,54%)';
+                        background = `background: hsl(${$HeatmapSettingsStore.Colors.expenseBottomHue}, ${$HeatmapSettingsStore.Colors.expenseBottomSat}%, ${$HeatmapSettingsStore.Colors.expenseBottomLum}%)`;
                     } else {
-                        background = 'background: hsl(157, 100%, 32%)';
+                        background = `background: hsl(${$HeatmapSettingsStore.Colors.incomeTopHue}, ${$HeatmapSettingsStore.Colors.incomeTopSat}%, ${$HeatmapSettingsStore.Colors.incomeTopLum}%)`;
                     }
                 }
-                // if (selectedOption === 'income') {
-                //     background = 'background: hsl(157,' + s + '%, 32%)';
-                // }// else if (selectedOption === 'expense') {
-                //     background = 'background: hsl(334,' + s + '%, 55%)';
-                // }
             } else {
                 if ($NavOptionsStore.selectedOption === 'income' || $NavOptionsStore.selectedOption === 'net' & day.Amount >= 0) {
-                    background = 'background: #00a567';
+                    background = `background: hsl(${$HeatmapSettingsStore.Colors.incomeHue}, ${$HeatmapSettingsStore.Colors.incomeSat}%, ${$HeatmapSettingsStore.Colors.incomeLum}%)`;
                 } else{
-                    background = 'background: #de5d83';
+                    background = `background: hsl(${$HeatmapSettingsStore.Colors.expenseHue}, ${$HeatmapSettingsStore.Colors.expenseSat}%, ${$HeatmapSettingsStore.Colors.expenseLum}%)`;
                 }
             }
             day.Color = background;

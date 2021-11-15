@@ -2,6 +2,7 @@
     import { createEventDispatcher } from 'svelte';
     import NavOptionsStore from "../stores/navOptionsStore";
     import DateSelectionPopup from '../components/DateSelectionPopup.svelte';
+    import HeatmapSettingsStore from '../stores/heatmapSettingsStore';
 
     const dispatch = createEventDispatcher();
 
@@ -11,9 +12,28 @@
     var showPopup = false;
 
     let formattedStartDate, formattedEndDate;
+    let incomeColor, expenseColor, netColor;
+
+    setOptionColors();
 
     $: $NavOptionsStore.startDate, formattedStartDate = formatSelectedDate($NavOptionsStore.startDate);
     $: $NavOptionsStore.endDate, formattedEndDate = formatSelectedDate($NavOptionsStore.endDate);
+
+    function setOptionColors () {
+        if ($NavOptionsStore.selectedOption === 'income') {
+            incomeColor = `hsl(${$HeatmapSettingsStore.Colors.incomeHue}, ${$HeatmapSettingsStore.Colors.incomeSat}%, ${$HeatmapSettingsStore.Colors.incomeLum}%)`;
+            expenseColor = 'rgba(187, 167, 167, 0.842)';
+            netColor = 'rgba(187, 167, 167, 0.842)';
+        } else if ($NavOptionsStore.selectedOption === 'expense') {
+            incomeColor = 'rgba(187, 167, 167, 0.842)';
+            expenseColor = `hsl(${$HeatmapSettingsStore.Colors.expenseHue}, ${$HeatmapSettingsStore.Colors.expenseSat}%, ${$HeatmapSettingsStore.Colors.expenseLum}%)`;
+            netColor = 'rgba(187, 167, 167, 0.842)';
+        } else {
+            incomeColor = 'rgba(187, 167, 167, 0.842)';
+            expenseColor = 'rgba(187, 167, 167, 0.842)';
+            netColor = `hsl(${$HeatmapSettingsStore.Colors.expenseHue}, ${$HeatmapSettingsStore.Colors.expenseSat}%, ${$HeatmapSettingsStore.Colors.expenseLum}%)`;
+        }
+    }
 
     /**
      * Changes the selected style based on the style selected by the user.
@@ -69,9 +89,9 @@
 </script>
 <div class="cal-navigation">
     <div class="cal-options">
-        <button on:click={() => changeSelectedOption('income')}><div class="desc-popup"><div class="desc-text income">Income</div><span class="material-icons-outlined md-36 income-icon" class:selected={$NavOptionsStore.selectedOption === 'income'} class:nonselected-icon={$NavOptionsStore.selectedOption != 'income'}>savings</span></div></button>
-        <button on:click={() => changeSelectedOption('expense')}><div class="desc-popup"><div class="desc-text expense">Expense</div><span class="material-icons-outlined md-36 expense-icon" class:selected={$NavOptionsStore.selectedOption === 'expense'} class:nonselected-icon={$NavOptionsStore.selectedOption != 'expense'}>paid</span></div></button>
-        <button on:click={() => changeSelectedOption('net')}><div class="desc-popup"><div class="desc-text net">Net</div><span class="material-icons-outlined md-36 net-icon" class:selected={$NavOptionsStore.selectedOption === 'net'} class:nonselected-icon={$NavOptionsStore.selectedOption != 'net'}>request_quote</span></div></button>
+        <button on:click={() => changeSelectedOption('income')}><div class="desc-popup"><div class="desc-text income">Income</div><span class="material-icons-outlined md-36 income-icon" style="--incomeColor: {incomeColor}" class:selected={$NavOptionsStore.selectedOption === 'income'} class:nonselected-icon={$NavOptionsStore.selectedOption != 'income'}>savings</span></div></button>
+        <button on:click={() => changeSelectedOption('expense')}><div class="desc-popup"><div class="desc-text expense">Expense</div><span class="material-icons-outlined md-36 expense-icon" style="--expensecolor: {expenseColor}"class:selected={$NavOptionsStore.selectedOption === 'expense'} class:nonselected-icon={$NavOptionsStore.selectedOption != 'expense'}>paid</span></div></button>
+        <button on:click={() => changeSelectedOption('net')}><div class="desc-popup"><div class="desc-text net">Net</div><span class="material-icons-outlined md-36 net-icon" style="--netcolor: {netColor}" class:selected={$NavOptionsStore.selectedOption === 'net'} class:nonselected-icon={$NavOptionsStore.selectedOption != 'net'}>request_quote</span></div></button>
     </div>
     <div class="cal-date" on:click={() => togglePopup()}>
         <div class="cal-date-container">
@@ -110,22 +130,22 @@
         }
     }
     .income-icon.selected, .income-icon:hover {
-        color: #00a567;
+        color: var(--incomeColor);
 
         transition-duration: 350ms;
     }
     .expense-icon.selected, .expense-icon:hover {
-        color: #de5d83;
+        color: var(--expenseColor);
 
         transition-duration: 350ms;
     }
     .net-icon.selected, .net-icon:hover {
-        color: #6f8175;
+      
 
         transition-duration: 350ms;
     }
     .nonselected-icon {
-        color:  rgba(187, 167, 167, 0.842);
+        color: rgba(187, 167, 167, 0.842);
 
         transition-duration: 350ms;
     }
