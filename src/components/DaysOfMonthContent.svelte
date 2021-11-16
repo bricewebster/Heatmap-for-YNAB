@@ -42,7 +42,6 @@
      */
     function refreshCalendar () {
         transactionList = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]];
-        console.log(transactionList)
         transactionList = populateTransactionList(transactionList);
         summaryList = populateSummaryList(summaryList, transactionList);
         summaryList = changeSelectedStyle(summaryList);
