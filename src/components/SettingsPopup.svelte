@@ -1,6 +1,7 @@
 <script>
     import Button from "./Button.svelte";
     import HeatmapSettingsStore from '../stores/heatmapSettingsStore';
+    import BudgetsListStore from '../stores/budgetsListStore';
     import { createEventDispatcher } from 'svelte';
 
     export let togglePopup = () => {};
@@ -177,11 +178,11 @@
             </div>
             <p class="option-title">Selected Budget:</p>
             <div class="option-section">
-                <!-- <select name="startmonths" bind:value={selected.startMonth} on:change="{() => populateMonths('start')}">
-                    {#each startMonths as month}
-                        <option value={month.Number} disabled={month.Disabled}>{month.Name}</option>
+                <select name="budgets">
+                    {#each $BudgetsListStore as budget}
+                        <option value={budget.Name}>{budget.Name}</option>
                     {/each}
-                </select> -->
+                </select>
             </div>
         </div>
     </div>
@@ -238,14 +239,24 @@
     }
     .option-section > input {
         display: block;
+
+        cursor: pointer;
+    }
+    .option-section > label {
+        cursor: pointer;
     }
     .option-grouping {
         margin: 10px 0 10px 10px;
+    }
+    .option-grouping > label {
+        cursor: pointer;
     }
     .option-grouping > input {
         display: inline-block;
 
         margin-right: 10px;
+
+        cursor: pointer;
     }
     span {
             display: inline-block;

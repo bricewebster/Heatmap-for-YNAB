@@ -3,6 +3,7 @@
 	import Content from "./components/Content.svelte";
 	import Loading from "./components/Loading.svelte";
 	import { onMount } from 'svelte';
+	import BudgetsListStore from './stores/budgetsListStore';
 	import navOptionsStore from './stores/navOptionsStore';
 	import CategorySectionStore from './stores/categorySectionStore';
 	import CategoryListStore from './stores/categoryListStore';
@@ -12,7 +13,7 @@
 	import CurrentTransactionsStore from './stores/currentTransactionsStore';
 	import CurrencyInfoStore from './stores/currencyInfoStore';
 	
-	let transactionsLoaded = true;
+	let transactionsLoaded = false;
 	let activeTab = 'Yearly';
 
 	let ynabAPIReady = false;
@@ -22,7 +23,7 @@
 	onMount(() => {
         mounted = true;
         if (ynabAPIReady) {
-        //	main();
+        	main();
         }
     });
 
@@ -32,7 +33,7 @@
 	function ynabAPILoaded() {
         ynabAPIReady = true;
         if (mounted) {
-        //	main();
+        	main();
         }
     }
 	
@@ -41,21 +42,27 @@
 	 */
 	async function main() {
 		const accessToken = await getAccessToken();
-		const mainBudgetID = await getBudgetID();
+		// const mainBudgetID = await getBudgetID();
 
 		var ynab = window.ynab;
 		const ynabAPI = await new ynab.API(accessToken);
-		const categoriesFetched = await getCategories(ynabAPI, mainBudgetID);
+		const budgetsFetched = await getBudgets(ynabAPI);
+		const budgetID = await initBudgets(budgetsFetched);
+
+		await getBudgetInfo(ynabAPI, budgetID);
+		storeTransactionsMain(); 
+	}
+	async function getBudgetInfo (ynabAPI, budgetID) {
+		const categoriesFetched = await getCategories(ynabAPI, budgetID);
 		initCategories(categoriesFetched);
-		const accountsFetched = await getAccounts(ynabAPI, mainBudgetID);
+		const accountsFetched = await getAccounts(ynabAPI, budgetID);
 		initAccounts(accountsFetched);
-		const payeesFetched = await getPayees(ynabAPI, mainBudgetID);
+		const payeesFetched = await getPayees(ynabAPI, budgetID);
 		initPayees(payeesFetched);
-		const currencyInfo = await getCurrencyInfo(ynabAPI, mainBudgetID);
+		const currencyInfo = await getCurrencyInfo(ynabAPI, budgetID);
 		$CurrencyInfoStore = currencyInfo;
-		const transactionsFetch = await getTransactions(ynabAPI, mainBudgetID);
+		const transactionsFetch = await getTransactions(ynabAPI, budgetID);
 		$AllTransactionsStore = transactionsFetch;
-		storeTransactionsMain();
 	}
 	/**
  	 * Grabs personal access token for testing. (Will replace in the future)
@@ -72,6 +79,10 @@
 		const response = await fetch('.vscode/budgetID.txt');
 		const budgetID = await response.text();
 		return budgetID;
+	}
+	async function getBudgets(ynabAPI) {
+		const budgetResponse = await ynabAPI.budgets.getBudgets();
+		return budgetResponse.data;
 	}
 	/**
 	 * Fetches all of the categories fom the user's YNAB account.
@@ -127,6 +138,28 @@
 							displaySymbol: currencySettings.display_symbol, groupSeparator: currencySettings.group_separator, dateFormat: currencyResponse.data.settings.date_format.format};
   		return currencyInfo;
 	}
+	async function initBudgets (budgetsFetched) {
+		let budgetsList = [];
+		let budgetID;
+
+		if(budgetsFetched.default_budget === null) {
+			budgetID = 'last-used';
+		} else {
+			budgetID = 'default';
+		}
+
+		for(let budget of budgetsFetched.budgets) {
+			let budgetList = {ID: budget.id, Name: budget.name};
+			budgetsList.push(budgetList);
+		}
+
+		BudgetsListStore.update(currentList => {
+			return currentList.length === 0 ? [...budgetsList] : [currentList, ...budgetsList];
+		})
+		
+		return budgetID;
+	}
+		
 	/**
 	 * Initiates the categories list by taking the categories and store the needed information in a section and list store.
 	 * @param {Array of Objects} categoriesFetched Categories fetched Objects
@@ -241,7 +274,6 @@
 	 * @returns nothing or new transaction object
 	 */
 	function storeTransaction(transaction) {
-		
   		const transactionDate = newNormalizedDate(transaction.date);
   		//If transaction isn't on selected year, is a transfer transaction, not a selected account, or not a selected category then it skips storing it.
   		if (transactionSkipCheck(transaction, transactionDate)) {
