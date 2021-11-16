@@ -12,27 +12,30 @@
     var showPopup = false;
 
     let formattedStartDate, formattedEndDate;
-    let incomeColor, expenseColor, netColor;
-
-    setOptionColors();
+    let incomeSelectedColor, expenseSelectedColor, netSelectedColor, incomeCurrentColor, expenseCurrentColor, netCurrentColor;
 
     $: $NavOptionsStore.startDate, formattedStartDate = formatSelectedDate($NavOptionsStore.startDate);
     $: $NavOptionsStore.endDate, formattedEndDate = formatSelectedDate($NavOptionsStore.endDate);
+    $: $NavOptionsStore.selectedOption, setOptionColors();
 
     function setOptionColors () {
+        console.log('running')
         if ($NavOptionsStore.selectedOption === 'income') {
-            incomeColor = `hsl(${$HeatmapSettingsStore.Colors.incomeHue}, ${$HeatmapSettingsStore.Colors.incomeSat}%, ${$HeatmapSettingsStore.Colors.incomeLum}%)`;
-            expenseColor = 'rgba(187, 167, 167, 0.842)';
-            netColor = 'rgba(187, 167, 167, 0.842)';
+            incomeSelectedColor = `hsl(${$HeatmapSettingsStore.Colors.incomeHue}, ${$HeatmapSettingsStore.Colors.incomeSat}%, ${$HeatmapSettingsStore.Colors.incomeLum}%)`;
+            expenseSelectedColor = 'rgba(187, 167, 167, 0.842)';
+            netSelectedColor = 'rgba(187, 167, 167, 0.842)';
         } else if ($NavOptionsStore.selectedOption === 'expense') {
-            incomeColor = 'rgba(187, 167, 167, 0.842)';
-            expenseColor = `hsl(${$HeatmapSettingsStore.Colors.expenseHue}, ${$HeatmapSettingsStore.Colors.expenseSat}%, ${$HeatmapSettingsStore.Colors.expenseLum}%)`;
-            netColor = 'rgba(187, 167, 167, 0.842)';
+            incomeSelectedColor = 'rgba(187, 167, 167, 0.842)';
+            expenseSelectedColor = `hsl(${$HeatmapSettingsStore.Colors.expenseHue}, ${$HeatmapSettingsStore.Colors.expenseSat}%, ${$HeatmapSettingsStore.Colors.expenseLum}%)`;
+            netSelectedColor = 'rgba(187, 167, 167, 0.842)';
         } else {
-            incomeColor = 'rgba(187, 167, 167, 0.842)';
-            expenseColor = 'rgba(187, 167, 167, 0.842)';
-            netColor = `hsl(${$HeatmapSettingsStore.Colors.expenseHue}, ${$HeatmapSettingsStore.Colors.expenseSat}%, ${$HeatmapSettingsStore.Colors.expenseLum}%)`;
+            incomeSelectedColor = 'rgba(187, 167, 167, 0.842)';
+            expenseSelectedColor = 'rgba(187, 167, 167, 0.842)';
+            netSelectedColor = `hsl(${$HeatmapSettingsStore.Colors.expenseHue}, ${$HeatmapSettingsStore.Colors.expenseSat}%, ${$HeatmapSettingsStore.Colors.expenseLum}%)`;
         }
+        incomeCurrentColor = `hsl(${$HeatmapSettingsStore.Colors.incomeHue}, ${$HeatmapSettingsStore.Colors.incomeSat}%, ${$HeatmapSettingsStore.Colors.incomeLum}%)`;
+        expenseCurrentColor = `hsl(${$HeatmapSettingsStore.Colors.expenseHue}, ${$HeatmapSettingsStore.Colors.expenseSat}%, ${$HeatmapSettingsStore.Colors.expenseLum}%)`;
+        netCurrentColor = `hsl(${$HeatmapSettingsStore.Colors.expenseHue}, ${$HeatmapSettingsStore.Colors.expenseSat}%, ${$HeatmapSettingsStore.Colors.expenseLum}%)`;
     }
 
     /**
@@ -89,9 +92,9 @@
 </script>
 <div class="cal-navigation">
     <div class="cal-options">
-        <button on:click={() => changeSelectedOption('income')}><div class="desc-popup"><div class="desc-text income">Income</div><span class="material-icons-outlined md-36 income-icon" style="--incomeColor: {incomeColor}" class:selected={$NavOptionsStore.selectedOption === 'income'} class:nonselected-icon={$NavOptionsStore.selectedOption != 'income'}>savings</span></div></button>
-        <button on:click={() => changeSelectedOption('expense')}><div class="desc-popup"><div class="desc-text expense">Expense</div><span class="material-icons-outlined md-36 expense-icon" style="--expensecolor: {expenseColor}"class:selected={$NavOptionsStore.selectedOption === 'expense'} class:nonselected-icon={$NavOptionsStore.selectedOption != 'expense'}>paid</span></div></button>
-        <button on:click={() => changeSelectedOption('net')}><div class="desc-popup"><div class="desc-text net">Net</div><span class="material-icons-outlined md-36 net-icon" style="--netcolor: {netColor}" class:selected={$NavOptionsStore.selectedOption === 'net'} class:nonselected-icon={$NavOptionsStore.selectedOption != 'net'}>request_quote</span></div></button>
+        <button style="--incomeSelectedColor: {incomeSelectedColor}; --incomeCurrentColor: {incomeCurrentColor}" on:click={() => changeSelectedOption('income')}><div class="desc-popup"><span class="material-icons-outlined md-36 income-icon icon" class:selected={$NavOptionsStore.selectedOption === 'income'} class:nonselected-icon={$NavOptionsStore.selectedOption != 'income'}>savings</span><div class="desc-text income">Income</div></div></button>
+        <button style="--expenseSelectedColor: {expenseSelectedColor}; --expenseCurrentColor: {expenseCurrentColor}" on:click={() => changeSelectedOption('expense')}><div class="desc-popup"><span class="material-icons-outlined md-36 expense-icon icon" class:selected={$NavOptionsStore.selectedOption === 'expense'} class:nonselected-icon={$NavOptionsStore.selectedOption != 'expense'}>paid</span><div class="desc-text expense">Expense</div></div></button>
+        <button style="--netSelectedColor: {netSelectedColor}; --netCurrentColor: {netCurrentColor}" on:click={() => changeSelectedOption('net')}><div class="desc-popup"><span class="material-icons-outlined md-36 net-icon icon" class:selected={$NavOptionsStore.selectedOption === 'net'} class:nonselected-icon={$NavOptionsStore.selectedOption != 'net'}>request_quote</span><div class="desc-text net">Net</div></div></button>
     </div>
     <div class="cal-date" on:click={() => togglePopup()}>
         <div class="cal-date-container">
@@ -99,9 +102,9 @@
         </div>
     </div>
     <div class="cal-styles">
-        <button on:click={() => toggleSelectedStyle('regular')}><div class="desc-popup"><div class="desc-text seq">Sequential</div><span class="material-icons-outlined md-36 style-regular-icon" class:selected={$NavOptionsStore.selectedStyle === 'regular'} class:nonselected-icon={$NavOptionsStore.selectedStyle != 'regular'}>local_fire_department</span></div></button>
-        <button on:click={() => toggleSelectedStyle('group')}><div class="desc-popup"><div class="desc-text group">Grouping</div><span class="material-icons-outlined md-36 style-group-icon" class:selected={$NavOptionsStore.selectedStyle === 'group'} class:nonselected-icon={$NavOptionsStore.selectedStyle != 'group'}>whatshot</span></div></button>
-        <button on:click={() => toggleSelectedStyle('simple')}><div class="desc-popup"><div class="desc-text simple">Simple</div><span class="material-icons-outlined md-36 style-simple-icon" class:selected={$NavOptionsStore.selectedStyle === 'simple'} class:nonselected-icon={$NavOptionsStore.selectedStyle != 'simple'}>fireplace</span></div></button>
+        <button on:click={() => toggleSelectedStyle('regular')}><div class="desc-popup"><span class="material-icons-outlined md-36 style-regular-icon icon" class:selected={$NavOptionsStore.selectedStyle === 'regular'} class:nonselected-icon={$NavOptionsStore.selectedStyle != 'regular'}>local_fire_department</span><div class="desc-text seq">Sequential</div></div></button>
+        <button on:click={() => toggleSelectedStyle('group')}><div class="desc-popup"><span class="material-icons-outlined md-36 style-group-icon icon" class:selected={$NavOptionsStore.selectedStyle === 'group'} class:nonselected-icon={$NavOptionsStore.selectedStyle != 'group'}>whatshot</span><div class="desc-text group">Grouping</div></div></button>
+        <button on:click={() => toggleSelectedStyle('simple')}><div class="desc-popup"><span class="material-icons-outlined md-36 style-simple-icon icon" class:selected={$NavOptionsStore.selectedStyle === 'simple'} class:nonselected-icon={$NavOptionsStore.selectedStyle != 'simple'}>fireplace</span><div class="desc-text simple">Simple</div></div></button>
     </div>
     {#if showPopup}
         <div class="backdrop" on:click|self={() => togglePopup()}>
@@ -113,7 +116,7 @@
 <style lang="scss">
     .cal-navigation {
         display: block;
-
+    
         height: 50px;
     }
     .cal-options {
@@ -125,22 +128,38 @@
             margin-right: 20px;
             background: none;
             border: none;
-
-            cursor: pointer;
         }
     }
-    .income-icon.selected, .income-icon:hover {
-        color: var(--incomeColor);
+    .icon {
+        cursor: pointer;
+    }
+    .income-icon.selected {
+        color: var(--incomeSelectedColor);
 
         transition-duration: 350ms;
     }
-    .expense-icon.selected, .expense-icon:hover {
-        color: var(--expenseColor);
+    .income-icon:hover {
+        color: var(--incomeCurrentColor);
 
         transition-duration: 350ms;
     }
-    .net-icon.selected, .net-icon:hover {
-      
+    .expense-icon.selected {
+        color: var(--expenseSelectedColor);
+
+        transition-duration: 350ms;
+    }
+    .expense-icon:hover {
+        color: var(--expenseCurrentColor);
+
+        transition-duration: 350ms;
+    }
+    .net-icon.selected {
+        color: var(--netSelectedColor);
+
+        transition-duration: 350ms;
+    }
+    .net-icon:hover {
+        color: var(--netCurrentColor);
 
         transition-duration: 350ms;
     }
@@ -168,7 +187,7 @@
         align-items: center;
         flex-direction: row;
     }
-    .cal-date p{
+    .cal-date p {
         margin: 0 5px;
 
         font-size: 1.5em;
@@ -182,8 +201,6 @@
             margin-left: 20px;
             background: none;
             border: none;
-
-            cursor: pointer;
         }
     }
     .style-regular-icon.selected, .style-regular-icon:hover {
@@ -220,13 +237,13 @@
         transition-duration: 350ms;
     }
     .desc-popup .desc-text.income {
-        background-color: #00a567;
+        background-color: var(--incomeCurrentColor);
     }
     .desc-popup .desc-text.expense {
-        background-color: #de5d83;
+        background-color: var(--expenseCurrentColor);
     }
     .desc-popup .desc-text.net {
-        background-color: #6f8175;
+        background-color: var(--netCurrentColor);
     }
     .desc-popup .desc-text.seq {
         background-color: #B31313;
@@ -249,13 +266,13 @@
         border-style: solid;
     }
     .desc-popup .desc-text.income:after {
-        border-color: #00a567 transparent transparent transparent;
+        border-color: var(--incomeCurrentColor) transparent transparent transparent;
     }
     .desc-popup .desc-text.expense:after {
-        border-color: #de5d83 transparent transparent transparent;
+        border-color: var(--expenseCurrentColor) transparent transparent transparent;
     }
     .desc-popup .desc-text.net:after {
-        border-color: #6f8175 transparent transparent transparent;
+        border-color: var(--netCurrentColor) transparent transparent transparent;
     }
     .desc-popup .desc-text.seq:after {
         border-color: #B31313 transparent transparent transparent;
@@ -266,7 +283,7 @@
     .desc-popup .desc-text.simple:after {
         border-color: #FEDE17 transparent transparent transparent;
     }
-    .desc-popup:hover .desc-text {
+    .icon:hover + .desc-text{
         opacity: 1;
         transition-duration: 350ms;
     }

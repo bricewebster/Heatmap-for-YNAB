@@ -12,7 +12,7 @@
 	import CurrentTransactionsStore from './stores/currentTransactionsStore';
 	import CurrencyInfoStore from './stores/currencyInfoStore';
 	
-	let transactionsLoaded = false;
+	let transactionsLoaded = true;
 	let activeTab = 'Yearly';
 
 	let ynabAPIReady = false;
@@ -22,7 +22,7 @@
 	onMount(() => {
         mounted = true;
         if (ynabAPIReady) {
-        	main();
+        //	main();
         }
     });
 
@@ -32,7 +32,7 @@
 	function ynabAPILoaded() {
         ynabAPIReady = true;
         if (mounted) {
-        	main();
+        //	main();
         }
     }
 	
