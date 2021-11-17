@@ -1,5 +1,6 @@
 <script>
     import CalendarNavigation from "./CalendarNavigation.svelte";
+    import HeatmapValue from "./HeatmapValue.svelte";
     import TransListPopup from '../components/TransListPopup.svelte';
     import CurrentTransactionsStore from '../stores/currentTransactionsStore';
     import CurrencyInfoStore from '../stores/currencyInfoStore';
@@ -181,6 +182,7 @@
                     {/each}
                 {/each}
             </table>
+            <HeatmapValue />
         </div>
         {#if showPopup}
             <div class="backdrop" on:click|self={() => togglePopup()} transition:fade>
@@ -194,7 +196,7 @@
         display: block;
         
         margin: 50px auto 0 auto;
-        width: 880px;
+        width: 1000px;
     }
     .cal-year {
         display: inline-block;
@@ -205,7 +207,7 @@
         margin: 15px 0 0 5px;
     }
     .cal-year.cal-year-days {
-        width: 840px;
+        width: 860px;
         height: auto;
     }
     .cal-year tr {
