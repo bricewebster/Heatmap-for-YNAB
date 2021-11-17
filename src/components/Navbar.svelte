@@ -34,7 +34,7 @@
   <Filters {filters} on:filterChange/>
   {#if showPopup}
         <div class="backdrop" on:click|self={() => togglePopup()}>
-            <SettingsPopup {togglePopup} on:settingsChange/>
+            <SettingsPopup {togglePopup} on:colorChange on:budgetChange/>
         </div>
   {/if}  
 </div>

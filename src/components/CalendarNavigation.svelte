@@ -3,6 +3,7 @@
     import NavOptionsStore from "../stores/navOptionsStore";
     import DateSelectionPopup from '../components/DateSelectionPopup.svelte';
     import HeatmapSettingsStore from '../stores/heatmapSettingsStore';
+    import CurrentTransactionsStore from '../stores/currentTransactionsStore';
 
     const dispatch = createEventDispatcher();
 

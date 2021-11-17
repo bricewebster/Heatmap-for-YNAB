@@ -11,7 +11,8 @@ export const heatmapSettingsStore = writable({
                 incomeLowHue: 76, incomeLowSat: 52, incomeLowLum: 63, incomeBottomHue: 52, incomeBottomSat: 84, incomeBottomLum: 76,
                 expenseTopHue: 343, expenseTopSat: 63, expenseTopLum: 54, expenseHighHue: 4, expenseHighSat: 66, expenseHighLum: 60,
                 expenseLowHue: 22, expenseLowSat: 75, expenseLowLum: 57, expenseBottomHue: 34, expenseBottomSat: 81, expenseBottomLum: 54},
-    Budgets: []
+    Budgets: [],
+    selectedBudget: {Id: '', Name: ''} 
 });
 
 export default heatmapSettingsStore;

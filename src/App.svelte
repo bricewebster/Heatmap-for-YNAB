@@ -3,7 +3,7 @@
 	import Content from "./components/Content.svelte";
 	import Loading from "./components/Loading.svelte";
 	import { onMount } from 'svelte';
-	import BudgetsListStore from './stores/budgetsListStore';
+	import HeatmapSettingsStore from './stores/heatmapSettingsStore';
 	import navOptionsStore from './stores/navOptionsStore';
 	import CategorySectionStore from './stores/categorySectionStore';
 	import CategoryListStore from './stores/categoryListStore';
@@ -13,11 +13,14 @@
 	import CurrentTransactionsStore from './stores/currentTransactionsStore';
 	import CurrencyInfoStore from './stores/currencyInfoStore';
 	
-	let transactionsLoaded = false;
 	let activeTab = 'Yearly';
 
 	let ynabAPIReady = false;
     let mounted = false;
+	let transactionsLoaded = false;
+	let ynabAPI;
+
+	let mainBudgetID;
 
 	//Once the component mounts, it will run the main function if the YNAB API js file has downloaded.
 	onMount(() => {
@@ -42,10 +45,10 @@
 	 */
 	async function main() {
 		const accessToken = await getAccessToken();
-		// const mainBudgetID = await getBudgetID();
+		mainBudgetID = await getBudgetID();
 
 		var ynab = window.ynab;
-		const ynabAPI = await new ynab.API(accessToken);
+		ynabAPI = await new ynab.API(accessToken);
 		const budgetsFetched = await getBudgets(ynabAPI);
 		const budgetID = await initBudgets(budgetsFetched);
 
@@ -63,6 +66,11 @@
 		$CurrencyInfoStore = currencyInfo;
 		const transactionsFetch = await getTransactions(ynabAPI, budgetID);
 		$AllTransactionsStore = transactionsFetch;
+	}
+	async function budgetUpdate () {
+		transactionsLoaded = false;
+		await getBudgetInfo(ynabAPI, $HeatmapSettingsStore.selectedBudget.Id);
+		storeTransactionsMain();
 	}
 	/**
  	 * Grabs personal access token for testing. (Will replace in the future)
@@ -90,8 +98,8 @@
 	 * @param {String} mainBudgetID User's main budget ID(Might be replaced later)
 	 * @returns {Array of Objects} Group Objects 
 	 */
-	async function getCategories(ynabAPI, mainBudgetID) {
-  		const categoryResponse = await ynabAPI.categories.getCategories(mainBudgetID);
+	async function getCategories(ynabAPI, budgetID) {
+  		const categoryResponse = await ynabAPI.categories.getCategories(budgetID);
   		return categoryResponse.data.category_groups;
 	}
 	/**
@@ -100,8 +108,8 @@
 	 * @param {String} mainBudgetID User's main budget ID(Might be replaced later)
 	 * @returns {Array of Objects} Account Objects 
 	 */
-	async function getAccounts(ynabAPI, mainBudgetID) {
-  		const accountResponse = await ynabAPI.accounts.getAccounts(mainBudgetID);
+	async function getAccounts(ynabAPI, budgetID) {
+  		const accountResponse = await ynabAPI.accounts.getAccounts(budgetID);
   		return accountResponse.data.accounts;
 	}
 	/**
@@ -110,8 +118,8 @@
 	 * @param {String} mainBudgetID User's main budget ID(Might be replaced later)
 	 * @returns {Array of Objects} Payee Objects
 	 */
-	async function getPayees(ynabAPI, mainBudgetID) {
-		const payeeResponse = await ynabAPI.payees.getPayees(mainBudgetID);
+	async function getPayees(ynabAPI, budgetID) {
+		const payeeResponse = await ynabAPI.payees.getPayees(budgetID);
 		return payeeResponse.data.payees;
 	}
 	/**
@@ -120,8 +128,8 @@
 	 * @param {String} mainBudgetID User's main budget ID(Might be replaced later)
 	 * @returns {Array of Objects} Transaction Objects
 	 */
-	async function getTransactions(ynabAPI, mainBudgetID) {
-		const transactionResponse = await ynabAPI.transactions.getTransactions(mainBudgetID);
+	async function getTransactions(ynabAPI, budgetID) {
+		const transactionResponse = await ynabAPI.transactions.getTransactions(budgetID);
 		return transactionResponse.data.transactions;
 	}
 	/**
@@ -130,8 +138,8 @@
 	 * @param {String} mainBudgetID User's main budget ID(Might be replaced later)
 	 * @returns {Object} User's Setting Object
 	 */
-	async function getCurrencyInfo(ynabAPI, mainBudgetID) {
-  		const currencyResponse = await ynabAPI.budgets.getBudgetSettingsById(mainBudgetID);
+	async function getCurrencyInfo(ynabAPI, budgetID) {
+  		const currencyResponse = await ynabAPI.budgets.getBudgetSettingsById(budgetID);
 		const currencySettings = currencyResponse.data.settings.currency_format;
 		let currencyInfo = {Decimals: currencySettings.decimal_digits, decimalSeparator: currencySettings.decimal_separator, 
 				            symbolFirst: currencySettings.symbol_first, Symbol: currencySettings.currency_symbol, 
@@ -139,7 +147,6 @@
   		return currencyInfo;
 	}
 	async function initBudgets (budgetsFetched) {
-		let budgetsList = [];
 		let budgetID;
 
 		if(budgetsFetched.default_budget === null) {
@@ -148,14 +155,12 @@
 			budgetID = 'default';
 		}
 
-		for(let budget of budgetsFetched.budgets) {
-			let budgetList = {ID: budget.id, Name: budget.name};
-			budgetsList.push(budgetList);
-		}
+		$HeatmapSettingsStore.selectedBudget.Id = mainBudgetID;
 
-		BudgetsListStore.update(currentList => {
-			return currentList.length === 0 ? [...budgetsList] : [currentList, ...budgetsList];
-		})
+		for(let budget of budgetsFetched.budgets) {
+			let budgetList = {Id: budget.id, Name: budget.name};
+			$HeatmapSettingsStore.Budgets.push(budgetList);
+		}
 		
 		return budgetID;
 	}
@@ -432,7 +437,7 @@
 
 <main>
 	{#if transactionsLoaded}
-		<Navbar bind:activeTab = {activeTab} on:filterChange={storeTransactionsMain} on:settingsChange={storeTransactionsMain}/>
+		<Navbar bind:activeTab = {activeTab} on:filterChange={storeTransactionsMain} on:settingsChange={storeTransactionsMain} on:budgetChange={budgetUpdate}/>
 		<Content {activeTab} {formatAmount} {formatDate} {dayToWeek} on:dateChange={storeTransactionsMain}/>
 	{:else}
 		<Loading />	
