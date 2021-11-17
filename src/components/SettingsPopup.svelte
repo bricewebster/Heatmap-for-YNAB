@@ -20,9 +20,12 @@
     let colorSelectedFlag = 0;
 
     let selectedBudget = $HeatmapSettingsStore.selectedBudget.Id;
-    console.log( $HeatmapSettingsStore.selectedBudget.Id)
     let budgetSelectedFlag = 0;
 
+    /**
+     * Save any changes that are made either to the colors or budget selected.
+     * @param {String} saveOption used for the colors to determine if its setting the defaults or not
+     */
     function saveChanges (saveOption) {
         if (colorSelectedFlag) {
             if (saveOption === 'defaults') {
@@ -107,7 +110,13 @@
         }
         togglePopup();
     }
-
+    /**
+     * Convert supplied hsl values to hex code.
+     * @param h hue of hsl
+     * @param s saturation of hsl
+     * @param l lightness of hsl
+     * @return {String} hex code value of supplied hsl
+     */
     function hslToHex(h, s, l) {
         l /= 100;
         const a = s * Math.min(l, 1 - l) / 100;
@@ -118,7 +127,11 @@
         };
         return `#${f(0)}${f(8)}${f(4)}`;
     }
-
+    /**
+     * Convert supplied hex value to hsl values.
+     * @param {String} hex supplied hex value to convert
+     * @return {Object} object containing h,s,l values of converted hex value 
+     */
     function hexToHSL(hex) {
         var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 
@@ -152,7 +165,6 @@
 
     return {h, s, l};
 }
-
 </script>
 <div class="popup">
     <p class="title">Heatmap Settings</p>
@@ -205,7 +217,7 @@
 <style lang="scss">
     .popup {
         position: absolute;
-        left: 592px;
+        right: 592px;
 
         margin-top: 75px;
 

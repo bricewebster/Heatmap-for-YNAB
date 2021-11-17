@@ -3,7 +3,6 @@
     import NavOptionsStore from "../stores/navOptionsStore";
     import DateSelectionPopup from '../components/DateSelectionPopup.svelte';
     import HeatmapSettingsStore from '../stores/heatmapSettingsStore';
-    import CurrentTransactionsStore from '../stores/currentTransactionsStore';
 
     const dispatch = createEventDispatcher();
 
@@ -20,6 +19,9 @@
     $: $NavOptionsStore.selectedOption, setOptionColors();
     $: $HeatmapSettingsStore.Colors, setOptionColors();
 
+    /**
+     * Set the option colors used with the option icons.
+     */
     function setOptionColors () {
         if ($NavOptionsStore.selectedOption === 'income') {
             incomeSelectedColor = `hsl(${$HeatmapSettingsStore.Colors.incomeHue}, ${$HeatmapSettingsStore.Colors.incomeSat}%, ${$HeatmapSettingsStore.Colors.incomeLum}%)`;

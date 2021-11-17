@@ -49,27 +49,34 @@
 
 		var ynab = window.ynab;
 		ynabAPI = await new ynab.API(accessToken);
-		const budgetsFetched = await getBudgets(ynabAPI);
+		const budgetsFetched = await getBudgets();
 		const budgetID = await initBudgets(budgetsFetched);
 
-		await getBudgetInfo(ynabAPI, budgetID);
+		await getBudgetInfo(budgetID);
 		storeTransactionsMain(); 
 	}
-	async function getBudgetInfo (ynabAPI, budgetID) {
-		const categoriesFetched = await getCategories(ynabAPI, budgetID);
+	/**
+	 * Fetches all of the budget info (Categories, Accounts, Payees, Currency Info, & Transactions).
+	 * @param {String} budgetID ID of the budget to fetch info from
+	 */
+	async function getBudgetInfo (budgetID) {
+		const categoriesFetched = await getCategories(budgetID);
 		initCategories(categoriesFetched);
-		const accountsFetched = await getAccounts(ynabAPI, budgetID);
+		const accountsFetched = await getAccounts(budgetID);
 		initAccounts(accountsFetched);
-		const payeesFetched = await getPayees(ynabAPI, budgetID);
+		const payeesFetched = await getPayees(budgetID);
 		initPayees(payeesFetched);
-		const currencyInfo = await getCurrencyInfo(ynabAPI, budgetID);
+		const currencyInfo = await getCurrencyInfo(budgetID);
 		$CurrencyInfoStore = currencyInfo;
-		const transactionsFetch = await getTransactions(ynabAPI, budgetID);
+		const transactionsFetch = await getTransactions(budgetID);
 		$AllTransactionsStore = transactionsFetch;
 	}
+	/**
+	 * Updates the budget info when a new budget is selected from the budget settings window.
+	 */
 	async function budgetUpdate () {
 		transactionsLoaded = false;
-		await getBudgetInfo(ynabAPI, $HeatmapSettingsStore.selectedBudget.Id);
+		await getBudgetInfo($HeatmapSettingsStore.selectedBudget.Id);
 		storeTransactionsMain();
 	}
 	/**
@@ -88,57 +95,56 @@
 		const budgetID = await response.text();
 		return budgetID;
 	}
-	async function getBudgets(ynabAPI) {
+	/**
+	 * Fetches all of the budgets from the user's YNAB account.
+	 * @return {Array of Objects} Budget Objects
+	 */
+	async function getBudgets() {
 		const budgetResponse = await ynabAPI.budgets.getBudgets();
 		return budgetResponse.data;
 	}
 	/**
 	 * Fetches all of the categories fom the user's YNAB account.
-	 * @param {Object} ynabAPI ynabAPI object used to get info from YNAB
 	 * @param {String} mainBudgetID User's main budget ID(Might be replaced later)
-	 * @returns {Array of Objects} Group Objects 
+	 * @returns {Array of Objects} Category Objects 
 	 */
-	async function getCategories(ynabAPI, budgetID) {
+	async function getCategories(budgetID) {
   		const categoryResponse = await ynabAPI.categories.getCategories(budgetID);
   		return categoryResponse.data.category_groups;
 	}
 	/**
 	 * Fetches all of the accounts fom the user's YNAB account
-	 * @param {Object} ynabAPI ynabAPI object used to get info from YNAB
 	 * @param {String} mainBudgetID User's main budget ID(Might be replaced later)
 	 * @returns {Array of Objects} Account Objects 
 	 */
-	async function getAccounts(ynabAPI, budgetID) {
+	async function getAccounts(budgetID) {
   		const accountResponse = await ynabAPI.accounts.getAccounts(budgetID);
   		return accountResponse.data.accounts;
 	}
 	/**
 	 * Fetches all of the payees fom the user's YNAB account.
-	 * @param {Object} ynabAPI ynabAPI object used to get info from YNAB
 	 * @param {String} mainBudgetID User's main budget ID(Might be replaced later)
 	 * @returns {Array of Objects} Payee Objects
 	 */
-	async function getPayees(ynabAPI, budgetID) {
+	async function getPayees(budgetID) {
 		const payeeResponse = await ynabAPI.payees.getPayees(budgetID);
 		return payeeResponse.data.payees;
 	}
 	/**
 	 * Fetches all of the transactions from the user's YNAB account.
-	 * @param {Object} ynabAPI ynabAPI object used to get info from YNAB
 	 * @param {String} mainBudgetID User's main budget ID(Might be replaced later)
 	 * @returns {Array of Objects} Transaction Objects
 	 */
-	async function getTransactions(ynabAPI, budgetID) {
+	async function getTransactions(budgetID) {
 		const transactionResponse = await ynabAPI.transactions.getTransactions(budgetID);
 		return transactionResponse.data.transactions;
 	}
 	/**
 	 * Fetches the user settings from the user's YNAB account.
-	 * @param {Object} ynabAPI ynabAPI object used to get info from YNAB
 	 * @param {String} mainBudgetID User's main budget ID(Might be replaced later)
 	 * @returns {Object} User's Setting Object
 	 */
-	async function getCurrencyInfo(ynabAPI, budgetID) {
+	async function getCurrencyInfo(budgetID) {
   		const currencyResponse = await ynabAPI.budgets.getBudgetSettingsById(budgetID);
 		const currencySettings = currencyResponse.data.settings.currency_format;
 		let currencyInfo = {Decimals: currencySettings.decimal_digits, decimalSeparator: currencySettings.decimal_separator, 
@@ -146,6 +152,11 @@
 							displaySymbol: currencySettings.display_symbol, groupSeparator: currencySettings.group_separator, dateFormat: currencyResponse.data.settings.date_format.format};
   		return currencyInfo;
 	}
+	/**
+	 * Initializes the budgets list and selected budget.
+	 * @param {Array Objects} budgetsFetched budgets Objects
+	 * @return {String} ID of budget to be used for first fetch
+	 */
 	async function initBudgets (budgetsFetched) {
 		let budgetID;
 
@@ -154,7 +165,6 @@
 		} else {
 			budgetID = 'default';
 		}
-
 		$HeatmapSettingsStore.selectedBudget.Id = mainBudgetID;
 
 		for(let budget of budgetsFetched.budgets) {
@@ -164,7 +174,6 @@
 		
 		return budgetID;
 	}
-		
 	/**
 	 * Initiates the categories list by taking the categories and store the needed information in a section and list store.
 	 * @param {Array of Objects} categoriesFetched Categories fetched Objects
@@ -276,7 +285,7 @@
 	/**
 	 * Takes a transaction, makes sure it meets the criteria and returns nothing or a new transaction object with needed information.
 	 * @param {Object} transaction Transaction Object
-	 * @returns nothing or new transaction object
+	 * @return nothing or new transaction object
 	 */
 	function storeTransaction(transaction) {
   		const transactionDate = newNormalizedDate(transaction.date);

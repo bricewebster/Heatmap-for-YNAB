@@ -72,7 +72,6 @@
      function togglePopup () {
         showPopup = !showPopup;
     }
-
 </script>
 <div class="content">
     <CalendarNavigation {changeSelectedOption} {refreshCalendar} on:dateChange/>

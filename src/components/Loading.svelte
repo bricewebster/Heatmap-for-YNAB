@@ -3,7 +3,7 @@
 </script>
 
 <div class="content">
-    <!-- <img src="images/loading.gif" alt="loading"> -->
+    <img src="images/loading.gif" alt="loading">
     <p>Loading Heatmap</p>
 </div>
 

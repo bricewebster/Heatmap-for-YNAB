@@ -49,7 +49,6 @@
         }
         summaryList = list;
     }
-
     /**
      * Initialize the transaction list which is an array of arrays for each day of the year.
      */
@@ -71,7 +70,6 @@
     function daysInMonth (year, month) {
         return new Date(year, month, 0).getDate();
     }
-
     /**
      * Converts supplied month, year and day into a date object.
      * @param {Int} year selected year
@@ -82,7 +80,6 @@
     function dayDate (year, month, day) {
         return new Date(year, month, day);
     }
-   
     /**
      * Called when there is a change to where the calendar needs refreshed such as option, style or date change.
      */
@@ -93,7 +90,6 @@
         summaryList = populateSummaryList(summaryList, transactionList);
         summaryList = changeSelectedStyle(summaryList);
     }
-
     /**
      * When a day is clicked on the calendar, set all the information to be passed to the trans list popup and then call it.
      * @param {Date} date date clicked

@@ -71,7 +71,7 @@
      * @param {String} month supplied month
      * @param {String} year selected year
      * @param {String} day supplied day
-     * @returns {Date} Date object based on parameters
+     * @return {Date} Date object based on parameters
      */
     function convertToDate (month, year, day) {
         return new Date(year, month, day);
@@ -79,7 +79,7 @@
     /**
      * Determine the class to be used based on the supplied amount and selected option.
      * @param {Int} amount supplied amount
-     * @returns {String} class to be used
+     * @return {String} class to be used
      */
     function getDayClass (amount) {
         let dayClass;
@@ -165,6 +165,12 @@
         }
         return summaryList;
     }
+    /**
+     * Creates a list of positive and negative days.
+     * @param {String} sign list to build based on sign
+     * @param {Array of Objects} summaryList list to break down
+     * @return {Array of Objects} list based on supplied sign
+     */
     function getSignList (sign, summaryList) {
         let signList = [];
         if (sign === 'positive') {
@@ -182,13 +188,14 @@
         }
         return signList;
     }
+    /**
+     * Takes positive & negative list and combines them into summarylist.
+     * @param {Array of Objects} posList list of positive days
+     * @param {Array of Objects} negList list of negative days
+     * @param {Array of Objects} summaryList list to merge sign lists into
+     * @return {Array of Objects} summarylist with pos and neg lists combined
+     */
     function combineSignLists (posList, negList, summaryList) {
-        let posLength = posList.length;
-        let negLength = negList.length;
-        let length = posLength + negLength;
-        let posIndex = 0;
-        let negIndex = 0;
-        let combinedList = [];
 
         for (let list of posList) {
             if (activeTab === 'Yearly') {
