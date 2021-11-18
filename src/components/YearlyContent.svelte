@@ -196,7 +196,7 @@
         display: block;
         
         margin: 50px auto 0 auto;
-        width: 1000px;
+        width: 1020px;
     }
     .cal-year {
         display: inline-block;

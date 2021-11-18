@@ -17,7 +17,7 @@
 
 	let ynabAPIReady = false;
     let mounted = false;
-	let transactionsLoaded = false;
+	let transactionsLoaded = true;
 	let ynabAPI;
 
 	let mainBudgetID;
@@ -26,7 +26,7 @@
 	onMount(() => {
         mounted = true;
         if (ynabAPIReady) {
-        	main();
+        //	main();
         }
     });
 
@@ -36,7 +36,7 @@
 	function ynabAPILoaded() {
         ynabAPIReady = true;
         if (mounted) {
-        	main();
+        	//main();
         }
     }
 	

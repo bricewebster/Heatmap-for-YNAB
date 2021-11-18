@@ -120,6 +120,7 @@
     .cal-navigation {
         display: block;
     
+        width: 885px;
         height: 50px;
     }
     .cal-options {

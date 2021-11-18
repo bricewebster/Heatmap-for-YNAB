@@ -310,7 +310,7 @@
                 }
             } else {
                 if ($NavOptionsStore.selectedOption === 'income' || $NavOptionsStore.selectedOption === 'net' & day.Amount >= 0) {
-                    background = `background: hsl(${$HeatmapSettingsStore.Colors.incomeHue}, ${$HeatmapSettingsStore.Colors.incomeSat}%, ${$HeatmapSettingsStore.Colors.incomeLum}%)`;
+                    background = `background: hsl(${$HeatmapSettingsStore.Colors.incomeHue}, 100%, ${$HeatmapSettingsStore.Colors.incomeLum}%)`;
                 } else{
                     background = `background: hsl(${$HeatmapSettingsStore.Colors.expenseHue}, ${$HeatmapSettingsStore.Colors.expenseSat}%, ${$HeatmapSettingsStore.Colors.expenseLum}%)`;
                 }

@@ -1,5 +1,6 @@
 <script>
     import CalendarNavigation from "./CalendarNavigation.svelte";
+    import HeatmapValue from "./HeatmapValue.svelte";
     import TransListPopup from '../components/TransListPopup.svelte';
     import CurrentTransactionsStore from '../stores/currentTransactionsStore';
     import NavOptionsStore from "../stores/navOptionsStore";
@@ -74,6 +75,7 @@
             {/if}
         {/each}
     </table>
+    <HeatmapValue />
     {#if showPopup}
         <div class="backdrop" on:click|self={() => togglePopup()}>
             <TransListPopup {selectedSquare} {selectedList} {selectedAmount} popupType = 'daily' {togglePopup}/>

@@ -1,5 +1,6 @@
 <script>
     import CalendarNavigation from "./CalendarNavigation.svelte";
+    import HeatmapValue from "./HeatmapValue.svelte";
     import TransListPopup from '../components/TransListPopup.svelte';
     import CurrentTransactionsStore from '../stores/currentTransactionsStore';
     import NavOptionsStore from "../stores/navOptionsStore";
@@ -67,28 +68,31 @@
 
 <div class="content">
     <CalendarNavigation {changeSelectedOption} {refreshCalendar} on:dateChange/>
-    <table class="cal-month">
-        {#each Array(2) as _, mainIndex}
-        <tr>
-            {#each summaryList as month, index}
-                {#if index < 6 & mainIndex === 0}
-                    {#if month.Amount != 0}
-                        <th class="{month.Class} populated" style="{month.Color}" on:click={() => dayClicked(month.Month, month.displayName, month.amountFormatted)}><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><p class="date">{month.displayName}</p><p class="amount">{month.amountFormatted}</p></div></div></div></th>
-                    {:else}
-                        <th class="{month.Class}"><p>{month.displayName}</p></th>
+    <div class="cal-container">
+        <table class="cal-month">
+            {#each Array(2) as _, mainIndex}
+            <tr>
+                {#each summaryList as month, index}
+                    {#if index < 6 & mainIndex === 0}
+                        {#if month.Amount != 0}
+                            <th class="{month.Class} populated" style="{month.Color}" on:click={() => dayClicked(month.Month, month.displayName, month.amountFormatted)}><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><p class="date">{month.displayName}</p><p class="amount">{month.amountFormatted}</p></div></div></div></th>
+                        {:else}
+                            <th class="{month.Class}"><p>{month.displayName}</p></th>
+                        {/if}
                     {/if}
-                {/if}
-                {#if index >= 6 & mainIndex === 1}
-                    {#if month.Amount != 0}
-                        <th class="{month.Class} populated" style="{month.Color}" on:click={() => dayClicked(month.Month, month.displayName, month.amountFormatted)}><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><p class="date">{month.displayName}</p><p class="amount">{month.amountFormatted}</p></div></div></div></th>
-                    {:else}
-                        <th class="{month.Class}"><p>{month.displayName}</p></th>
+                    {#if index >= 6 & mainIndex === 1}
+                        {#if month.Amount != 0}
+                            <th class="{month.Class} populated" style="{month.Color}" on:click={() => dayClicked(month.Month, month.displayName, month.amountFormatted)}><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><p class="date">{month.displayName}</p><p class="amount">{month.amountFormatted}</p></div></div></div></th>
+                        {:else}
+                            <th class="{month.Class}"><p>{month.displayName}</p></th>
+                        {/if}
                     {/if}
-                {/if}
+                {/each}
+            </tr>
             {/each}
-        </tr>
-        {/each}
-    </table>
+        </table>
+    <HeatmapValue />
+    </div>
     {#if showPopup}
         <div class="backdrop" on:click|self={() => togglePopup()}>
             <TransListPopup {selectedSquare} {selectedList} {selectedAmount} popupType = 'monthly' {togglePopup}/>
@@ -101,12 +105,15 @@
         display: block;
         
         margin: 50px auto 0 auto;
-        width: 880px;
+        width: 885px;
+    }
+    .cal-container {
+        margin: 15px auto 0 auto;
+        width: 760px;
     }
     .cal-month {
-        display: block;
+        display: inline-block;
 
-        margin: 15px auto 0 auto;
         width: 635px;
         height: auto;
 

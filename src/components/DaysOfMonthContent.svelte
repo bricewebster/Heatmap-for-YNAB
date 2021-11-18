@@ -1,5 +1,6 @@
 <script>
     import CalendarNavigation from "./CalendarNavigation.svelte";
+    import HeatmapValue from "./HeatmapValue.svelte";
     import TransListPopup from '../components/TransListPopup.svelte';
     import CurrentTransactionsStore from '../stores/currentTransactionsStore';
     import NavOptionsStore from "../stores/navOptionsStore";
@@ -75,49 +76,52 @@
 </script>
 <div class="content">
     <CalendarNavigation {changeSelectedOption} {refreshCalendar} on:dateChange/>
-    <table class="cal-month">
-        {#each Array(5) as _, mainIndex}
-        <tr>
-            {#each summaryList as day, index}
-                {#if index < 7 & mainIndex === 0}
-                    {#if day.Amount != 0}
-                        <th class="{day.Class} populated" style="{day.Color}" on:click={() => dayClicked(day.dayOfMonth, day.displayName, day.amountFormatted)}><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><p class="date">{day.displayName}</p><p class="amount">{day.amountFormatted}</p></div></div></div></th>
-                    {:else}
-                        <th class="{day.Class}"><p>{day.displayName}</p></th>
+    <div class="cal-container">
+        <table class="cal-month">
+            {#each Array(5) as _, mainIndex}
+            <tr>
+                {#each summaryList as day, index}
+                    {#if index < 7 & mainIndex === 0}
+                        {#if day.Amount != 0}
+                            <th class="{day.Class} populated" style="{day.Color}" on:click={() => dayClicked(day.dayOfMonth, day.displayName, day.amountFormatted)}><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><p class="date">{day.displayName}</p><p class="amount">{day.amountFormatted}</p></div></div></div></th>
+                        {:else}
+                            <th class="{day.Class}"><p>{day.displayName}</p></th>
+                        {/if}
                     {/if}
-                {/if}
-                {#if index >= 7 & index <= 13 & mainIndex === 1}
-                    {#if day.Amount != 0}
-                        <th class="{day.Class} populated" style="{day.Color}" on:click={() => dayClicked(day.dayOfMonth, day.displayName, day.amountFormatted)}><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><p class="date">{day.displayName}</p><p class="amount">{day.amountFormatted}</p></div></div></div></th>
-                    {:else}
-                        <th class="{day.Class}"><p>{day.displayName}</p></th>
+                    {#if index >= 7 & index <= 13 & mainIndex === 1}
+                        {#if day.Amount != 0}
+                            <th class="{day.Class} populated" style="{day.Color}" on:click={() => dayClicked(day.dayOfMonth, day.displayName, day.amountFormatted)}><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><p class="date">{day.displayName}</p><p class="amount">{day.amountFormatted}</p></div></div></div></th>
+                        {:else}
+                            <th class="{day.Class}"><p>{day.displayName}</p></th>
+                        {/if}
                     {/if}
-                {/if}
-                {#if index > 13 & index <= 20 & mainIndex === 2}
-                    {#if day.Amount != 0}
-                        <th class="{day.Class} populated" style="{day.Color}" on:click={() => dayClicked(day.dayOfMonth, day.displayName, day.amountFormatted)}><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><p class="date">{day.displayName}</p><p class="amount">{day.amountFormatted}</p></div></div></div></th>
-                    {:else}
-                        <th class="{day.Class}"><p>{day.displayName}</p></th>
+                    {#if index > 13 & index <= 20 & mainIndex === 2}
+                        {#if day.Amount != 0}
+                            <th class="{day.Class} populated" style="{day.Color}" on:click={() => dayClicked(day.dayOfMonth, day.displayName, day.amountFormatted)}><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><p class="date">{day.displayName}</p><p class="amount">{day.amountFormatted}</p></div></div></div></th>
+                        {:else}
+                            <th class="{day.Class}"><p>{day.displayName}</p></th>
+                        {/if}
                     {/if}
-                {/if}
-                {#if index > 20 & index <= 27 & mainIndex === 3}
-                    {#if day.Amount != 0}
-                        <th class="{day.Class} populated" style="{day.Color}" on:click={() => dayClicked(day.dayOfMonth, day.displayName, day.amountFormatted)}><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><p class="date">{day.displayName}</p><p class="amount">{day.amountFormatted}</p></div></div></div></th>
-                    {:else}
-                        <th class="{day.Class}"><p>{day.displayName}</p></th>
+                    {#if index > 20 & index <= 27 & mainIndex === 3}
+                        {#if day.Amount != 0}
+                            <th class="{day.Class} populated" style="{day.Color}" on:click={() => dayClicked(day.dayOfMonth, day.displayName, day.amountFormatted)}><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><p class="date">{day.displayName}</p><p class="amount">{day.amountFormatted}</p></div></div></div></th>
+                        {:else}
+                            <th class="{day.Class}"><p>{day.displayName}</p></th>
+                        {/if}
                     {/if}
-                {/if}
-                {#if index >= 28 & mainIndex === 4}
-                    {#if day.Amount != 0}
-                        <th class="{day.Class} populated" style="{day.Color}" on:click={() => dayClicked(day.dayOfMonth, day.displayName, day.amountFormatted)}><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><p class="date">{day.displayName}</p><p class="amount">{day.amountFormatted}</p></div></div></div></th>
-                    {:else}
-                        <th class="{day.Class}"><p>{day.displayName}</p></th>
+                    {#if index >= 28 & mainIndex === 4}
+                        {#if day.Amount != 0}
+                            <th class="{day.Class} populated" style="{day.Color}" on:click={() => dayClicked(day.dayOfMonth, day.displayName, day.amountFormatted)}><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><p class="date">{day.displayName}</p><p class="amount">{day.amountFormatted}</p></div></div></div></th>
+                        {:else}
+                            <th class="{day.Class}"><p>{day.displayName}</p></th>
+                        {/if}
                     {/if}
-                {/if}
+                {/each}
+            </tr>
             {/each}
-        </tr>
-        {/each}
-    </table>
+        </table>
+        <HeatmapValue />
+    </div>
     {#if showPopup}
         <div class="backdrop" on:click|self={() => togglePopup()}>
             <TransListPopup {selectedSquare} {selectedList} {selectedAmount} popupType = 'dayofmonth' {togglePopup}/>
@@ -131,10 +135,12 @@
         margin: 50px auto 0 auto;
         width: 880px;
     }
-    .cal-month {
-        display: block;
-
+    .cal-container {
         margin: 15px auto 0 auto;
+    }
+    .cal-month {
+        display: inline-block;
+
         width: 745px;
         height: auto;
 
