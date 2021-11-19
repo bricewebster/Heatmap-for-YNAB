@@ -27,8 +27,10 @@
      * @param {String} saveOption used for the colors to determine if its setting the defaults or not
      */
     function saveChanges (saveOption) {
-        if (colorSelectedFlag) {
+        console.log(colorSelectedFlag)
+        if (colorSelectedFlag || saveOption === 'defaults') {
             if (saveOption === 'defaults') {
+                console.log('in here')
                 $HeatmapSettingsStore.Colors.incomeHue = $HeatmapSettingsStore.defaultColors.incomeHue; 
                 $HeatmapSettingsStore.Colors.incomeSat = $HeatmapSettingsStore.defaultColors.incomeSat;
                 $HeatmapSettingsStore.Colors.incomeLum = $HeatmapSettingsStore.defaultColors.incomeLum;
@@ -170,7 +172,7 @@
     <p class="title">Heatmap Settings</p>
     <div class="option-list">
         <div class="option">
-            <p class="option-title">Colors: <span on:click="{() => colorSelectedFlag = 1, saveChanges('defaults')}">Defaults</span></p>
+            <p class="option-title">Colors: <span on:click="{() => saveChanges('defaults')}">Defaults</span></p>
             <div class="option-section">
                 <label for="income-colorPicker">Income</label>
                 <input type="color" id="income-colorPicker" bind:value={incomeColor} on:change="{() => colorSelectedFlag = 1}">
