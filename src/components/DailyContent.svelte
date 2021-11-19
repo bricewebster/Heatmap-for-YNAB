@@ -65,17 +65,19 @@
     }
 </script>
 <div class="content">
-    <CalendarNavigation {changeSelectedOption} {refreshCalendar} on:dateChange/>
-    <table class="cal-day">
-        {#each summaryList as day}
-            {#if day.Amount != 0}
-                <th class="{day.Class} populated" style="{day.Color}" on:click={() => dayClicked(day.dayOfWeek, day.displayName, day.amountFormatted)}><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><p class="date">{day.displayName}</p><p class="amount">{day.amountFormatted}</p></div></div></div></th>
-            {:else}
-                <th class="{day.Class}"><p>{day.displayName}</p></th>
-            {/if}
-        {/each}
-    </table>
-    <HeatmapValue />
+    <CalendarNavigation {changeSelectedOption} {refreshCalendar} selectedTab = "daily" on:dateChange/>
+    <div class="cal-container">
+        <table class="cal-day">
+            {#each summaryList as day}
+                {#if day.Amount != 0}
+                    <th class="{day.Class} populated" style="{day.Color}" on:click={() => dayClicked(day.dayOfWeek, day.displayName, day.amountFormatted)}><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><p class="date">{day.displayName}</p><p class="amount">{day.amountFormatted}</p></div></div></div></th>
+                {:else}
+                    <th class="{day.Class}"><p>{day.displayName}</p></th>
+                {/if}
+            {/each}
+        </table>
+        <HeatmapValue />
+    </div>
     {#if showPopup}
         <div class="backdrop" on:click|self={() => togglePopup()}>
             <TransListPopup {selectedSquare} {selectedList} {selectedAmount} popupType = 'daily' {togglePopup}/>
@@ -89,10 +91,12 @@
         margin: 50px auto 0 auto;
         width: 880px;
     }
-    .cal-day {
-        display: block;
-
+    .cal-container {
         margin: 15px auto 0 auto;
+    }
+    .cal-day {
+        display: inline-block;
+
         width: 745px;
         height: auto;
 

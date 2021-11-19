@@ -63,17 +63,19 @@
     }
 </script>
 <div class="content">
-    <CalendarNavigation {changeSelectedOption} {refreshCalendar} on:dateChange/>
-    <table class="cal-week">
-        {#each summaryList as week}
-            {#if week.Amount != 0}
-                <th class="{week.Class} populated" style="{week.Color}" on:click={() => dayClicked(week.Week, week.displayName, week.amountFormatted)}><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><p class="date">{week.displayName}</p><p class="amount">{week.amountFormatted}</p></div></div></div></th>
-            {:else}
-                <th class="{week.Class}"><p>{week.displayName}</p></th>
-            {/if}
-        {/each}
-    </table>
-    <HeatmapValue />
+    <CalendarNavigation {changeSelectedOption} {refreshCalendar} selectedTab = "weeksofmonth" on:dateChange/>
+    <div class="cal-container">
+        <table class="cal-week">
+            {#each summaryList as week}
+                {#if week.Amount != 0}
+                    <th class="{week.Class} populated" style="{week.Color}" on:click={() => dayClicked(week.Week, week.displayName, week.amountFormatted)}><div class="populated-main-container"><div class="populated-container"><div class="populated-subcontainer"><p class="date">{week.displayName}</p><p class="amount">{week.amountFormatted}</p></div></div></div></th>
+                {:else}
+                    <th class="{week.Class}"><p>{week.displayName}</p></th>
+                {/if}
+            {/each}
+        </table>
+        <HeatmapValue />
+    </div>
     {#if showPopup}
         <div class="backdrop" on:click|self={() => togglePopup()}>
             <TransListPopup {selectedSquare} {selectedList} {selectedAmount} popupType = 'daily' {togglePopup}/>
@@ -85,12 +87,14 @@
         display: block;
         
         margin: 50px auto 0 auto;
-        width: 880px;
+        width: 660px;
+    }
+    .cal-container {
+        margin: 15px auto 0 auto;
     }
     .cal-week {
-        display: block;
+        display: inline-block;
 
-        margin: 15px auto 0 auto;
         width: 535px;
         height: auto;
 

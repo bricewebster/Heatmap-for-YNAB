@@ -8,6 +8,7 @@
 
     export let changeSelectedOption = () => {};
     export let refreshCalendar = () => {};
+    export let selectedTab;
     
     var showPopup = false;
 
@@ -93,18 +94,18 @@
         showPopup = !showPopup;
     }
 </script>
-<div class="cal-navigation">
-    <div class="cal-options">
+<div class="cal-navigation {selectedTab}">
+    <div class="cal-options {selectedTab}">
         <button style="--incomeSelectedColor: {incomeSelectedColor}; --incomeCurrentColor: {incomeCurrentColor}" on:click={() => changeSelectedOption('income')}><div class="desc-popup"><span class="material-icons-outlined md-36 income-icon icon" class:selected={$NavOptionsStore.selectedOption === 'income'} class:nonselected-icon={$NavOptionsStore.selectedOption != 'income'}>savings</span><div class="desc-text income">Income</div></div></button>
         <button style="--expenseSelectedColor: {expenseSelectedColor}; --expenseCurrentColor: {expenseCurrentColor}" on:click={() => changeSelectedOption('expense')}><div class="desc-popup"><span class="material-icons-outlined md-36 expense-icon icon" class:selected={$NavOptionsStore.selectedOption === 'expense'} class:nonselected-icon={$NavOptionsStore.selectedOption != 'expense'}>paid</span><div class="desc-text expense">Expense</div></div></button>
         <button style="--netSelectedColor: {netSelectedColor}; --netCurrentColor: {netCurrentColor}; --incomeSelectedColor: {incomeSelectedColor}; --incomeCurrentColor: {incomeCurrentColor}" on:click={() => changeSelectedOption('net')}><div class="desc-popup"><span class="material-icons-outlined md-36 net-icon icon" class:selected={$NavOptionsStore.selectedOption === 'net'} class:nonselected-icon={$NavOptionsStore.selectedOption != 'net'}>request_quote</span><div class="desc-text net">Net</div></div></button>
     </div>
-    <div class="cal-date" on:click={() => togglePopup()}>
+    <div class="cal-date {selectedTab}" on:click={() => togglePopup()}>
         <div class="cal-date-container">
             <p>{formattedStartDate} - {formattedEndDate}</p><span class="material-icons-round md-36">arrow_drop_down</span>
         </div>
     </div>
-    <div class="cal-styles">
+    <div class="cal-styles {selectedTab}">
         <button on:click={() => toggleSelectedStyle('regular')}><div class="desc-popup"><span class="material-icons-outlined md-36 style-regular-icon icon" class:selected={$NavOptionsStore.selectedStyle === 'regular'} class:nonselected-icon={$NavOptionsStore.selectedStyle != 'regular'}>local_fire_department</span><div class="desc-text seq">Sequential</div></div></button>
         <button on:click={() => toggleSelectedStyle('group')}><div class="desc-popup"><span class="material-icons-outlined md-36 style-group-icon icon" class:selected={$NavOptionsStore.selectedStyle === 'group'} class:nonselected-icon={$NavOptionsStore.selectedStyle != 'group'}>whatshot</span><div class="desc-text group">Grouping</div></div></button>
         <button on:click={() => toggleSelectedStyle('simple')}><div class="desc-popup"><span class="material-icons-outlined md-36 style-simple-icon icon" class:selected={$NavOptionsStore.selectedStyle === 'simple'} class:nonselected-icon={$NavOptionsStore.selectedStyle != 'simple'}>fireplace</span><div class="desc-text simple">Simple</div></div></button>
@@ -119,19 +120,62 @@
 <style lang="scss">
     .cal-navigation {
         display: block;
-    
-        width: 885px;
+
         height: 50px;
+    }
+    .cal-navigation.yearly {
+        width: 885px;
+    }
+    .cal-navigation.monthly {
+        width: 638px;
+    }
+    .cal-navigation.daysofmonth {
+        width: 750px;
+    }
+    .cal-navigation.weeksofmonth {
+        width: 585px;
+    }
+    .cal-navigation.daily {
+        width: 750px;
     }
     .cal-options {
         float: left;
+
+        & button {
+            background: none;
+            border: none;
+        }
+    }
+    .cal-options.yearly {
         margin-left: 25px;
         width: 213px;
 
         & button {
             margin-right: 20px;
-            background: none;
-            border: none;
+        }
+    }
+    .cal-options.monthly {
+        width: 175px;
+
+        & button {
+            margin-right: 5px;
+        }
+    }
+    .cal-options.daysofmonth {
+        width: 205px;
+
+        & button {
+            margin-right: 15px;
+        }
+    }
+    .cal-options.weeksofmonth {
+        width: 155px;
+    }
+    .cal-options.daily {
+        width: 205px;
+
+        & button {
+            margin-right: 15px;
         }
     }
     .icon {
@@ -175,10 +219,26 @@
     .cal-date {
         float: left;
 
+        cursor: pointer;
+    }
+    .cal-date.yearly {
         margin-left: 90px;
         width: 300px;
-
-        cursor: pointer;
+    }
+    .cal-date.monthly {
+        margin-left: 18px;
+    }
+    .cal-date.daysofmonth {
+        margin-left: 35px;
+    }
+    .cal-date.weeksofmonth {
+        margin-left: 5px;
+    }
+    .cal-date.daysofweek {
+        margin-left: 5px;
+    }
+    .cal-date.daily {
+        margin-left: 35px;
     }
     .cal-date:hover {
         color: var(--ynab-light-green);
@@ -199,12 +259,32 @@
     .cal-styles {
         float: right;
 
+        & button {
+            background: none;
+            border: none;
+        }
+    }
+    .cal-styles.yearly {
         width: 223px;
 
         & button {
             margin-left: 20px;
             background: none;
             border: none;
+        }
+    }
+    .cal-styles.daysofmonth {
+        width: 205px;
+
+        & button {
+            margin-left: 15px;
+        }
+    }
+    .cal-styles.daily {
+        width: 205px;
+
+        & button {
+            margin-left: 15px;
         }
     }
     .style-regular-icon.selected, .style-regular-icon:hover {

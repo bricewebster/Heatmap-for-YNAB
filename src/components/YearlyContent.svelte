@@ -153,7 +153,7 @@
 </script>
 <div class="content">
     <div class="cal-year-container">
-        <CalendarNavigation {changeSelectedOption} {refreshCalendar} on:dateChange/>
+        <CalendarNavigation {changeSelectedOption} {refreshCalendar} selectedTab = "yearly" on:dateChange/>
         <table class="cal-year day-list">
             <tr>
             <th><p></p></th>

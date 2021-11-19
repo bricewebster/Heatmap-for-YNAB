@@ -17,7 +17,7 @@
 
 	let ynabAPIReady = false;
     let mounted = false;
-	let transactionsLoaded = true;
+	let transactionsLoaded = false;
 	let ynabAPI;
 
 	let mainBudgetID;
@@ -26,7 +26,7 @@
 	onMount(() => {
         mounted = true;
         if (ynabAPIReady) {
-        //	main();
+        	main();
         }
     });
 
@@ -36,7 +36,7 @@
 	function ynabAPILoaded() {
         ynabAPIReady = true;
         if (mounted) {
-        	//main();
+        	main();
         }
     }
 	
@@ -446,7 +446,7 @@
 
 <main>
 	{#if transactionsLoaded}
-		<Navbar bind:activeTab = {activeTab} on:filterChange={storeTransactionsMain} on:settingsChange={storeTransactionsMain} on:budgetChange={budgetUpdate}/>
+		<Navbar bind:activeTab = {activeTab} on:filterChange={storeTransactionsMain} on:colorChange={storeTransactionsMain} on:budgetChange={budgetUpdate}/>
 		<Content {activeTab} {formatAmount} {formatDate} {dayToWeek} on:dateChange={storeTransactionsMain}/>
 	{:else}
 		<Loading />	

@@ -67,7 +67,7 @@
 </script>
 
 <div class="content">
-    <CalendarNavigation {changeSelectedOption} {refreshCalendar} on:dateChange/>
+    <CalendarNavigation {changeSelectedOption} {refreshCalendar} selectedTab = "monthly" on:dateChange/>
     <div class="cal-container">
         <table class="cal-month">
             {#each Array(2) as _, mainIndex}
@@ -105,15 +105,16 @@
         display: block;
         
         margin: 50px auto 0 auto;
-        width: 885px;
+        width: 765px;
     }
     .cal-container {
         margin: 15px auto 0 auto;
-        width: 760px;
+        width: 765px;
     }
     .cal-month {
         display: inline-block;
 
+        margin-right: 5px;
         width: 635px;
         height: auto;
 

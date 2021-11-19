@@ -75,7 +75,7 @@
     }
 </script>
 <div class="content">
-    <CalendarNavigation {changeSelectedOption} {refreshCalendar} on:dateChange/>
+    <CalendarNavigation {changeSelectedOption} {refreshCalendar} selectedTab = "daysofmonth" on:dateChange/>
     <div class="cal-container">
         <table class="cal-month">
             {#each Array(5) as _, mainIndex}
