@@ -27,10 +27,8 @@
      * @param {String} saveOption used for the colors to determine if its setting the defaults or not
      */
     function saveChanges (saveOption) {
-        console.log(colorSelectedFlag)
         if (colorSelectedFlag || saveOption === 'defaults') {
             if (saveOption === 'defaults') {
-                console.log('in here')
                 $HeatmapSettingsStore.Colors.incomeHue = $HeatmapSettingsStore.defaultColors.incomeHue; 
                 $HeatmapSettingsStore.Colors.incomeSat = $HeatmapSettingsStore.defaultColors.incomeSat;
                 $HeatmapSettingsStore.Colors.incomeLum = $HeatmapSettingsStore.defaultColors.incomeLum;
@@ -218,12 +216,13 @@
 </div>
 <style lang="scss">
     .popup {
-        position: absolute;
-        right: 592px;
+        position: relative;
 
-        margin-top: 75px;
+        left: 122px;
+        margin: 75px auto 0 auto;
+        padding-top: 2px;
 
-        width:  500px;
+        width: 500px;
         height: 400px;
 
         background-color: white;
@@ -252,7 +251,6 @@
     }
     .option-list {
         margin: 15px 0 0 15px;
-        width: 400pxx;
         height: 280px;
 
         font-size: .9rem;
@@ -336,29 +334,6 @@
     .budget-select {
         margin-top: 10px;
         height: 30px;
-    }
-
-    .Categories {
-        top: 95px;
-        right: 455px;
-    }
-    .Accounts {
-        top: 95px;
-        right: 275px;
-    }
-    .Payees {
-        top: 95px;
-        right: 105px;
-    }
-    .Accounts::after, .Categories::after, .Payees::after {
-        content: " ";
-        position: absolute;
-        bottom: 100%; /* At the bottom of the tooltip */
-        left: 50%;
-        margin-left: -5px;
-        border-width: 15px;
-        border-style: solid;
-        border-color: transparent transparent white transparent;
     }
     .showpopup {
         opacity: 1;

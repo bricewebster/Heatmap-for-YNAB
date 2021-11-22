@@ -237,11 +237,11 @@
 
 <style lang="scss">
     .popup {
-        position: absolute;
-        top: 180px;
-        right: 730px;
+        position: relative;
 
-        margin-top: 30px;
+        right: 50px;
+        margin: 200px auto 0 auto;
+        padding-top: 2px;
 
         width:  460px;
         height: 180px;

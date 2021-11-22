@@ -50,10 +50,9 @@
     .title-container {
         display: flex;
         align-items: center;
+        justify-content: center;
         
         padding-top: 10px;
-        margin: 0 auto;
-        width: 310px;
     }
     .title {
         padding-right: 15px;
