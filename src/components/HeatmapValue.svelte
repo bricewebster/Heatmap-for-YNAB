@@ -1,6 +1,7 @@
 <script>
     import HeatmapSettingsStore from '../stores/heatmapSettingsStore';
     import NavOptionsStore from "../stores/navOptionsStore";
+    import { fade } from 'svelte/transition';
 
     let values = {Income: '', Expense: ''};
 
@@ -46,7 +47,7 @@
 <div class="content">
     <p class="title">Values:</p>
     {#if values.Income === 'regular'}
-        <div class="values">
+        <div class="values" in:fade>
             <p>Income</p>
             <div class="value-container">
                 <div class="value">
@@ -65,7 +66,7 @@
         </div>
     {/if}
     {#if values.Expense === 'regular'}
-        <div class="values">
+        <div class="values" in:fade>
             <p>Expense</p>
             <div class="value-container">
                 <div class="value">
@@ -84,7 +85,7 @@
         </div>
     {/if}
     {#if values.Income === 'group'}
-        <div class="values">
+        <div class="values" in:fade>
             <p>Income</p>
             <div class="value-container">
                 <div class="value">
@@ -107,7 +108,7 @@
         </div>
     {/if}
     {#if values.Expense === 'group'}
-        <div class="values">
+        <div class="values" in:fade>
             <p>Expense</p>
             <div class="value-container">
                 <div class="value">
@@ -130,7 +131,7 @@
         </div>
     {/if}
     {#if values.Income === 'simple'}
-        <div class="values">
+        <div class="values" in:fade>
             <p>Income</p>
             <div class="value-container">
                 <div class="value">
@@ -141,7 +142,7 @@
         </div>
     {/if}
     {#if values.Expense === 'simple'}
-        <div class="values">
+        <div class="values" in:fade>
             <p>Expense</p>
             <div class="value-container">
                 <div class="value">

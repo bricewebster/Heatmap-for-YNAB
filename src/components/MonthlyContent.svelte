@@ -4,7 +4,6 @@
     import TransListPopup from '../components/TransListPopup.svelte';
     import CurrentTransactionsStore from '../stores/currentTransactionsStore';
     import NavOptionsStore from "../stores/navOptionsStore";
-    import { fade } from 'svelte/transition';
 
     export let populateTransactionList = () => {};
     export let populateSummaryList = () => {};

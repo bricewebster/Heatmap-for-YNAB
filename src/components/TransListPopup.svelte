@@ -1,5 +1,6 @@
 <script>
     import Button from "./Button.svelte";
+    import { scale } from 'svelte/transition';
 
     export let togglePopup = () => {};
     export let selectedSquare;
@@ -72,7 +73,7 @@
     }
 </script>
 
-<div class="popup {popupType}">
+<div class="popup {popupType}" in:scale="{{duration: 150}}">
     <div class="content">
         <div class="title-container">
             <p class="title"><span class="material-icons-outlined md-24">event_note</span>{selectedSquare}</p>

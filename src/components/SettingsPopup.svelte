@@ -2,6 +2,7 @@
     import Button from "./Button.svelte";
     import HeatmapSettingsStore from '../stores/heatmapSettingsStore';
     import { createEventDispatcher } from 'svelte';
+    import { scale } from 'svelte/transition';
 
     export let togglePopup = () => {};
 
@@ -166,7 +167,7 @@
     return {h, s, l};
 }
 </script>
-<div class="popup">
+<div class="popup" in:scale="{{duration: 150}}">
     <p class="title">Heatmap Settings</p>
     <div class="option-list">
         <div class="option">

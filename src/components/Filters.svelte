@@ -1,5 +1,6 @@
 <script>
     import FilterPopup from "./FilterPopup.svelte";
+    import { fade, fly } from 'svelte/transition';
 
     let selectedFilter;
     let showFilter = false;

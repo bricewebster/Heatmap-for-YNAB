@@ -6,6 +6,7 @@
 	import AccountListStore from '../stores/accountListStore';
     import PayeeListStore from '../stores/payeeListStore';
     import { createEventDispatcher } from 'svelte';
+    import { scale } from 'svelte/transition';
 
     const dispatch = createEventDispatcher();
 
@@ -171,7 +172,7 @@
     }
 </script>
 
-<div class="popup {filter.Type}">
+<div class="popup {filter.Type}" in:scale="{{duration: 150}}">
     <p class="title">{filter.Type}</p>
     <div class="selection">
         <ul>

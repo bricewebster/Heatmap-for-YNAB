@@ -2,6 +2,7 @@
     import Button from "./Button.svelte";
     import NavOptionsStore from "../stores/navOptionsStore";
     import { createEventDispatcher } from 'svelte';
+    import { scale } from 'svelte/transition';
 
     const dispatch = createEventDispatcher();
 
@@ -184,7 +185,7 @@
 
 </script>
 
-<div class="popup">
+<div class="popup" in:scale="{{duration: 150}}">
     <p class="title">Timeframe</p>
     <div class="selection">
         <ul>

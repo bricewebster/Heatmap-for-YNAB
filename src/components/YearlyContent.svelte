@@ -5,7 +5,6 @@
     import CurrentTransactionsStore from '../stores/currentTransactionsStore';
     import CurrencyInfoStore from '../stores/currencyInfoStore';
     import NavOptionsStore from "../stores/navOptionsStore";
-    import { fade } from 'svelte/transition';
 
     var showPopup = false;
     var selectedSquare;
@@ -185,7 +184,7 @@
             <HeatmapValue />
         </div>
         {#if showPopup}
-            <div class="backdrop" on:click|self={() => togglePopup()} transition:fade>
+            <div class="backdrop" on:click|self={() => togglePopup()}>
                 <TransListPopup {selectedSquare} {selectedList} {selectedAmount} popupType = 'yearly' {togglePopup}/>
             </div>
         {/if}
