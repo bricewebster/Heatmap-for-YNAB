@@ -302,14 +302,35 @@
     .Categories {
         top: 95px;
         right: 455px;
+
+        @media screen and (max-width: 1690px) {
+            right: 370px;
+        }
+        @media screen and (max-width: 1365px) {
+            right: 280px;
+        }
     }
     .Accounts {
         top: 95px;
         right: 275px;
+
+        @media screen and (max-width: 1690px) {
+            right: 195px;
+        }
+        @media screen and (max-width: 1365px) {
+            right: 125px;
+        }
     }
     .Payees {
         top: 95px;
         right: 105px;
+
+        @media screen and (max-width: 1690px) {
+            right: 25px;
+        }
+        @media screen and (max-width: 1365px) {
+            right: 15px;
+        }
     }
     .Accounts::after, .Categories::after, .Payees::after {
         content: " ";

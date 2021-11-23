@@ -239,7 +239,7 @@
     .popup {
         position: relative;
 
-        right: 50px;
+        right: 60px;
         margin: 200px auto 0 auto;
         padding-top: 2px;
 

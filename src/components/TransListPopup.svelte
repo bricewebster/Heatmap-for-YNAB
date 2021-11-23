@@ -185,18 +185,40 @@
 
         background-color: white;
         border-radius: 5px;
-        box-shadow: 0 16px 64px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 5px 64px rgba(0, 0, 0, 0.2);
 
         opacity: 1;
     }
     .popup.yearly, .popup.dayofmonth {
         margin: 520px auto 0 auto;
+
+        @media screen and (max-width: 1690px) {
+            margin-top: 350px;
+        }
+        @media screen and (max-width: 1366px) {
+            margin-top: 230px;
+        }
     }
     .popup.monthly {
         margin: 380px auto 0 auto;
+
+        @media screen and (max-width: 1366px) {
+            margin-top: 250px;
+        }
+    }
+    .popup.weeksofmonth {
+        margin: 340px auto 0 auto;
+
+        @media screen and (max-width: 1366px) {
+            margin-top: 230px;
+        }
     }
     .popup.daily {
         margin: 310px auto 0 auto;
+
+        @media screen and (max-width: 1366px) {
+            margin-top: 255px;
+        }
     }
     .popup::after {
         content: " ";
@@ -207,6 +229,16 @@
         border-width: 15px;
         border-style: solid;
         border-color: transparent transparent white transparent;
+    }
+    .popup.yearly::after, .popup.dayofmonth::after {
+        @media screen and (max-width: 1690px) {
+           display: none;
+        }
+    }
+    .popup.monthly::after, .popup.weeksofmonth::after, .popup.daily::after {
+        @media screen and (max-width: 1366px) {
+            display: none;
+        }
     }
     .content {
         padding: .765em .765em 0;

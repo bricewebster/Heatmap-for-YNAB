@@ -436,5 +436,6 @@
         width: 100%;
 
         z-index: 10;
+        overflow-y: auto;
     }
 </style>

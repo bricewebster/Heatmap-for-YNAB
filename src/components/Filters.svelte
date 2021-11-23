@@ -33,6 +33,13 @@
         float: right;
         
         margin-right: 100px;
+
+        @media screen and (max-width: 1690px) {
+            margin-right: 25px;
+        }
+        @media screen and (max-width: 1365px) {
+            margin-right: 5px;
+        }
     }
     ul {
         display: flex;
@@ -55,6 +62,9 @@
             color: var(--ynab-dark-green);
 
             transition: all 250ms ease-in;
+        }        
+        @media screen and (max-width: 1365px) {
+            margin-right: 25px;
         }
     }
     .backdrop {

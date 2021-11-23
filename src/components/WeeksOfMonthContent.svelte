@@ -78,7 +78,7 @@
     </div>
     {#if showPopup}
         <div class="backdrop" on:click|self={() => togglePopup()}>
-            <TransListPopup {selectedSquare} {selectedList} {selectedAmount} popupType = 'daily' {togglePopup}/>
+            <TransListPopup {selectedSquare} {selectedList} {selectedAmount} popupType = 'weeksofmonth' {togglePopup}/>
         </div>
     {/if}    
 </div>
@@ -290,5 +290,6 @@
         width: 100%;
 
         z-index: 10;
+        overflow-y: auto;
     }
 </style>
