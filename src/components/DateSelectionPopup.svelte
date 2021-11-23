@@ -242,9 +242,8 @@
 
         right: 60px;
         margin: 200px auto 0 auto;
-        padding-top: 2px;
 
-        width:  460px;
+        width:  465px;
         height: 180px;
 
         background-color: white;
@@ -257,6 +256,7 @@
     }
     .title {
         margin: 15px 0 5px 15px;
+        padding-top: 10px;
 
         font-size: 1em;
         font-weight: 700;
@@ -264,8 +264,7 @@
     }
     .selection {
         margin: 0px 15px;
-        
-
+    
         border-top: 1px solid rgba(0, 0, 0, 0.15);
         border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 

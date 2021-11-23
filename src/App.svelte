@@ -17,7 +17,7 @@
 
 	let ynabAPIReady = false;
     let mounted = false;
-	let transactionsLoaded = false;
+	let transactionsLoaded = true;
 	let ynabAPI;
 
 	let mainBudgetID;
@@ -26,7 +26,7 @@
 	onMount(() => {
         mounted = true;
         if (ynabAPIReady) {
-        	main();
+        	//main();
         }
     });
 
@@ -36,7 +36,7 @@
 	function ynabAPILoaded() {
         ynabAPIReady = true;
         if (mounted) {
-        	main();
+        	//main();
         }
     }
 	
@@ -44,6 +44,7 @@
 	 * The main function that fetches all the information needed for the heatmap from the User's account.
 	 */
 	async function main() {
+		console.time('main')
 		const accessToken = await getAccessToken();
 		mainBudgetID = await getBudgetID();
 
@@ -54,22 +55,25 @@
 
 		await getBudgetInfo(budgetID);
 		storeTransactionsMain(); 
+		console.timeEnd('main')
 	}
 	/**
 	 * Fetches all of the budget info (Categories, Accounts, Payees, Currency Info, & Transactions).
 	 * @param {String} budgetID ID of the budget to fetch info from
 	 */
 	async function getBudgetInfo (budgetID) {
-		const categoriesFetched = await getCategories(budgetID);
-		initCategories(categoriesFetched);
-		const accountsFetched = await getAccounts(budgetID);
-		initAccounts(accountsFetched);
-		const payeesFetched = await getPayees(budgetID);
-		initPayees(payeesFetched);
-		const currencyInfo = await getCurrencyInfo(budgetID);
-		$CurrencyInfoStore = currencyInfo;
-		const transactionsFetch = await getTransactions(budgetID);
-		$AllTransactionsStore = transactionsFetch;
+		const categoriesFetched = getCategories(budgetID);
+		const accountsFetched = getAccounts(budgetID);
+		const payeesFetched = getPayees(budgetID);
+		const currencyInfo = getCurrencyInfo(budgetID);
+		const transactionsFetch = getTransactions(budgetID);
+
+		let fetchedValues = await Promise.all([categoriesFetched, accountsFetched, payeesFetched, currencyInfo, transactionsFetch]);
+		initCategories(fetchedValues[0]);
+		initAccounts(fetchedValues[1]);
+		initPayees(fetchedValues[2]);
+		$CurrencyInfoStore = fetchedValues[3];
+		$AllTransactionsStore = fetchedValues[4];
 	}
 	/**
 	 * Updates the budget info when a new budget is selected from the budget settings window.

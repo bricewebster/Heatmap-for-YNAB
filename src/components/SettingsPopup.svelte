@@ -274,6 +274,9 @@
     .option-section > input {
         display: block;
 
+        width: 50px;
+        height: 27px;
+
         cursor: pointer;
     }
     .option-section > label {
@@ -289,6 +292,8 @@
         display: inline-block;
 
         margin-right: 10px;
+        width: 50px;
+        height: 27px;
 
         cursor: pointer;
     }
