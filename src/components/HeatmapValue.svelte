@@ -51,7 +51,7 @@
             <p>Income</p>
             <div class="value-container">
                 <div class="value">
-                    <div class="value-square" style="background-color: hsl({$HeatmapSettingsStore.Colors.incomeHue}, 0%, {$HeatmapSettingsStore.Colors.incomeLum}%);"></div>
+                    <div class="value-square" style="background-color: hsl({$HeatmapSettingsStore.Colors.incomeHue}, 100%, {$HeatmapSettingsStore.Colors.incomeLum}%);"></div>
                     <p>Highest</p>
                 </div>
                 <div class="value">
@@ -59,7 +59,7 @@
                     <p>Middle</p>
                 </div>
                 <div class="value">
-                    <div class="value-square" style="background-color: hsl({$HeatmapSettingsStore.Colors.incomeHue}, 100%, {$HeatmapSettingsStore.Colors.incomeLum}%);"></div>
+                    <div class="value-square" style="background-color: hsl({$HeatmapSettingsStore.Colors.incomeHue}, 20%, {$HeatmapSettingsStore.Colors.incomeLum}%);"></div>
                     <p>Lowest</p>
                 </div>
             </div>
@@ -78,7 +78,7 @@
                     <p>Middle</p>
                 </div>
                 <div class="value">
-                    <div class="value-square" style="background-color: hsl({$HeatmapSettingsStore.Colors.expenseHue}, 0%, {$HeatmapSettingsStore.Colors.expenseLum}%);"></div>
+                    <div class="value-square" style="background-color: hsl({$HeatmapSettingsStore.Colors.expenseHue}, 20%, {$HeatmapSettingsStore.Colors.expenseLum}%);"></div>
                     <p>Lowest</p>
                 </div>
             </div>

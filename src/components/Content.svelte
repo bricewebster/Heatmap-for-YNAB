@@ -275,10 +275,14 @@
         for (let day of list) {
             let s;
             if ($NavOptionsStore.selectedStyle === 'regular') {
-                s = increment * day.Rank;
+            
+                //console.log('s', s, 'rank', day.Rank);
+
                 if ($NavOptionsStore.selectedOption === 'income' || $NavOptionsStore.selectedOption === 'net' & day.Amount >= 0) {
+                    s = increment * (amountToColor - day.Rank);
                     background = `background: hsl(${$HeatmapSettingsStore.Colors.incomeHue}, ${s}%, ${$HeatmapSettingsStore.Colors.incomeLum}%)`;
                 } else if ($NavOptionsStore.selectedOption === 'expense' || $NavOptionsStore.selectedOption === 'net' & day.Amount < 0) {
+                    s = increment * day.Rank;
                     background = `background: hsl(${$HeatmapSettingsStore.Colors.expenseHue}, ${s}%, ${$HeatmapSettingsStore.Colors.expenseLum}%)`;
                 }
             } else if ($NavOptionsStore.selectedStyle === 'group') {

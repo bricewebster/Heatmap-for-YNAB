@@ -1,6 +1,7 @@
 <script>
 	import Navbar from "./components/Navbar.svelte";
 	import Content from "./components/Content.svelte";
+	import LandingPage from "./components/LandingPage.svelte";
 	import Loading from "./components/Loading.svelte";
 	import { onMount } from 'svelte';
 	import HeatmapSettingsStore from './stores/heatmapSettingsStore';
@@ -17,7 +18,8 @@
 
 	let ynabAPIReady = false;
     let mounted = false;
-	let transactionsLoaded = true;
+	let linkedYNABAccount = true;
+	let transactionsLoaded = false;
 	let ynabAPI;
 
 	let mainBudgetID;
@@ -26,7 +28,7 @@
 	onMount(() => {
         mounted = true;
         if (ynabAPIReady) {
-        	//main();
+        	main();
         }
     });
 
@@ -36,7 +38,7 @@
 	function ynabAPILoaded() {
         ynabAPIReady = true;
         if (mounted) {
-        	//main();
+        	main();
         }
     }
 	
@@ -449,7 +451,9 @@
 </svelte:head>
 
 <main>
-	{#if transactionsLoaded}
+	{#if linkedYNABAccount === false}
+		<LandingPage />
+	{:else if linkedYNABAccount === true & transactionsLoaded === true}
 		<Navbar bind:activeTab = {activeTab} on:filterChange={storeTransactionsMain} on:colorChange={storeTransactionsMain} on:budgetChange={budgetUpdate}/>
 		<Content {activeTab} {formatAmount} {formatDate} {dayToWeek} on:dateChange={storeTransactionsMain}/>
 	{:else}
@@ -470,7 +474,7 @@
 		margin: 0 auto;
 
 		width: 100%;
-		height: auto;
+		height: 100%;
 	}
 
 </style>
