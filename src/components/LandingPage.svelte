@@ -11,7 +11,7 @@
         width: 100%;
         height: 100vh;
 
-        background-color: rgb(0, 163, 101);
+        background-color: var(--heatmap-primary);
     }
     .title {
         padding-top: 15px;

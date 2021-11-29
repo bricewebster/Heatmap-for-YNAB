@@ -203,7 +203,7 @@
     }
     .popup.daysofmonth {
         margin: 540px auto 0 auto;
-        right: 65px;
+        right: 75px;
 
         @media screen and (max-width: 1690px) {
             margin-top: 350px;

@@ -236,7 +236,7 @@
         transition-duration: 350ms;
     }
     .focused {
-        color: var(--ynab-light-green);
+        color: var(--heatmap-secondary);
         transition: transform 250ms ease-in;
         transition-delay: 200ms;
     }
@@ -273,7 +273,7 @@
         width: 125.5%;
         height: 2px;
 
-        background: var(--ynab-dark-green);
+        background: var(--heatmap-tertiary);
 
         border-bottom-left-radius: 2px;
         border-bottom-right-radius: 2px;
@@ -298,7 +298,7 @@
         width: 2px;
         height: 135%;
 
-        background: var(--ynab-dark-green);
+        background: var(--heatmap-tertiary);
         border-top-left-radius: 2px;
         border-bottom-left-radius: 2px;
 
@@ -322,7 +322,7 @@
         width: 2px;
         height: 135%;
 
-        background: var(--ynab-dark-green);
+        background: var(--heatmap-tertiary);
         border-top-right-radius: 2px;
         border-bottom-right-radius: 2px;
 
@@ -347,7 +347,7 @@
         width: 63.5%;
         height: 2px;
 
-        background: var(--ynab-dark-green);
+        background: var(--heatmap-tertiary);
         border-top-left-radius: 2px;
 
         transform: scaleX(0);
@@ -370,7 +370,7 @@
         width: 63.5%;
         height: 2px;
 
-        background: var(--ynab-dark-green);
+        background: var(--heatmap-tertiary);
         border-top-right-radius: 5px;
 
         transform: scaleX(0);

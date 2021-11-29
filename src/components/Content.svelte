@@ -364,7 +364,7 @@
     .content {
         width: 100%;
 
-        border-top: 5px solid var(--ynab-dark-green);
+        border-top: 5px solid var(--heatmap-secondary);
 
         line-height: normal;
     }

@@ -19,7 +19,7 @@
 	let ynabAPIReady = false;
     let mounted = false;
 	let linkedYNABAccount = true;
-	let transactionsLoaded = false;
+	let transactionsLoaded = true;
 	let ynabAPI;
 
 	let mainBudgetID;
@@ -464,10 +464,9 @@
 
 <style lang="scss">
 	:global(:root){
-		--ynab-dark-green: #003440;
-		--ynab-teal: #00596f;
-		--ynab-light-green: #009cc2;
-		--ynab-light-blue: #4495d7;
+		--heatmap-primary: #FA4E5D;
+		--heatmap-secondary: #FF7A00;
+		--heatmap-tertiary: #D52742;
 	}
 
 	main {

@@ -60,7 +60,7 @@
         transition: all 250ms ease-in;
 
         &:hover {
-            color: var(--ynab-dark-green);
+            color: var(--heatmap-secondary);
 
             transition: all 250ms ease-in;
         }        

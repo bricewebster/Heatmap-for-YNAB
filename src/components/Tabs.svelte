@@ -41,19 +41,19 @@
         cursor: pointer;
 
         &:hover {
-            color: var(--ynab-dark-green);
+            color: var(--heatmap-secondary);
 
             transition: all 250ms ease-in;
         }
       
         &.active {
             background: white;
-            border: 5px solid var(--ynab-dark-green);
+            border: 5px solid var(--heatmap-secondary);
             border-bottom: 5px solid transparent;
             border-top-left-radius: 5px;
             border-top-right-radius: 5px;
   
-            color: var(--ynab-dark-green);
+            color: var(--heatmap-secondary);
             transition: background 250ms ease-out;
         }
     }

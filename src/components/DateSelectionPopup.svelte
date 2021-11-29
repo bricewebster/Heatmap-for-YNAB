@@ -282,10 +282,10 @@
             border-radius: 1000px;
 
             font-size: 12.6px;
-            color: var(--ynab-light-blue);
+            color: var(--heatmap-primary);
 
             &:hover {
-                background-color: var(--ynab-light-green);
+                background-color: var(--heatmap-primary);
 
                 color: white;
 

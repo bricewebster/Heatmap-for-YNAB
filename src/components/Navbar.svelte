@@ -45,7 +45,7 @@
 
         height: 90px;
         
-        background-color: var(--ynab-light-green);
+        background-color: var(--heatmap-primary);
     }
     .title-container {
         display: flex;
