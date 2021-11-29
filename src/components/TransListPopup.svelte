@@ -190,8 +190,20 @@
 
         opacity: 1;
     }
-    .popup.yearly, .popup.dayofmonth {
+    .popup.yearly {
         margin: 520px auto 0 auto;
+        right: 60px;
+
+        @media screen and (max-width: 1690px) {
+            margin-top: 350px;
+        }
+        @media screen and (max-width: 1366px) {
+            margin-top: 230px;
+        }
+    }
+    .popup.daysofmonth {
+        margin: 540px auto 0 auto;
+        right: 65px;
 
         @media screen and (max-width: 1690px) {
             margin-top: 350px;
@@ -202,6 +214,7 @@
     }
     .popup.monthly {
         margin: 380px auto 0 auto;
+        right: 65px;
 
         @media screen and (max-width: 1366px) {
             margin-top: 250px;
@@ -209,6 +222,7 @@
     }
     .popup.weeksofmonth {
         margin: 340px auto 0 auto;
+        right: 20px;
 
         @media screen and (max-width: 1366px) {
             margin-top: 230px;
@@ -216,6 +230,7 @@
     }
     .popup.daily {
         margin: 310px auto 0 auto;
+        right: 70px;
 
         @media screen and (max-width: 1366px) {
             margin-top: 255px;

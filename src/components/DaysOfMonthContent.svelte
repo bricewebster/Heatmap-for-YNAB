@@ -123,7 +123,7 @@
     </div>
     {#if showPopup}
         <div class="backdrop" on:click|self={() => togglePopup()}>
-            <TransListPopup {selectedSquare} {selectedList} {selectedAmount} popupType = 'dayofmonth' {togglePopup}/>
+            <TransListPopup {selectedSquare} {selectedList} {selectedAmount} popupType = 'daysofmonth' {togglePopup}/>
         </div>
     {/if}
 </div>
