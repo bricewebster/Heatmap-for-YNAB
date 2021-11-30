@@ -27,11 +27,17 @@
 
 <div class="navbar">
   <div class="title-container">
+    <img class="logo" alt="HeatmapIcon" src="/images/HeatmapIcon2.png">
     <p class="title">Heatmap for YNAB</p>
-    <span class="material-icons-round md-36" on:click="{() => togglePopup()}">settings</span>
   </div>
   <Tabs {activeTab} {tabs} on:tabChange={tabChange}/>
   <Filters {filters} on:filterChange/>
+  <div class="settings">
+    <div class="settings-container" on:click="{() => togglePopup()}">
+        <p class="settings-text">Settings</p>
+        <span class="material-icons-round md-24 settings-icon">settings</span>
+    </div>
+  </div>
   {#if showPopup}
         <div class="backdrop" on:click|self={() => togglePopup()}>
             <SettingsPopup {togglePopup} on:colorChange on:budgetChange/>
@@ -54,17 +60,60 @@
         
         padding-top: 10px;
     }
+    .logo {
+        width: 50px;
+    }
     .title {
-        padding-right: 15px;
+        padding-left: 5px;
 
         font-size: 1.75em;
         color: white;
         font-weight: bold;
     }
-    span {
-        color: white;
+    .settings {
+        position: relative;
+
+        margin: 0 auto;
+        width: 90px;
+
+        transition: all 250ms ease-in;
+
+        @media screen and (max-width: 1449px) {
+            left: 50px;
+
+            transition: all 250ms ease-in;
+        }
+        @media screen and (max-width: 1365px) {
+            left: 100px;
+
+            transition: all 250ms ease-in;
+        }
+    }
+    .settings-container {
+        display: flex;
+        align-items: center;
+
+        margin-top: 5px;
 
         cursor: pointer;
+
+        &:hover .settings-text, &:hover .settings-icon {
+            color: var(--heatmap-secondary);
+
+            transition: all 250ms ease-in;
+        }
+    }
+    .settings-text {
+        margin-right: 5px;
+
+        color: white;
+
+        transition: all 250ms ease-in;
+    }
+    .settings-icon{
+        color: white;
+
+        transition: all 250ms ease-in;
     }
     .backdrop {
         position: fixed;

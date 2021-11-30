@@ -208,6 +208,14 @@
                     {/each}
                 </select>
             </div>
+            <p class="option-title">Theme:</p>
+            <div class="option-section">
+                <select class="budget-select" name="budgets" bind:value={selectedBudget} on:change="{() => budgetSelectedFlag = 1}">
+                    {#each $HeatmapSettingsStore.Budgets as budget}
+                        <option value={budget.Id}>{budget.Name}</option>
+                    {/each}
+                </select>
+            </div>
         </div>
     </div>
     <div class="buttons">
@@ -219,8 +227,7 @@
     .popup {
         position: relative;
 
-        left: 122px;
-        margin: 75px auto 0 auto;
+        margin: 125px auto 0 auto;
         padding-top: 2px;
 
         width: 500px;
@@ -231,6 +238,13 @@
         box-shadow: 0 16px 64px rgba(0, 0, 0, 0.2);
 
         opacity: 1;
+
+        @media screen and (max-width: 1449px) {
+            left: 50px;
+        }
+        @media screen and (max-width: 1365px) {
+            left: 100px;
+        }
     }
     .popup::after {
         content: " ";

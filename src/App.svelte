@@ -28,7 +28,7 @@
 	onMount(() => {
         mounted = true;
         if (ynabAPIReady) {
-        	main();
+        	//main();
         }
     });
 
@@ -38,7 +38,7 @@
 	function ynabAPILoaded() {
         ynabAPIReady = true;
         if (mounted) {
-        	main();
+        	//main();
         }
     }
 	

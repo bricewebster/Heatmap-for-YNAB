@@ -40,6 +40,8 @@
   
         cursor: pointer;
 
+        transition: color 200ms ease-in;
+
         &:hover {
             color: var(--heatmap-secondary);
 
