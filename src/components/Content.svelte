@@ -364,7 +364,7 @@
     .content {
         width: 100%;
 
-        border-top: 5px solid var(--heatmap-secondary);
+        border-top: 5px solid var(--theme-secondary);
 
         line-height: normal;
     }

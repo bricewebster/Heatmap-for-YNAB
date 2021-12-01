@@ -259,10 +259,10 @@
             border-radius: 1000px;
 
             font-size: 13.5px;
-            color: var(--heatmap-primary);
+            color: var(--theme-primary);
 
             &:hover {
-                background-color: var(--heatmap-primary);
+                background-color: var(--theme-primary);
 
                 color: white;
 

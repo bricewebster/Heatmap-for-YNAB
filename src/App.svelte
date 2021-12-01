@@ -4,6 +4,7 @@
 	import LandingPage from "./components/LandingPage.svelte";
 	import Loading from "./components/Loading.svelte";
 	import { onMount } from 'svelte';
+	import ThemeContext from "./components/ThemeContext.svelte";
 	import HeatmapSettingsStore from './stores/heatmapSettingsStore';
 	import navOptionsStore from './stores/navOptionsStore';
 	import CategorySectionStore from './stores/categorySectionStore';
@@ -28,7 +29,7 @@
 	onMount(() => {
         mounted = true;
         if (ynabAPIReady) {
-        	//main();
+        	main();
         }
     });
 
@@ -38,7 +39,7 @@
 	function ynabAPILoaded() {
         ynabAPIReady = true;
         if (mounted) {
-        	//main();
+        	main();
         }
     }
 	
@@ -450,24 +451,26 @@
   <script src="https://unpkg.com/ynab@1.21.0/dist/browser/ynab.js" on:load={ynabAPILoaded}></script>
 </svelte:head>
 
-<main>
-	{#if linkedYNABAccount === false}
-		<LandingPage />
-	{:else if linkedYNABAccount === true & transactionsLoaded === true}
-		<Navbar bind:activeTab = {activeTab} on:filterChange={storeTransactionsMain} on:colorChange={storeTransactionsMain} on:budgetChange={budgetUpdate}/>
-		<Content {activeTab} {formatAmount} {formatDate} {dayToWeek} on:dateChange={storeTransactionsMain}/>
-	{:else}
-		<Loading />	
-	{/if}
+<ThemeContext>
+	<main>
+		{#if linkedYNABAccount === false}
+			<LandingPage />
+		{:else if linkedYNABAccount === true & transactionsLoaded === true}
+			<Navbar bind:activeTab = {activeTab} on:filterChange={storeTransactionsMain} on:colorChange={storeTransactionsMain} on:budgetChange={budgetUpdate}/>
+			<Content {activeTab} {formatAmount} {formatDate} {dayToWeek} on:dateChange={storeTransactionsMain}/>
+		{:else}
+			<Loading />	
+		{/if}
 
-</main>
+	</main>
+</ThemeContext>
 
 <style lang="scss">
-	:global(:root){
-		--heatmap-primary: #FA4E5D;
-		--heatmap-secondary: #FF7A00;
-		--heatmap-tertiary: #D52742;
-	}
+	// :global(:root){
+	// 	--heatmap-primary: #FA4E5D;
+	// 	--heatmap-secondary: #FF7A00;
+	// 	--heatmap-tertiary: #D52742;
+	// }
 
 	main {
 		margin: 0 auto;

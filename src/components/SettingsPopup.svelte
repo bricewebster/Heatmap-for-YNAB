@@ -1,6 +1,8 @@
 <script>
     import Button from "./Button.svelte";
     import HeatmapSettingsStore from '../stores/heatmapSettingsStore';
+    import { getContext } from 'svelte';
+    const { theme, toggle } = getContext('theme');
     import { createEventDispatcher } from 'svelte';
     import { scale } from 'svelte/transition';
 
@@ -22,6 +24,10 @@
 
     let selectedBudget = $HeatmapSettingsStore.selectedBudget.Id;
     let budgetSelectedFlag = 0;
+
+    let themes = ['Heatmap', 'YNAB Classic', 'YNAB Default'];
+    let selectedTheme = $theme.name;
+    let themeSelectedFlag = 0;
 
     /**
      * Save any changes that are made either to the colors or budget selected.
@@ -109,6 +115,9 @@
             console.log( $HeatmapSettingsStore.selectedBudget.Id)
             dispatch('budgetChange', );
         }
+        if (themeSelectedFlag) {
+            toggle(selectedTheme);
+        }
         togglePopup();
     }
     /**
@@ -156,16 +165,16 @@
             }
             
             h /= 6;
+        }
+
+        s = s*100;
+        s = Math.round(s);
+        l = l*100;
+        l = Math.round(l);
+        h = Math.round(360*h);
+
+        return {h, s, l};
     }
-
-    s = s*100;
-    s = Math.round(s);
-    l = l*100;
-    l = Math.round(l);
-    h = Math.round(360*h);
-
-    return {h, s, l};
-}
 </script>
 <div class="popup" in:scale="{{duration: 150}}">
     <p class="title">Heatmap Settings</p>
@@ -200,21 +209,27 @@
                     <input type="color" id="expense-bottom-colorPicker" bind:value={expenseBottomColor} on:change="{() => colorSelectedFlag = 1}">
                 </div>
             </div>
-            <p class="option-title">Selected Budget:</p>
-            <div class="option-section">
-                <select class="budget-select" name="budgets" bind:value={selectedBudget} on:change="{() => budgetSelectedFlag = 1}">
-                    {#each $HeatmapSettingsStore.Budgets as budget}
-                        <option value={budget.Id}>{budget.Name}</option>
-                    {/each}
-                </select>
-            </div>
-            <p class="option-title">Theme:</p>
-            <div class="option-section">
-                <select class="budget-select" name="budgets" bind:value={selectedBudget} on:change="{() => budgetSelectedFlag = 1}">
-                    {#each $HeatmapSettingsStore.Budgets as budget}
-                        <option value={budget.Id}>{budget.Name}</option>
-                    {/each}
-                </select>
+            <div class="option-twocolumn">
+                <div class="option-twocolumn-section">
+                    <p class="option-title">Budget:</p>
+                    <div class="option-section">
+                        <select class="budget-select" name="budgets" bind:value={selectedBudget} on:change="{() => budgetSelectedFlag = 1}">
+                            {#each $HeatmapSettingsStore.Budgets as budget}
+                                <option value={budget.Id}>{budget.Name}</option>
+                            {/each}
+                        </select>
+                    </div>
+                </div>
+                <div class="option-twocolumn-section">
+                    <p class="option-title">Theme:</p>
+                    <div class="option-section">
+                        <select class="theme-select" name="themes" bind:value={selectedTheme} on:change="{() => themeSelectedFlag = 1}">
+                            {#each themes as theme}
+                                <option value={theme}>{theme}</option>
+                            {/each}
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -231,7 +246,7 @@
         padding-top: 2px;
 
         width: 500px;
-        height: 400px;
+        height: 425px;
 
         background-color: white;
         border-radius: 5px;
@@ -264,9 +279,16 @@
         color: #383e41;
         border-bottom: 1px solid rgba(0, 0, 0, 0.15);
     }
+    .option-twocolumn {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        margin-right: 40px;
+    }
     .option-list {
         margin: 15px 0 0 15px;
-        height: 280px;
+        height: 300px;
 
         font-size: .9rem;
     }
@@ -321,10 +343,10 @@
             border-radius: 1000px;
 
             font-size: 13.5px;
-            color: var(--heatmap-primary);
+            color: var(--theme-primary);
 
             &:hover {
-                background-color: var(--heatmap-primary);
+                background-color: var(--theme-primary);
 
                 color: white;
 
@@ -352,6 +374,10 @@
         width: 140px;
     }
     .budget-select {
+        margin-top: 10px;
+        height: 30px;
+    }
+    .theme-select {
         margin-top: 10px;
         height: 30px;
     }

@@ -43,19 +43,19 @@
         transition: color 200ms ease-in;
 
         &:hover {
-            color: var(--heatmap-secondary);
+            color: var(--theme-secondary);
 
             transition: all 250ms ease-in;
         }
       
         &.active {
             background: white;
-            border: 5px solid var(--heatmap-secondary);
+            border: 5px solid var(--theme-secondary);
             border-bottom: 5px solid transparent;
             border-top-left-radius: 5px;
             border-top-right-radius: 5px;
   
-            color: var(--heatmap-secondary);
+            color: var(--theme-secondary);
             transition: background 250ms ease-out;
         }
     }

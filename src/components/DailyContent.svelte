@@ -170,7 +170,7 @@
         width: 112.25%;
         height: 5px;
 
-        background: var(--heatmap-tertiary);
+        background: var(--theme-tertiary);
 
         border-bottom-left-radius: 5px;
         border-bottom-right-radius: 5px;
@@ -195,7 +195,7 @@
         width: 5px;
         height: 114%;
 
-        background: var(--heatmap-tertiary);
+        background: var(--theme-tertiary);
         border-top-left-radius: 5px;
 
         transform: scaleY(0);
@@ -218,7 +218,7 @@
         width: 5px;
         height: 114%;
 
-        background: var(--heatmap-tertiary);
+        background: var(--theme-tertiary);
         border-top-right-radius: 5px;
 
         transform: scaleY(0);
@@ -242,7 +242,7 @@
         width: 63.5%;
         height: 5px;
 
-        background: var(--heatmap-tertiary);
+        background: var(--theme-tertiary);
         border-top-left-radius: 5px;
 
         transform: scaleX(0);
@@ -265,7 +265,7 @@
         width: 63.5%;
         height: 5px;
 
-        background: var(--heatmap-tertiary);
+        background: var(--theme-tertiary);
         border-top-right-radius: 5px;
 
         transform: scaleX(0);

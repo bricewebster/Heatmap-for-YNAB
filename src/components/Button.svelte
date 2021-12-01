@@ -19,13 +19,13 @@
     }
     .primary {
         border: 2px solid transparent;
-        background-color: var(--heatmap-primary);
+        background-color: var(--theme-primary);
 
         color: white;
 
         &:hover {
-            border-color: var(--heatmap-tertiary);
-            background-color: var(--heatmap-tertiary);
+            border-color: var(--theme-tertiary);
+            background-color: var(--theme-tertiary);
         }
     }
     .secondary {
@@ -34,11 +34,11 @@
         border: 2px solid #dee3e8;
         background-color: transparent;
 
-        color: var(--heatmap-primary);
+        color: var(--theme-primary);
 
         &:hover {
-            border-color: var(--heatmap-tertiary);
-            background-color: var(--heatmap-tertiary);
+            border-color: var(--theme-tertiary);
+            background-color: var(--theme-tertiary);
             color: white;
         }
     }

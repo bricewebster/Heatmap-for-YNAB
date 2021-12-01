@@ -51,7 +51,7 @@
 
         height: 90px;
         
-        background-color: var(--heatmap-primary);
+        background-color: var(--theme-primary);
     }
     .title-container {
         display: flex;
@@ -80,13 +80,9 @@
 
         @media screen and (max-width: 1449px) {
             left: 50px;
-
-            transition: all 250ms ease-in;
         }
         @media screen and (max-width: 1365px) {
             left: 100px;
-
-            transition: all 250ms ease-in;
         }
     }
     .settings-container {
@@ -98,7 +94,7 @@
         cursor: pointer;
 
         &:hover .settings-text, &:hover .settings-icon {
-            color: var(--heatmap-secondary);
+            color: var(--theme-secondary);
 
             transition: all 250ms ease-in;
         }
