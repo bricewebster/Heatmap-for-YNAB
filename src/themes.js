@@ -19,8 +19,16 @@ export const themeColors = [
       name: 'YNAB Default',
       colors: {
         primary: '#244564',
-        secondary: '#3674a7',
-        tertiary: '#4495d7'
+        secondary: '#009CC2',
+        tertiary: '#4495D7'
+      },
+    },
+    {
+      name: 'YNAB Dark',
+      colors: {
+        primary: '#1B1B1D',
+        secondary: '#4495d7',
+        tertiary: '#3674A7'
       },
     },
   ]

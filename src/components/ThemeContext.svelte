@@ -4,8 +4,19 @@
     import { themeColors } from "../themes.js";
     // expose props for customization and set default values
     export let themes = [...themeColors];
-    // set state of current theme's name
-    let _current = themes[0].name;
+    // set state of current theme's name from the local storage if it exists.
+    let _current;
+    if (typeof(Storage) !== "undefined") {
+        let themeStorage = localStorage.getItem("theme");
+        if(themeStorage === null) {
+            _current = themes[0].name;
+            localStorage.setItem("theme", _current);
+        } else {
+            _current = themeStorage;
+        }
+    } else {
+        _current = themes[0].name;
+    }
   
     // utility to get current theme from name
     const getCurrentTheme = name => themes.find(h => h.name === name);

@@ -25,7 +25,7 @@
     let selectedBudget = $HeatmapSettingsStore.selectedBudget.Id;
     let budgetSelectedFlag = 0;
 
-    let themes = ['Heatmap', 'YNAB Classic', 'YNAB Default'];
+    let themes = ['Heatmap', 'YNAB Classic', 'YNAB Default', 'YNAB Dark'];
     let selectedTheme = $theme.name;
     let themeSelectedFlag = 0;
 
@@ -117,6 +117,7 @@
         }
         if (themeSelectedFlag) {
             toggle(selectedTheme);
+            localStorage.setItem("theme", selectedTheme);
         }
         togglePopup();
     }
@@ -305,7 +306,6 @@
         display: block;
 
         margin-left: 5px;
-        height: 100px;
     }
     .option-section > input {
         display: block;
