@@ -28,7 +28,7 @@
             background-color: var(--theme-tertiary);
         }
     }
-    .secondary {
+    .secondary, .tertiary {
         padding: .3em .6em;
    
         border: 2px solid #dee3e8;
@@ -40,6 +40,27 @@
             border-color: var(--theme-tertiary);
             background-color: var(--theme-tertiary);
             color: white;
+        }
+    }
+    .tertiary {
+        padding: .3em .6em;
+        width: 175px;
+
+        border: 5px solid var(--theme-primary);
+        background-color: transparent;
+
+        color: var(--theme-primary);
+        font-weight: bold;
+        font-size: 1.2em;
+
+        transition: all 250ms ease-in;
+
+        &:hover {
+            border-color: var(--theme-primary);
+            background-color: var(--theme-primary);
+            color: white;
+
+            transition: all 250ms ease-in;
         }
     }
 </style>

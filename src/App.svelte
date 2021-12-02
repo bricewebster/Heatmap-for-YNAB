@@ -19,7 +19,7 @@
 
 	let ynabAPIReady = false;
     let mounted = false;
-	let linkedYNABAccount = true;
+	let linkedYNABAccount = false;
 	let transactionsLoaded = true;
 	let ynabAPI;
 
