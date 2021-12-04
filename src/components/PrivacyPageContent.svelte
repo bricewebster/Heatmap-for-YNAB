@@ -1,7 +1,11 @@
 <script>
-    // your script goes here
+    export let privacyPage;
 </script>
 <div class="content">
+    <div class="back-container" on:click="{() => privacyPage = 0}">
+        <span class="material-icons-outlined md-36 style-regular-icon icon">chevron_left</span>
+        <p>Back</p>
+    </div>
     <p class="title">Privacy Policy</p>
     <p class="subtitle">What data does Heatmap for YNAB collect?</p>
     <p></p>
@@ -23,6 +27,14 @@
         font-size: 3em;
         font-weight: bold;
         color: var(--theme-primary);
+    }
+    .back-container {
+        display: flex;
+        align-items: center;
+
+        width: 75px;
+
+        cursor: pointer;
     }
 </style>
 

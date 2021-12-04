@@ -67,7 +67,7 @@
         <div class="list-container">
         <li>Themes</li>
         <ul class="sub-list">
-            <li>Don't like the theme or want to change it up? There are 3 other themes besides the main heatmap one which are the YNAB themes.</li>
+            <li>Don't like the theme or want to change it up? There are the 3 YNAB themes along with the main heatmap one.</li>
         </ul>
         </div>
     </ul>

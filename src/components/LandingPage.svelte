@@ -7,7 +7,7 @@
 </script>
 <div class="content">
     {#if privacyPage}
-        <PrivacyPageContent />
+        <PrivacyPageContent bind:privacyPage = {privacyPage}/>
     {:else}
         <LandingPageContent />
     {/if}
