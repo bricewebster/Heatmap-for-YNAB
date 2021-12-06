@@ -7,16 +7,24 @@
         <p>Back</p>
     </div>
     <p class="title">Privacy Policy</p>
-    <p class="subtitle">What data does Heatmap for YNAB collect?</p>
-    <p></p>
-    <p class="subtitle">How does Heatmap for YNAB handle your data?</p>
+    <p class="subtitle">What data does Heatmap for YNAB collect and how is the data handled?</p>
+    <p class="answers">Heatmap for YNAB collects information from your YNAB account once you provide authorization. Only information from the YNAB budgeting software itself is collected. We have no access to nor do we collect bank credentials or information. None of this data is stored or collected on a server. It is removed from your computer once the browswer is closed. Its sole purpose to populate the report and provide options to filter the results.</p>
+    <p class="answers">Below is all of the information collected and its use:</p>
+    <ul>
+        <li>Budget Settings - Settings such as date and currency layout</li>
+        <li>Budgets List - Allows for changing of budgets</li>
+        <li>Categories List - Used for filtering report</li>
+        <li>Accounts List - Used for filtering report</li>
+        <li>Payees List - Used for filtering report</li>
+        <li>Transactions List - Transactions for populating the report</li>
+    </ul>
     <p></p>
     <p class="subtitle">Third-party services</p>
-    <p></p>
+    <p>Heatmap for YNAB does not communicate with any third-party apps or services. This means data collected from YNAB stays within the report and is not sent anywhere else. No analytic or tracking software is used on the report.</p>
     <p class="subtitle">Changes to Privacy Policy</p>
-    <p></p>
+    <p>This Privacy Policy may change in the future with updates to either YNAB or Heatmap for YNAB and they'll be listed on this page.</p>
     <p class="subtitle">Contact Information</p>
-    <p></p>
+    <p>If you have any questions regarding Heatmap for YNAB's Privacy Policy, feel free to send an email to .</p>
 </div>
 <style>
     .content {
@@ -27,6 +35,17 @@
         font-size: 3em;
         font-weight: bold;
         color: var(--theme-primary);
+    }
+    .subtitle {
+        margin-top: 15px;
+
+        font-size: 1.5em;
+    }
+    .answers {
+        margin-left: 15px;
+    }
+    ul {
+        margin-left: 35px;
     }
     .back-container {
         display: flex;
