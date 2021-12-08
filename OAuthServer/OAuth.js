@@ -1,4 +1,3 @@
-let x = 5;
 const express = require('express');
 const querystring = require('querystring');
 const https = require('https');
@@ -39,7 +38,7 @@ app.get('/oauth/token', (req, res) => {
     path: '/oauth/token',
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded',
       'Content-Length': Buffer.byteLength(postData)
     }
   };
