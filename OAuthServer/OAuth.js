@@ -1,16 +1,18 @@
 const express = require('express');
 const querystring = require('querystring');
 const https = require('https');
+const { request } = require('http');
 
-const clientID = '496a5e03e32f6754ccf5538dbd64bdf76bcfdf6a9b6ea950b11056653a57ae23';
-const clientSecret = '04d7d3d795520045912ae1be5c67319f4f303506d2a6670e1edc8c1d16c137b0';
+const clientID = process.env.clientID;
+const clientSecret = process.env.clientSecret;
 const codeRedirect = encodeURI('https://heatmap-for-ynab.herokuapp.com/oauth/token');
-const tokenRedirect = encodeURI('https://heatmapforynab.netlify.app');
+const tokenRedirect = encodeURI('https://heatmap-for-ynab.herokuapp.com/oauth/token');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 let authCode;
+let accessToken;
 
 // Obtain Authorization Code
 app.get('/oauth/redirect', (req, res) => {
@@ -22,6 +24,7 @@ app.get('/oauth/redirect', (req, res) => {
 // Obtain Access Token
 app.get('/oauth/token', (req, res) => {
   authCode = req.query.code;
+  console.log('inhere')
   console.log(`Client ID: ${clientID} \nClient Secret: ${clientSecret} \nAuthorization Code: ${authCode}`);
 
   let postData = querystring.stringify({
@@ -49,6 +52,9 @@ app.get('/oauth/token', (req, res) => {
     res.setEncoding('utf8');
     res.on('data', (chunk) => {
       console.log(`BODY: ${chunk}`);
+      accessToken = JSON.parse(chunk);
+      accessToken = accessToken.access_token;
+      sendAccessToken();
     });
     res.on('end', () => {
       console.log('No more data in response.');
@@ -62,11 +68,11 @@ app.get('/oauth/token', (req, res) => {
   post_req.write(postData);
   post_req.end();
 
+  function sendAccessToken () {
+    console.log(accessToken)
+    res.redirect(`https://heatmapforynab.netlify.app?token=${accessToken}`);
+  }
 });
-
-app.get('/gotcode', (req, res) => {
-  res.redirect(`https://heatmapforynab.netlify.app/`);
-})
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}.`);
