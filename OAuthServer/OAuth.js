@@ -4,7 +4,7 @@ const https = require('https');
 
 const clientID = process.env.clientID;
 const clientSecret = process.env.clientSecret;
-const codeRedirect = encodeURI('https://heatmap-for-ynab.heroku.com/oauth/token');
+const codeRedirect = encodeURI('https://heatmap-for-ynab.herokuapp.com/oauth/token');
 const tokenRedirect = encodeURI('https://heatmapforynab.netlify.com');
 
 const app = express();
