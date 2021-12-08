@@ -2,10 +2,10 @@ const express = require('express');
 const querystring = require('querystring');
 const https = require('https');
 
-const clientID = process.env.clientID;
-const clientSecret = process.env.clientSecret;
+const clientID = '496a5e03e32f6754ccf5538dbd64bdf76bcfdf6a9b6ea950b11056653a57ae23';
+const clientSecret = '04d7d3d795520045912ae1be5c67319f4f303506d2a6670e1edc8c1d16c137b0';
 const codeRedirect = encodeURI('https://heatmap-for-ynab.herokuapp.com/oauth/token');
-const tokenRedirect = encodeURI('https://heatmapforynab.netlify.com');
+const tokenRedirect = encodeURI('https://heatmapforynab.netlify.app');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -15,7 +15,7 @@ let authCode;
 // Obtain Authorization Code
 app.get('/oauth/redirect', (req, res) => {
 
-  res.redirect(`https://app.youneedabudget.com/oauth/authorize?client_id=${clientID}&redirect_uri=${codeRedirect}&response_type=code`);
+  res.redirect(`https://api.youneedabudget.com/oauth/authorize?client_id=${clientID}&redirect_uri=${codeRedirect}&response_type=code`);
 
 });
 
@@ -33,7 +33,7 @@ app.get('/oauth/token', (req, res) => {
   });
 
   let options = {
-    hostname: 'app.youneedabudget.com',
+    hostname: 'api.youneedabudget.com',
     port: 443,
     path: '/oauth/token',
     method: 'POST',
@@ -63,6 +63,10 @@ app.get('/oauth/token', (req, res) => {
   post_req.end();
 
 });
+
+app.get('/gotcode', (req, res) => {
+  res.redirect(`https://heatmapforynab.netlify.app/`);
+})
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}.`);
