@@ -24,7 +24,7 @@
     <p class="subtitle">Changes to Privacy Policy</p>
     <p>This Privacy Policy may change in the future with updates to either YNAB or Heatmap for YNAB and they'll be listed on this page.</p>
     <p class="subtitle">Contact Information</p>
-    <p>If you have any questions regarding Heatmap for YNAB's Privacy Policy, feel free to send an email to .</p>
+    <p>If you have any questions regarding Heatmap for YNAB's Privacy Policy, feel free to send an email to <a href="mailto:bricewebdev@gmail.com">bricewebdev@gmail.com</a>.</p>
 </div>
 <style>
     .content {

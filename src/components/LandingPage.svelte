@@ -13,7 +13,7 @@
     {/if}
     <div class="footer">
         <div class="copyright-section">
-            <small>&copy; {currentYear} Brice Webster</small>
+            <small>&copy; {currentYear} <a href="mailto:bricewebdev@gmail.com">Brice Webster</a></small>
         </div>
         <div class="legal">
             <small>Heatmap for YNAB is an unofficial report for YNAB</small>
@@ -40,6 +40,11 @@
         margin: 85px auto 10px auto;
         width: 1000px;
     }
+    .copyright-section a {
+        color: var(--theme-secondary);
+
+        text-decoration: none;
+    }
     .links small {
         font-weight: bold;
         color: var(--theme-secondary);
@@ -51,6 +56,7 @@
 
         border-right: 2px solid var(--theme-secondary);
     }
+ 
 </style>
 
 <!-- markup (zero or more items) goes here -->
