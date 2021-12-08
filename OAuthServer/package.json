@@ -4,8 +4,12 @@
   "description": "oauth server for heatmapforynab",
   "main": "OAuth.js",
   "scripts": {
+    "start": "node OAuth.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
