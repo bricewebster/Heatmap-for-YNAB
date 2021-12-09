@@ -3,10 +3,10 @@ const querystring = require('querystring');
 const https = require('https');
 const { request } = require('http');
 
-const clientID = process.env.clientID;
-const clientSecret = process.env.clientSecret;
-const codeRedirect = encodeURI('https://heatmap-for-ynab.herokuapp.com/oauth/token');
-const tokenRedirect = encodeURI('https://heatmap-for-ynab.herokuapp.com/oauth/token');
+const clientID = '496a5e03e32f6754ccf5538dbd64bdf76bcfdf6a9b6ea950b11056653a57ae23';
+const clientSecret = '1e5cc9c46d5b9c46d00b57969ede4f794bcbafa251c0722b8a3492ecd8fbcee2';
+const codeRedirect = encodeURI('http://localhost:3000/oauth/token');
+const tokenRedirect = encodeURI('http://localhost:3000/oauth/token');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -70,7 +70,7 @@ app.get('/oauth/token', (req, res) => {
 
   function sendAccessToken () {
     console.log(accessToken)
-    res.redirect(`https://heatmapforynab.netlify.app?token=${accessToken}`);
+    res.redirect(`http://localhost:5000?token=${accessToken}`);
   }
 });
 

@@ -9,7 +9,7 @@
 <img class="example" alt="HeatmapExample" src="/images/heatmapExample.PNG">
 <div class="main-buttons">
     <a href="https://www.youneedabudget.com"><img  alt="WorksWithYNAB" src="/images/works_with_ynab.svg"></a>
-    <a href="https://heatmap-for-ynab.herokuapp.com/oauth/redirect/"><Button type="tertiary">Authorize Report</Button></a>
+    <a href="http://localhost:3000/oauth/redirect/"><Button type="tertiary">Authorize Report</Button></a>
 </div>
 <div class="section">
     <div class="section-title-container feat">

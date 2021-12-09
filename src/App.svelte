@@ -18,8 +18,10 @@
 	let activeTab = 'Yearly';
 
 	let ynabAPIReady = false;
+	let appReady = false;
     let mounted = false;
 	let linkedYNABAccount = false;
+	let accessToken;
 	let transactionsLoaded = true;
 	let ynabAPI;
 
@@ -29,7 +31,7 @@
 	onMount(() => {
         mounted = true;
         if (ynabAPIReady) {
-        	main();
+        	appReady = true;
         }
     });
 
@@ -39,7 +41,7 @@
 	function ynabAPILoaded() {
         ynabAPIReady = true;
         if (mounted) {
-        	main();
+        	appReady = true;
         }
     }
 	
@@ -47,8 +49,7 @@
 	 * The main function that fetches all the information needed for the heatmap from the User's account.
 	 */
 	async function main() {
-		console.time('main')
-		const accessToken = await getAccessToken();
+		linkedYNABAccount === true;
 		mainBudgetID = await getBudgetID();
 
 		var ynab = window.ynab;
@@ -461,7 +462,7 @@
 <ThemeContext>
 	<main>
 		{#if linkedYNABAccount === false}
-			<LandingPage />
+			<LandingPage {accessToken} on:linked={main}/>
 		{:else if linkedYNABAccount === true & transactionsLoaded === true}
 			<Navbar bind:activeTab = {activeTab} on:filterChange={storeTransactionsMain} on:colorChange={storeTransactionsMain} on:budgetChange={budgetUpdate}/>
 			<Content {activeTab} {formatAmount} {formatDate} {dayToWeek} on:dateChange={storeTransactionsMain}/>

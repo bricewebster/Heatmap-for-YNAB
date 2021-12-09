@@ -1,9 +1,25 @@
 <script>
     import LandingPageContent from "./LandingPageContent.svelte";
     import PrivacyPageContent from "./PrivacyPageContent.svelte";
+    import { createEventDispatcher } from 'svelte';
+
+    const dispatch = createEventDispatcher();
 
     let privacyPage = 0;
     let currentYear = new Date().getFullYear();
+
+    export let accessToken;
+
+    function linkedCheck() {
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        const params = Object.fromEntries(urlSearchParams.entries());
+        accessToken = params.token;
+        if (accessToken != null) {
+            dispatch('linked', );
+        }
+    }
+
+    linkedCheck();
 </script>
 <div class="content">
     {#if privacyPage}
