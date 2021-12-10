@@ -6,23 +6,20 @@
 	let linkedYNABAccount = false;
 	let accessToken;
 
+	/**
+	 * Checks if an access token is present in the params and if so it'll load up the app.
+	 */
 	function linkedCheck() {
         const urlSearchParams = new URLSearchParams(window.location.search);
         const params = Object.fromEntries(urlSearchParams.entries());
         accessToken = params.token;
 		let refreshToken = params.refresh
-		console.log('refreshTokenquery', refreshToken)
-		console.log('refreshTokenStorage', localStorage.getItem("new"))
-		console.log('accessToken', accessToken)
         if (accessToken != null) {
-			console.log(accessToken)
 			localStorage.setItem("new", refreshToken);
 			linkedYNABAccount = true;
         }
     }
-
 	linkedCheck();
-
 </script>
 
 <svelte:head>
@@ -47,17 +44,10 @@
 </ThemeContext>
 
 <style lang="scss">
-	// :global(:root){
-	// 	--heatmap-primary: #FA4E5D;
-	// 	--heatmap-secondary: #FF7A00;
-	// 	--heatmap-tertiary: #D52742;
-	// }
-
 	main {
 		margin: 0 auto;
 
 		width: 100%;
 		height: 100%;
 	}
-
 </style>

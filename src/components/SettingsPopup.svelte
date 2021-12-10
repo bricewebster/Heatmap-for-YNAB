@@ -112,7 +112,6 @@
         }
         if (budgetSelectedFlag) {
             $HeatmapSettingsStore.selectedBudget.Id = selectedBudget;
-            console.log( $HeatmapSettingsStore.selectedBudget.Id)
             dispatch('budgetChange', );
         }
         if (themeSelectedFlag) {

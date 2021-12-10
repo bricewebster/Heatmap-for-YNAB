@@ -275,9 +275,6 @@
         for (let day of list) {
             let s;
             if ($NavOptionsStore.selectedStyle === 'regular') {
-            
-                //console.log('s', s, 'rank', day.Rank);
-
                 if ($NavOptionsStore.selectedOption === 'income' || $NavOptionsStore.selectedOption === 'net' & day.Amount >= 0) {
                     s = increment * (amountToColor - day.Rank);
                     background = `background: hsl(${$HeatmapSettingsStore.Colors.incomeHue}, ${s}%, ${$HeatmapSettingsStore.Colors.incomeLum}%)`;

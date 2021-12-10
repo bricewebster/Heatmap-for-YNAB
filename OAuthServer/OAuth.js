@@ -3,10 +3,9 @@ const querystring = require('querystring');
 const https = require('https');
 const { request } = require('http');
 
-const clientID = '496a5e03e32f6754ccf5538dbd64bdf76bcfdf6a9b6ea950b11056653a57ae23';
-const clientSecret = '1e5cc9c46d5b9c46d00b57969ede4f794bcbafa251c0722b8a3492ecd8fbcee2';
-const codeRedirect = encodeURI('http://localhost:3000/oauth/token');
-const tokenRedirect = encodeURI('http://localhost:3000/oauth/token');
+const clientID = process.env.clientID;
+const clientSecret = process.env.clientSecret;
+const redirectURI = encodeURI('https://heatmap-for-ynab.herokuapp.com/oauth/token');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -18,41 +17,33 @@ let refreshToken;
 
 // Obtain Authorization Code
 app.get('/oauth/redirect', (req, res) => {
-
-  res.redirect(`https://api.youneedabudget.com/oauth/authorize?client_id=${clientID}&redirect_uri=${codeRedirect}&response_type=code&scope=read-only`);
-
+  res.redirect(`https://api.youneedabudget.com/oauth/authorize?client_id=${clientID}&redirect_uri=${redirectURI}&response_type=code&scope=read-only`);
 });
 
-// Obtain Access Token
+// Obtain Access/Refresh Token
 app.get('/oauth/token', (req, res) => {
   authCode = req.query.code;
-  console.log('rparam', req.query.refresh)
   refreshFlag = req.query.refresh === undefined ? 0 : 1;
-  console.log('rFlag', refreshFlag)
-  console.log('inhere')
-  console.log(`Client ID: ${clientID} \nClient Secret: ${clientSecret} \nAuthorization Code: ${authCode}`);
 
   let postData;
+  //If the refreshflag is present then its a refresh call otherwise get the auth code.
   if (refreshFlag) {
-    console.log('refreshed')
     postData = querystring.stringify({
       'client_id': clientID,
       'client_secret': clientSecret,
-      'redirect_uri': tokenRedirect,
+      'redirect_uri': redirectURI,
       'grant_type': 'refresh_token',
       'refresh_token': authCode
     });
   } else {
-    console.log('original')
     postData = querystring.stringify({
       'client_id': clientID,
       'client_secret': clientSecret,
-      'redirect_uri': tokenRedirect,
+      'redirect_uri': redirectURI,
       'grant_type': 'authorization_code',
       'code': authCode
     });
   }
-
 
   let options = {
     hostname: 'api.youneedabudget.com',
@@ -66,11 +57,8 @@ app.get('/oauth/token', (req, res) => {
   };
 
   let post_req = https.request(options, (res) => {
-    console.log(`STATUS: ${res.statusCode}`);
-    console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
     res.setEncoding('utf8');
     res.on('data', (chunk) => {
-      console.log(`BODY: ${chunk}`);
       let params = JSON.parse(chunk);
       accessToken = params.access_token;
       refreshToken = params.refresh_token;
@@ -88,9 +76,9 @@ app.get('/oauth/token', (req, res) => {
   post_req.write(postData);
   post_req.end();
 
+  //Retrieved everything, now sending access/refresh token to app for use.
   function sendAccessToken () {
-    console.log(accessToken)
-    res.redirect(`http://localhost:5000?token=${accessToken}&refresh=${refreshToken}`);
+    res.redirect(`https://heatmapforynab.netlify.app?token=${accessToken}&refresh=${refreshToken}`);
   }
 });
 

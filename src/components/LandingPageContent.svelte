@@ -3,12 +3,11 @@
 
     let url;
     let token = localStorage.getItem("new");
+    //If the refresh token isn't present it'll authenticate with YNAB, otherwise it uses the refresh token to get an auth code.
     if (token === "undefined") {
-        console.log('nope')
-        url = 'http://localhost:3000/oauth/redirect/';
+        url = 'https://heatmap-for-ynab.herokuapp.com/oauth/redirect/';
     } else {
-        console.log('yep', token)
-        url = `http://localhost:3000/oauth/token?code=${token}&refresh=1`;
+        url = `https://heatmap-for-ynab.herokuapp.com/oauth/token?code=${token}&refresh=1`;
     }
 </script>
 <div class="title-container">
@@ -19,7 +18,7 @@
 <img class="example" alt="HeatmapExample" src="/images/heatmapExample.PNG">
 <div class="main-buttons">
     <a href="https://www.youneedabudget.com"><img  alt="WorksWithYNAB" src="/images/works_with_ynab.svg"></a>
-    <a href={url}><Button type="tertiary">Authorize Report</Button></a>
+    <Button type="tertiary" on:click={() => window.location.href = `${url}`}>Authorize Report</Button>
 </div>
 <div class="section">
     <div class="section-title-container feat">
@@ -162,8 +161,7 @@
 
         background: var(--theme-secondary);
 
-        border-bottom-left-radius: 5px;
-        border-bottom-right-radius: 5px;
+
     }
     .section-title::after {
         content: '';
