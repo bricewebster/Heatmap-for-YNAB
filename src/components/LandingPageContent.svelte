@@ -14,7 +14,7 @@
     }
 </script>
 <div class="title-container">
-    <img class="logo" alt="HeatmapIcon" src="/images/HeatmapIcon2.png">
+    <img class="logo" alt="HeatmapIcon" src="/images/HeatmapIcon.png">
     <p class="title">Heatmap for YNAB</p>
 </div>
 <p class="explain">A report that displays your YNAB transactions in a heatmap style to get a bird's eye view of your budget.</p>

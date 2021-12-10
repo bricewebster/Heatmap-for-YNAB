@@ -27,7 +27,7 @@
 
 <div class="navbar">
   <div class="title-container">
-    <img class="logo" alt="HeatmapIcon" src="/images/HeatmapIcon2.png">
+    <img class="logo" alt="HeatmapIcon" src="/images/HeatmapIcon.png">
     <p class="title">Heatmap for YNAB</p>
   </div>
   <Tabs {activeTab} {tabs} on:tabChange={tabChange}/>

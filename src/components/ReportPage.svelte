@@ -22,7 +22,7 @@
     let transactionsLoaded = false;
     let ynabAPI;
 
-    let mainBudgetID;
+    let budgetID;
 
     //Once the component mounts, it will run the main function if the YNAB API js file has downloaded.
 
@@ -48,8 +48,6 @@
 	 * The main function that fetches all the information needed for the heatmap from the User's account.
 	 */
 	async function main() {
-		mainBudgetID = await getBudgetID();
-
 		var ynab = window.ynab;
 		ynabAPI = await new ynab.API(accessToken);
 		const budgetsFetched = await getBudgets();
@@ -86,22 +84,6 @@
 		storeTransactionsMain();
 	}
 	/**
- 	 * Grabs personal access token for testing. (Will replace in the future)
- 	 */
-	async function getAccessToken() {
-		const response = await fetch('.vscode/accessToken.txt');
-		const accessToken = await response.text();
-		return accessToken;
-	}
-	/**
- 	 * Grabs personal main budget ID for testing. (Will replace in the future)
- 	 */
-	async function getBudgetID() {
-		const response = await fetch('.vscode/budgetID.txt');
-		const budgetID = await response.text();
-		return budgetID;
-	}
-	/**
 	 * Fetches all of the budgets from the user's YNAB account.
 	 * @return {Array of Objects} Budget Objects
 	 */
@@ -111,7 +93,7 @@
 	}
 	/**
 	 * Fetches all of the categories fom the user's YNAB account.
-	 * @param {String} mainBudgetID User's main budget ID(Might be replaced later)
+	 * @param {String} budgetID User's main budget ID(Might be replaced later)
 	 * @returns {Array of Objects} Category Objects 
 	 */
 	async function getCategories(budgetID) {
@@ -120,7 +102,7 @@
 	}
 	/**
 	 * Fetches all of the accounts fom the user's YNAB account
-	 * @param {String} mainBudgetID User's main budget ID(Might be replaced later)
+	 * @param {String} budgetID User's main budget ID(Might be replaced later)
 	 * @returns {Array of Objects} Account Objects 
 	 */
 	async function getAccounts(budgetID) {
@@ -129,7 +111,7 @@
 	}
 	/**
 	 * Fetches all of the payees fom the user's YNAB account.
-	 * @param {String} mainBudgetID User's main budget ID(Might be replaced later)
+	 * @param {String} budgetID User's main budget ID(Might be replaced later)
 	 * @returns {Array of Objects} Payee Objects
 	 */
 	async function getPayees(budgetID) {
@@ -138,7 +120,7 @@
 	}
 	/**
 	 * Fetches all of the transactions from the user's YNAB account.
-	 * @param {String} mainBudgetID User's main budget ID(Might be replaced later)
+	 * @param {String} budgetID User's main budget ID(Might be replaced later)
 	 * @returns {Array of Objects} Transaction Objects
 	 */
 	async function getTransactions(budgetID) {
@@ -147,7 +129,7 @@
 	}
 	/**
 	 * Fetches the user settings from the user's YNAB account.
-	 * @param {String} mainBudgetID User's main budget ID(Might be replaced later)
+	 * @param {String} budgetID User's main budget ID(Might be replaced later)
 	 * @returns {Object} User's Setting Object
 	 */
 	async function getCurrencyInfo(budgetID) {
@@ -171,7 +153,7 @@
 		} else {
 			budgetID = 'default';
 		}
-		$HeatmapSettingsStore.selectedBudget.Id = mainBudgetID;
+		$HeatmapSettingsStore.selectedBudget.Id = budgetID;
 
 		for(let budget of budgetsFetched.budgets) {
 			let budgetList = {Id: budget.id, Name: budget.name};
