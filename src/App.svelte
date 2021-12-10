@@ -10,7 +10,13 @@
         const urlSearchParams = new URLSearchParams(window.location.search);
         const params = Object.fromEntries(urlSearchParams.entries());
         accessToken = params.token;
+		let refreshToken = params.refresh
+		console.log('refreshTokenquery', refreshToken)
+		console.log('refreshTokenStorage', localStorage.getItem("new"))
+		console.log('accessToken', accessToken)
         if (accessToken != null) {
+			console.log(accessToken)
+			localStorage.setItem("new", refreshToken);
 			linkedYNABAccount = true;
         }
     }
@@ -32,7 +38,7 @@
 <ThemeContext>
 	<main>
 		{#if linkedYNABAccount === false}
-			<LandingPage {accessToken}/>
+			<LandingPage/>
 		{:else}
 			<ReportPage {accessToken}/>	
 		{/if}

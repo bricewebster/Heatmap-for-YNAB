@@ -1,5 +1,15 @@
 <script>
     import Button from "./Button.svelte";
+
+    let url;
+    let token = localStorage.getItem("new");
+    if (token === "undefined") {
+        console.log('nope')
+        url = 'http://localhost:3000/oauth/redirect/';
+    } else {
+        console.log('yep', token)
+        url = `http://localhost:3000/oauth/token?code=${token}&refresh=1`;
+    }
 </script>
 <div class="title-container">
     <img class="logo" alt="HeatmapIcon" src="/images/HeatmapIcon2.png">
@@ -9,7 +19,7 @@
 <img class="example" alt="HeatmapExample" src="/images/heatmapExample.PNG">
 <div class="main-buttons">
     <a href="https://www.youneedabudget.com"><img  alt="WorksWithYNAB" src="/images/works_with_ynab.svg"></a>
-    <a href="http://localhost:3000/oauth/redirect/"><Button type="tertiary">Authorize Report</Button></a>
+    <a href={url}><Button type="tertiary">Authorize Report</Button></a>
 </div>
 <div class="section">
     <div class="section-title-container feat">

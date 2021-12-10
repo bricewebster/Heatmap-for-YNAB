@@ -12,28 +12,47 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 let authCode;
+let refreshFlag;
 let accessToken;
+let refreshToken;
 
 // Obtain Authorization Code
 app.get('/oauth/redirect', (req, res) => {
 
-  res.redirect(`https://api.youneedabudget.com/oauth/authorize?client_id=${clientID}&redirect_uri=${codeRedirect}&response_type=code`);
+  res.redirect(`https://api.youneedabudget.com/oauth/authorize?client_id=${clientID}&redirect_uri=${codeRedirect}&response_type=code&scope=read-only`);
 
 });
 
 // Obtain Access Token
 app.get('/oauth/token', (req, res) => {
   authCode = req.query.code;
+  console.log('rparam', req.query.refresh)
+  refreshFlag = req.query.refresh === undefined ? 0 : 1;
+  console.log('rFlag', refreshFlag)
   console.log('inhere')
   console.log(`Client ID: ${clientID} \nClient Secret: ${clientSecret} \nAuthorization Code: ${authCode}`);
 
-  let postData = querystring.stringify({
-    'client_id': clientID,
-    'client_secret': clientSecret,
-    'redirect_uri': tokenRedirect,
-    'grant_type': 'authorization_code',
-    'code': authCode
-  });
+  let postData;
+  if (refreshFlag) {
+    console.log('refreshed')
+    postData = querystring.stringify({
+      'client_id': clientID,
+      'client_secret': clientSecret,
+      'redirect_uri': tokenRedirect,
+      'grant_type': 'refresh_token',
+      'refresh_token': authCode
+    });
+  } else {
+    console.log('original')
+    postData = querystring.stringify({
+      'client_id': clientID,
+      'client_secret': clientSecret,
+      'redirect_uri': tokenRedirect,
+      'grant_type': 'authorization_code',
+      'code': authCode
+    });
+  }
+
 
   let options = {
     hostname: 'api.youneedabudget.com',
@@ -52,8 +71,9 @@ app.get('/oauth/token', (req, res) => {
     res.setEncoding('utf8');
     res.on('data', (chunk) => {
       console.log(`BODY: ${chunk}`);
-      accessToken = JSON.parse(chunk);
-      accessToken = accessToken.access_token;
+      let params = JSON.parse(chunk);
+      accessToken = params.access_token;
+      refreshToken = params.refresh_token;
       sendAccessToken();
     });
     res.on('end', () => {
@@ -70,7 +90,7 @@ app.get('/oauth/token', (req, res) => {
 
   function sendAccessToken () {
     console.log(accessToken)
-    res.redirect(`http://localhost:5000?token=${accessToken}`);
+    res.redirect(`http://localhost:5000?token=${accessToken}&refresh=${refreshToken}`);
   }
 });
 

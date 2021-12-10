@@ -1,9 +1,6 @@
 <script>
     import LandingPageContent from "./LandingPageContent.svelte";
     import PrivacyPageContent from "./PrivacyPageContent.svelte";
-    import { createEventDispatcher } from 'svelte';
-
-    const dispatch = createEventDispatcher();
 
     let privacyPage = 0;
     let currentYear = new Date().getFullYear();
