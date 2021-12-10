@@ -3,10 +3,13 @@
 
     let url;
     let token = localStorage.getItem("new");
+    let authButtonText;
     //If the refresh token isn't present it'll authenticate with YNAB, otherwise it uses the refresh token to get an auth code.
     if (token === "undefined") {
+        authButtonText = 'Authorize Heatmap';
         url = 'https://heatmap-for-ynab.herokuapp.com/oauth/redirect/';
     } else {
+        authButtonText = 'Open Heatmap';
         url = `https://heatmap-for-ynab.herokuapp.com/oauth/token?code=${token}&refresh=1`;
     }
 </script>
@@ -18,7 +21,7 @@
 <img class="example" alt="HeatmapExample" src="/images/heatmapExample.PNG">
 <div class="main-buttons">
     <a href="https://www.youneedabudget.com"><img  alt="WorksWithYNAB" src="/images/works_with_ynab.svg"></a>
-    <Button type="tertiary" on:click={() => window.location.href = `${url}`}>Authorize Report</Button>
+    <Button type="tertiary" on:click={() => window.location.href = `${url}`}>{authButtonText}</Button>
 </div>
 <div class="section">
     <div class="section-title-container feat">
