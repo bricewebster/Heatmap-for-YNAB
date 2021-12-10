@@ -11,6 +11,7 @@
 	 */
 	function linkedCheck() {
         const urlSearchParams = new URLSearchParams(window.location.search);
+		window.history.pushState({}, document.title, "/"); //Removes query strings for cleaner look
         const params = Object.fromEntries(urlSearchParams.entries());
         accessToken = params.token;
 		let refreshToken = params.refresh
