@@ -23,33 +23,33 @@
         }
         if (sectionSorted.Section === 'Category') {
             if (sectionSorted.Direction) {
-                selectedList.sort((a,b) => (scrubCharacters(a.categoryName) < scrubCharacters(b.categoryName)) ? 1 : -1);
-            } else {
                 selectedList.sort((a,b) => (scrubCharacters(a.categoryName) > scrubCharacters(b.categoryName)) ? 1 : -1);
+            } else {
+                selectedList.sort((a,b) => (scrubCharacters(a.categoryName) < scrubCharacters(b.categoryName)) ? 1 : -1);
             }
         } else if (sectionSorted.Section === 'Account') {
             if (sectionSorted.Direction) {
-                selectedList.sort((a,b) => (scrubCharacters(a.accountName) < scrubCharacters(b.accountName)) ? 1 : -1);
-            } else {
                 selectedList.sort((a,b) => (scrubCharacters(a.accountName) > scrubCharacters(b.accountName)) ? 1 : -1);
+            } else {
+                selectedList.sort((a,b) => (scrubCharacters(a.accountName) < scrubCharacters(b.accountName)) ? 1 : -1);
             }
         } else if (sectionSorted.Section === 'Date') {
             if (sectionSorted.Direction) {
-                selectedList.sort((a,b) => (a.dateFormatted < b.dateFormatted) ? 1 : -1);
-            } else {
                 selectedList.sort((a,b) => (a.dateFormatted > b.dateFormatted) ? 1 : -1);
+            } else {
+                selectedList.sort((a,b) => (a.dateFormatted < b.dateFormatted) ? 1 : -1);
             }
         } else if (sectionSorted.Section === 'Payee') {
             if (sectionSorted.Direction) {
-                selectedList.sort((a,b) => (scrubCharacters(a.payeeName) < scrubCharacters(b.payeeName)) ? 1 : -1);
-            } else {
                 selectedList.sort((a,b) => (scrubCharacters(a.payeeName) > scrubCharacters(b.payeeName)) ? 1 : -1);
+            } else {
+                selectedList.sort((a,b) => (scrubCharacters(a.payeeName) < scrubCharacters(b.payeeName)) ? 1 : -1);
             }
         } else if (sectionSorted.Section === 'Memo') {
             if (sectionSorted.Direction) {
-                selectedList.sort((a,b) => (scrubCharacters(a.Memo) < scrubCharacters(b.Memo)) ? 1 : -1);
-            } else {
                 selectedList.sort((a,b) => (scrubCharacters(a.Memo) > scrubCharacters(b.Memo)) ? 1 : -1);
+            } else {
+                selectedList.sort((a,b) => (scrubCharacters(a.Memo) < scrubCharacters(b.Memo)) ? 1 : -1);
             }
         } else if (sectionSorted.Section === 'Amount') {
             if (sectionSorted.Direction) {
@@ -147,9 +147,9 @@
                             <p class="label">Amount</p>
                             {#if sectionSorted.Section === 'Amount'}
                                 {#if sectionSorted.Direction}
-                                    <span class="material-icons-outlined md-24">arrow_drop_down</span>
-                                {:else}
                                     <span class="material-icons-outlined md-24">arrow_drop_up</span>
+                                {:else}
+                                    <span class="material-icons-outlined md-24">arrow_drop_down</span>
                                 {/if}
                             {/if}
                         </div>
