@@ -153,7 +153,7 @@
 		} else {
 			budgetID = 'default';
 		}
-		$HeatmapSettingsStore.selectedBudget.Id = budgetID;
+		$HeatmapSettingsStore.selectedBudget.Id = budgetsFetched.default_budget.id;
 
 		for(let budget of budgetsFetched.budgets) {
 			let budgetList = {Id: budget.id, Name: budget.name};

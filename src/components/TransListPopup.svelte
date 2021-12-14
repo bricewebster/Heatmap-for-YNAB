@@ -87,9 +87,9 @@
                             <p class="label">Category</p>
                             {#if sectionSorted.Section === 'Category'}
                                 {#if sectionSorted.Direction}
-                                    <span class="material-icons-outlined md-24">arrow_drop_down</span>
-                                {:else}
                                     <span class="material-icons-outlined md-24">arrow_drop_up</span>
+                                {:else}
+                                    <span class="material-icons-outlined md-24">arrow_drop_down</span>
                                 {/if}
                             {/if}
                         </div>
@@ -99,9 +99,9 @@
                             <p class="label">Account</p>
                             {#if sectionSorted.Section === 'Account'}
                                 {#if sectionSorted.Direction}
-                                    <span class="material-icons-outlined md-24">arrow_drop_down</span>
-                                {:else}
                                     <span class="material-icons-outlined md-24">arrow_drop_up</span>
+                                {:else}
+                                    <span class="material-icons-outlined md-24">arrow_drop_down</span>
                                 {/if}
                             {/if}
                         </div>
@@ -111,9 +111,9 @@
                             <p class="label">Date</p>
                             {#if sectionSorted.Section === 'Date'}
                                 {#if sectionSorted.Direction}
-                                    <span class="material-icons-outlined md-24">arrow_drop_down</span>
-                                {:else}
                                     <span class="material-icons-outlined md-24">arrow_drop_up</span>
+                                {:else}
+                                    <span class="material-icons-outlined md-24">arrow_drop_down</span>
                                 {/if}
                             {/if}
                         </div>
@@ -123,9 +123,9 @@
                             <p class="label">Payee</p>
                             {#if sectionSorted.Section === 'Payee'}
                                 {#if sectionSorted.Direction}
-                                    <span class="material-icons-outlined md-24">arrow_drop_down</span>
-                                {:else}
                                     <span class="material-icons-outlined md-24">arrow_drop_up</span>
+                                {:else}
+                                    <span class="material-icons-outlined md-24">arrow_drop_down</span>
                                 {/if}
                             {/if}
                         </div>
@@ -135,9 +135,9 @@
                             <p class="label">Memo</p>
                             {#if sectionSorted.Section === 'Memo'}
                                 {#if sectionSorted.Direction}
-                                    <span class="material-icons-outlined md-24">arrow_drop_down</span>
-                                {:else}
                                     <span class="material-icons-outlined md-24">arrow_drop_up</span>
+                                {:else}
+                                    <span class="material-icons-outlined md-24">arrow_drop_down</span>
                                 {/if}
                             {/if}
                         </div>
