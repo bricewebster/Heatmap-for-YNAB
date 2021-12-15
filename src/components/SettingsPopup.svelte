@@ -295,12 +295,6 @@
     .option-title {
         font-size: 1.25em;
     }
-    .option-section-container {
-        display: flex;
-        flex-direction: row;
-
-        height: 100px;
-    }
     .option-section {
         display: block;
 
@@ -352,20 +346,6 @@
                 cursor: pointer;
             }
         }
-    .section {
-        font-weight: bold;
-
-        font-size: .9em;
-
-        list-style: none;
-    }
-    .section-item {
-        margin-left: 20px;
-        
-        font-size: .8em;
-
-        list-style: none;
-    }
     .buttons {
         float: right;
 
@@ -379,8 +359,5 @@
     .theme-select {
         margin-top: 10px;
         height: 30px;
-    }
-    .showpopup {
-        opacity: 1;
     }
 </style>

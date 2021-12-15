@@ -5,7 +5,7 @@
     let token = localStorage.getItem("new");
     let authButtonText;
     //If the refresh token isn't present it'll authenticate with YNAB, otherwise it uses the refresh token to get an auth code.
-    if (token === "undefined") {
+    if (token === "undefined" || token === null) {
         authButtonText = 'Authorize Heatmap';
         url = 'https://heatmap-for-ynab.herokuapp.com/oauth/redirect/';
     } else {
@@ -176,9 +176,6 @@
         height: 5px;
 
         background: var(--theme-secondary);
-
-        border-bottom-left-radius: 5px;
-        border-bottom-right-radius: 5px;
     }
     .list-container {
         display: inline-block;

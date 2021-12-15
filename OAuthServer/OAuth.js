@@ -57,15 +57,17 @@ app.get('/oauth/token', (req, res) => {
   };
 
   let post_req = https.request(options, (res) => {
+    let dataStream = '';
     res.setEncoding('utf8');
     res.on('data', (chunk) => {
-      let params = JSON.parse(chunk);
-      accessToken = params.access_token;
-      refreshToken = params.refresh_token;
-      sendAccessToken();
+      dataStream += chunk;
     });
     res.on('end', () => {
       console.log('No more data in response.');
+      let params = JSON.parse(dataStream);
+      accessToken = params.access_token;
+      refreshToken = params.refresh_token;
+      sendAccessToken();
     });
   });
 

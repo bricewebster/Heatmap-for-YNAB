@@ -185,13 +185,8 @@
     		}
   		}
 
-		CategorySectionStore.update(currentSections => {
-			return currentSections.length === 0 ? [...categorySections] : [currentSections, ...categorySections];
-		})
-
-		CategoryListStore.update(currentList => {
-			return currentList.length === 0 ? [...categoryLists] : [currentList, ...categoryLists];
-		})
+		$CategorySectionStore = categorySections;
+		$CategoryListStore = categoryLists;
 	}
 	/**
 	 * Initiates the accounts list by taking the accounts and store the needed information in a section and list store.
@@ -213,9 +208,7 @@
 			accountLists.push(accountList);
 		}
 
-		AccountListStore.update(currentList => {
-			return currentList.length === 0 ? [...accountLists] : [currentList, ...accountLists];
-		})
+		$AccountListStore = accountLists;
  	}
 	/**
 	 * Initiates the payees list by taking the payees and store the needed information in a list store. 
@@ -235,9 +228,7 @@
 		//Sorts the payee list in alphabetical order
 		payeeLists.sort((a,b) => (a.Name > b.Name) ? 1 : -1);
 
-		PayeeListStore.update(currentList => {
-			return currentList.length === 0 ? [...payeeLists] : [currentList, ...payeeLists];
-		})
+		$PayeeListStore = payeeLists;
 	}
 	/**
 	 * Main function for taking the transactions and storing them based on filters, options, and selected year.
@@ -320,6 +311,11 @@
 	function newNormalizedDate(date){
   		return new Date(new Date(date).getTime() - new Date(date).getTimezoneOffset() * - 60000); //https://stackoverflow.com/a/14569783
 	}
+	/**
+	 * Takes the supplied date and returns the week of the month.
+	 * @param {Date} date date object of the date to conver
+	 * @return {String} week of the month 
+	 */
 	function dayToWeek (date) {
 		let day = date.getDate();
 		let week;
