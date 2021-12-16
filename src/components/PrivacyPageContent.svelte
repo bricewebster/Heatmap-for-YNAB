@@ -17,6 +17,7 @@
         <li>Accounts List - Used for filtering report</li>
         <li>Payees List - Used for filtering report</li>
         <li>Transactions List - Transactions for populating the report</li>
+        <li>Session Settings - Theme used and token so you don't have to reauthenticate every time you use the report.</li>
     </ul>
     <p></p>
     <p class="subtitle">Third-party services</p>
