@@ -238,9 +238,10 @@
     .title {
         margin: 15px 0 5px 15px;
 
+        color: #383e41;
+
         font-size: 1em;
         font-weight: 700;
-        color: #383e41;
     }
     .selection {
         margin: 5px 15px 0 15px;
@@ -257,13 +258,12 @@
             
             background: none;
             border-radius: 1000px;
-
-            font-size: 13.5px;
             color: var(--theme-primary);
 
+            font-size: 13.5px;
+    
             &:hover {
                 background-color: var(--theme-primary);
-
                 color: white;
 
                 cursor: pointer;
@@ -281,7 +281,6 @@
     }
     .section {
         font-weight: bold;
-
         font-size: .9em;
 
         list-style: none;
@@ -334,11 +333,13 @@
         }
     }
     .Accounts::after, .Categories::after, .Payees::after {
-        content: " ";
         position: absolute;
-        bottom: 100%; /* At the bottom of the tooltip */
+        bottom: 100%;
         left: 50%;
+
         margin-left: -5px;
+        content: " ";
+
         border-width: 15px;
         border-style: solid;
         border-color: transparent transparent white transparent;

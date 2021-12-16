@@ -45,6 +45,9 @@
 </ThemeContext>
 
 <style lang="scss">
+	/**
+		Project uses outside in principle discribed on https://webdesign.tutsplus.com/articles/outside-in-ordering-css-properties-by-importance--cms-21685 for css property organization.
+	*/
 	main {
 		margin: 0 auto;
 

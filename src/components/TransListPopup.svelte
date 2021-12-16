@@ -191,8 +191,9 @@
         opacity: 1;
     }
     .popup.yearly {
-        margin: 520px auto 0 auto;
         right: 60px;
+
+        margin: 520px auto 0 auto;
 
         @media screen and (max-width: 1690px) {
             margin-top: 350px;
@@ -202,8 +203,9 @@
         }
     }
     .popup.daysofmonth {
-        margin: 540px auto 0 auto;
         right: 75px;
+
+        margin: 540px auto 0 auto;
 
         @media screen and (max-width: 1690px) {
             margin-top: 350px;
@@ -213,35 +215,40 @@
         }
     }
     .popup.monthly {
-        margin: 380px auto 0 auto;
         right: 65px;
+
+        margin: 380px auto 0 auto;
 
         @media screen and (max-width: 1366px) {
             margin-top: 250px;
         }
     }
     .popup.weeksofmonth {
-        margin: 340px auto 0 auto;
         right: 20px;
+
+        margin: 340px auto 0 auto;
 
         @media screen and (max-width: 1366px) {
             margin-top: 230px;
         }
     }
     .popup.daily {
-        margin: 310px auto 0 auto;
         right: 70px;
+
+        margin: 310px auto 0 auto;
 
         @media screen and (max-width: 1366px) {
             margin-top: 255px;
         }
     }
     .popup::after {
-        content: " ";
         position: absolute;
-        bottom: 100%; /* At the bottom of the tooltip */
+        bottom: 100%;
         left: 50%;
+
         margin-left: -5px;
+        content: " ";
+
         border-width: 15px;
         border-style: solid;
         border-color: transparent transparent white transparent;
@@ -263,6 +270,7 @@
         display: flex;
 
         color: #636366;
+
         font-weight: 400;
         font-size: 1.2em;
     }
@@ -285,19 +293,21 @@
         width: 100%;
     }
     th {
-        width: 16%;
-        
         display: inline-block;
+
         padding: .25em 0;
+        width: 16%;
+
+        color: #383e41;
 
         font-size: .75em;
         letter-spacing: .05em;
         font-weight: 100;
-        color: #383e41;
         text-align: left;
-        overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+
+        overflow: hidden;
     }
     .label-container {
         display: flex;
@@ -310,11 +320,11 @@
         align-content: flex-start;
     }
     th:last-child {
-            padding-right: .5rem;
+        padding-right: .5rem;
 
-            border-right: none;
+        border-right: none;
 
-            text-align: right;
+        text-align: right;
     }
     .column-header {
         display: flex;
@@ -334,9 +344,11 @@
         display: block;
 
         height: 220px;
+
         border-bottom: 1px solid #d1d1d6;
 
         overflow-y: scroll;
+        
         & tr {
             display: block;
             

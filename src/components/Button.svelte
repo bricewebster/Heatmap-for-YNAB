@@ -48,8 +48,8 @@
 
         border: 5px solid var(--theme-primary);
         background-color: transparent;
-
         color: var(--theme-primary);
+        
         font-weight: bold;
         font-size: 1.2em;
 

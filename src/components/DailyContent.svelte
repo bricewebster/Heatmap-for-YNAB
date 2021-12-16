@@ -99,12 +99,13 @@
         width: 745px;
         height: auto;
 
-        font-size: 12px;
-
         border-spacing: 5px;
+
+        font-size: 12px;
     }
     .cal-day th {
         position: relative;
+
         width: 100px;
         height: 55px; 
     }
@@ -112,12 +113,14 @@
         position: absolute;
         top: 0;
         left: 0;
+
         margin: 5px 0 0 5px;
     }
     .amount {
         display: flex;
         justify-content: center;
         align-items: center;
+
         height: 100%;
     }
     .income {
@@ -147,31 +150,33 @@
     }
     .populated-main-container {
         position: relative;
+
         width: 100%;
         height: 100%;
     }
     .populated-container {
         position: relative;
+
         width: 100%;
         height: 100%;
     }
     .populated-subcontainer {
         position: relative;
+
         width: 100%;
         height: 100%;
     }
     .populated-subcontainer::before {
         /* Bottom Line */
-        content: '';
         position: absolute;
-
         bottom: -6px;
         left: -6px;
-        width: 112.25%;
+
+        width: 112.25%;    
         height: 5px;
+        content: '';
 
         background: var(--theme-secondary);
-
         border-bottom-left-radius: 5px;
         border-bottom-right-radius: 5px;
 
@@ -187,13 +192,13 @@
     }
     .populated-subcontainer::after {
         /* Left Line */
-        content: '';
         position: absolute;
-
         top: -6px;
         left: -6px;
+
         width: 5px;
         height: 114%;
+        content: '';
 
         background: var(--theme-secondary);
         border-top-left-radius: 5px;
@@ -210,13 +215,13 @@
     }
     .populated-container::before {
         /* Right Line */
-        content: '';
         position: absolute;
-
         top: -6px;
         right: -6px;
+
         width: 5px;
         height: 114%;
+        content: '';
 
         background: var(--theme-secondary);
         border-top-right-radius: 5px;
@@ -234,13 +239,13 @@
     }
     .populated-container::after {
         /* Top Left Line */
-        content: '';
         position: absolute;
-
         top: -6px;
         left: -6px;
+
         width: 63.5%;
         height: 5px;
+        content: '';
 
         background: var(--theme-secondary);
         border-top-left-radius: 5px;
@@ -257,13 +262,14 @@
     }
     .populated-main-container::before {
         /* Top Right Line */
-        content: '';
         position: absolute;
 
         top: -6px;
         right: -6px;
+
         width: 63.5%;
         height: 5px;
+        content: '';
 
         background: var(--theme-secondary);
         border-top-right-radius: 5px;
@@ -280,11 +286,11 @@
     }
     .backdrop {
         position: fixed;
-
         top: 0;
         left: 0;
-        height: 100%;
+
         width: 100%;
+        height: 100%;
 
         z-index: 10;
         overflow-y: auto;

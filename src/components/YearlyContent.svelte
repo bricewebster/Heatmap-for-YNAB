@@ -237,11 +237,13 @@
     }
     .focused {
         color: var(--theme-secondary);
+
         transition: transform 250ms ease-in;
         transition-delay: 200ms;
     }
     .nonfocused {
         color: black;
+
         transition: transform 250ms ease-in;
         transition-delay: 200ms;
     }
@@ -250,31 +252,33 @@
     }
     .populated-main-container {
         position: relative;
+
         width: 100%;
         height: 100%;
     }
     .populated-container {
         position: relative;
+
         width: 100%;
         height: 100%;
     }
     .populated-subcontainer {
         position: relative;
+
         width: 100%;
         height: 100%;
     }
     .populated-subcontainer::before {
         /* Bottom Line */
-        content: '';
         position: absolute;
-
         bottom: -3px;
         left: -3px;
+
         width: 125.5%;
         height: 2px;
+        content: '';
 
         background: var(--theme-secondary);
-
         border-bottom-left-radius: 2px;
         border-bottom-right-radius: 2px;
 
@@ -290,13 +294,13 @@
     }
     .populated-subcontainer::after {
         /* Left Line */
-        content: '';
         position: absolute;
-
         top: -3px;
         left: -3px;
+
         width: 2px;
         height: 135%;
+        content: '';
 
         background: var(--theme-secondary);
         border-top-left-radius: 2px;
@@ -314,13 +318,14 @@
     }
     .populated-container::before {
         /* Right Line */
-        content: '';
         position: absolute;
 
         top: -3px;
         right: -3px;
+
         width: 2px;
         height: 135%;
+        content: '';
 
         background: var(--theme-secondary);
         border-top-right-radius: 2px;
@@ -339,13 +344,13 @@
     }
     .populated-container::after {
         /* Top Left Line */
-        content: '';
         position: absolute;
-
         top: -3px;
         left: -3px;
+
         width: 63.5%;
         height: 2px;
+        content: '';
 
         background: var(--theme-secondary);
         border-top-left-radius: 2px;
@@ -362,13 +367,13 @@
     }
     .populated-main-container::before {
         /* Top Right Line */
-        content: '';
         position: absolute;
-
         top: -3px;
         right: -3px;
+
         width: 63.5%;
         height: 2px;
+        content: '';
 
         background: var(--theme-secondary);
         border-top-right-radius: 5px;
@@ -385,23 +390,24 @@
     }
     .amountPopup {
         position: relative;
+
         display: inline-block;
         width: 100%;
         height: 100%;
     }
     .amountPopup .amountPopupText {
         position: absolute;
-
         top: -5px;
         left: 140%;
+
         padding: 5px;
         width: auto;
 
         background-color: white;
         border-radius: 5px;
         box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.2);
-
         color: #636366;
+
         text-align: center;
         font-size: 12px;
    
@@ -409,12 +415,12 @@
         visibility: hidden;
     }
     .amountPopup .amountPopupText::after {
-        content: "";
         position: absolute;
-
         top: 50%;
         right: 100%;
+
         margin-top: -5px;
+        content: "";
 
         border-width: 5px;
         border-style: solid;
@@ -428,9 +434,9 @@
     }
     .backdrop {
         position: fixed;
-
         top: 0;
         left: 0;
+        
         height: 100%;
         width: 100%;
 

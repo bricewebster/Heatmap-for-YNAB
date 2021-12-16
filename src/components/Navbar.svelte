@@ -66,8 +66,9 @@
     .title {
         padding-left: 5px;
 
-        font-size: 1.75em;
         color: white;
+
+        font-size: 1.75em;
         font-weight: bold;
     }
     .settings {
@@ -113,9 +114,9 @@
     }
     .backdrop {
         position: fixed;
-
         top: 0;
         left: 0;
+
         height: 100%;
         width: 100%;
 

@@ -46,8 +46,9 @@
         text-decoration: none;
     }
     .links small {
-        font-weight: bold;
         color: var(--theme-secondary);
+
+        font-weight: bold;
         
         cursor: pointer;
     }

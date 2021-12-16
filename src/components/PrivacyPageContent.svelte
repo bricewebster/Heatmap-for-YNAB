@@ -32,9 +32,10 @@
         width: 1000px;
     }
     .title {
+        color: var(--theme-primary);
+
         font-size: 3em;
         font-weight: bold;
-        color: var(--theme-primary);
     }
     .subtitle {
         margin-top: 15px;

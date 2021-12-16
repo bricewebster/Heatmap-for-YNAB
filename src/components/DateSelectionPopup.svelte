@@ -239,28 +239,39 @@
 <style lang="scss">
     .popup {
         position: relative;
-
         right: 60px;
-        margin: 200px auto 0 auto;
 
+        margin: 200px auto 0 auto;
         width:  465px;
         height: 180px;
 
         background-color: white;
         border-radius: 5px;
         box-shadow: 0 16px 64px rgba(0, 0, 0, 0.2);
-
         color: #383e41;
 
         opacity: 1;
     }
+    .popup::after {
+        position: absolute;
+        bottom: 100%; /* At the bottom of the tooltip */
+        left: 50%;
+        
+        margin-left: -5px;
+        content: " ";
+
+        border-width: 15px;
+        border-style: solid;
+        border-color: transparent transparent white transparent;
+    }
     .title {
         margin: 15px 0 5px 15px;
         padding-top: 10px;
+        
+        color: #383e41;
 
         font-size: 1em;
         font-weight: 700;
-        color: #383e41;
     }
     .selection {
         margin: 0px 15px;
@@ -280,13 +291,12 @@
             
             background: none;
             border-radius: 1000px;
+            color: var(--theme-primary);
 
             font-size: 12.6px;
-            color: var(--theme-primary);
 
             &:hover {
                 background-color: var(--theme-primary);
-
                 color: white;
 
                 cursor: pointer;
@@ -301,14 +311,14 @@
 
         & li {
             float: left;
-            list-style: none;
-            
+
             padding-right: 0.3em;
+
+            list-style: none;
         }
         & select {
             border: 0.125rem solid #8e8e93;
             border-radius: 0.25rem;
-
             color: #383e41;
         }
     }
@@ -328,16 +338,6 @@
 
         margin: 15px 10px 0 0;
         width: 140px;
-    }
-    .popup::after {
-        content: " ";
-        position: absolute;
-        bottom: 100%; /* At the bottom of the tooltip */
-        left: 50%;
-        margin-left: -5px;
-        border-width: 15px;
-        border-style: solid;
-        border-color: transparent transparent white transparent;
     }
 </style>
 

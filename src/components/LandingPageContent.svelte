@@ -98,8 +98,9 @@
     .title {
         padding-left: 5px;
 
-        font-size: 3em;
         color: var(--theme-primary);
+
+        font-size: 3em;
         font-weight: bold;
     }
     .explain {
@@ -107,8 +108,9 @@
 
         width: 600px;
 
-        font-size: 18px;
         color: #2E2E30;
+
+        font-size: 18px;
         text-align: center;
     }
     .example {
@@ -117,7 +119,6 @@
         
         border: 1px solid rgb(255,122,0);
         border-radius: 5px;
-
         box-shadow: 0 16px 64px rgba(255, 122, 0, 0.2);
     }
     .main-buttons {
@@ -149,31 +150,30 @@
  
         margin: 0 auto;
 
+        color: #2E2E30;
+
         font-size: 2.25em;
         font-weight: bold;
-        color: #2E2E30;
     }
     .section-title::before {
-        content: '';
         position: absolute;
-
         bottom: 0px;
         left: 20%;
+
         width: 35%;
         height: 5px;
+        content: '';
 
         background: var(--theme-secondary);
-
-
     }
     .section-title::after {
-        content: '';
         position: absolute;
-
         bottom: 0px;
         left: 50%;
+
         width: 35%;
         height: 5px;
+        content: '';
 
         background: var(--theme-secondary);
     }
@@ -202,10 +202,10 @@
     }
     .sub-list > li::before {
         display: inline-block; 
-        content: "\2022";
 
         margin-left: -1em;
         width: 1em;
+        content: "\2022";
 
         font-weight: bold;
     }

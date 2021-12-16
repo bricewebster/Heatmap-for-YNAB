@@ -18,10 +18,10 @@
         height: 100vh;
 
         background-color: #F1F2F4;
+        color: #2E2E30;
 
         font-size: 2.25em;
         font-weight: bold;
-        color: #2E2E30;
     }
 
 </style>

@@ -298,20 +298,21 @@
     }
     .desc-popup {
         position: relative;
+
         width: 100%;
         height: 100%;
     }
     .desc-popup .desc-text {
         position: absolute;
-
         bottom: 125%;
         left: -90%;
+
         padding: 5px;
         width: 100px;
 
         border-radius: 5px;
-  
         color: white;
+
         text-align: center;
         font-size: 14px;
         font-weight: bold;
@@ -339,12 +340,12 @@
         background-color: #FEDE17;
     }
     .desc-popup .desc-text:after {
-        content: "";
         position: absolute;
-
         top: 100%;
         left: 50%;
+
         margin-left: -5px;
+        content: "";
 
         border-width: 5px;
         border-style: solid;
@@ -373,11 +374,11 @@
     }
     .backdrop {
         position: fixed;
-
         top: 0;
         left: 0;
-        height: 100%;
+
         width: 100%;
+        height: 100%;
 
         z-index: 10;
     }

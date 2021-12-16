@@ -34,12 +34,11 @@
   
         background: none;
         border: none;
-  
-        font-size: 1.2em;
         color: white;
   
+        font-size: 1.2em;
+  
         cursor: pointer;
-
         transition: color 200ms ease-in;
 
         &:hover {
@@ -54,8 +53,8 @@
             border-bottom: 5px solid transparent;
             border-top-left-radius: 5px;
             border-top-right-radius: 5px;
-  
             color: var(--theme-secondary);
+            
             transition: background 250ms ease-out;
         }
     }

@@ -167,6 +167,7 @@
     }
     .value-square {
         display: inline-block;
+        
         height: 18px;
         width: 25px;
     }

@@ -244,7 +244,6 @@
 
         margin: 125px auto 0 auto;
         padding-top: 2px;
-
         width: 500px;
         height: 425px;
 
@@ -262,22 +261,25 @@
         }
     }
     .popup::after {
-        content: " ";
         position: absolute;
-        bottom: 100%; /* At the bottom of the tooltip */
+        bottom: 100%;
         left: 50%;
+
         margin-left: -5px;
+        content: " ";
+
         border-width: 15px;
         border-style: solid;
         border-color: transparent transparent white transparent;
     }
     .title {
         margin: 15px 15px 5px 15px;
+        
+        border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+        color: #383e41;
 
         font-size: 1em;
         font-weight: 700;
-        color: #383e41;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.15);
     }
     .option-twocolumn {
         display: flex;
@@ -334,9 +336,9 @@
             
             background: none;
             border-radius: 1000px;
+            color: var(--theme-primary);
 
             font-size: 13.5px;
-            color: var(--theme-primary);
 
             &:hover {
                 background-color: var(--theme-primary);
