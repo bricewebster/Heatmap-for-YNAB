@@ -244,6 +244,8 @@
 			//If there are subtransctions(which are just split transactions) then it loops through those
 			if(transaction.subtransactions.length > 0) {
 				for(let subtransaction of transaction.subtransactions) {
+					//Adds missing elements in the subtransaction from the main transaction.
+					subtransaction = {...subtransaction, ...{date: transaction.date}, ...{account_id: transaction.account_id}, ...{account_name: transaction.account_name}, ...{payee_id: transaction.payee_id}, ...{payee_name: transaction.payee_name}};
 					let transactionInfo = storeTransaction(subtransaction);
 					if(transactionInfo === undefined) {
 						continue;
