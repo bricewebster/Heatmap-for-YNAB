@@ -21,7 +21,7 @@
     </ul>
     <p></p>
     <p class="subtitle">Third-party services</p>
-    <p>Heatmap for YNAB does not communicate with any third-party apps or services. This means data collected from YNAB stays within the report and is not sent anywhere else. No analytic or tracking software is used on the report.</p>
+    <p>Heatmap for YNAB does not communicate with any third-party apps or services. This means data collected from YNAB stays within the report and is not sent anywhere else.</p>
     <p class="subtitle">Changes to Privacy Policy</p>
     <p>This Privacy Policy may change in the future with updates to either YNAB or Heatmap for YNAB and they'll be listed on this page.</p>
     <p class="subtitle">Contact Information</p>
