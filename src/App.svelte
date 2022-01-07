@@ -4,21 +4,27 @@
 	import ThemeContext from "./components/ThemeContext.svelte";
 
 	let linkedYNABAccount = false;
+	let debugMode = false;
 	let accessToken;
 
 	/**
 	 * Checks if an access token is present in the params and if so it'll load up the app.
 	 */
 	function linkedCheck() {
-        const urlSearchParams = new URLSearchParams(window.location.search);
-		window.history.pushState({}, document.title, "/"); //Removes query strings for cleaner look
-        const params = Object.fromEntries(urlSearchParams.entries());
-        accessToken = params.token;
-		let refreshToken = params.refresh
-        if (accessToken != null) {
-			localStorage.setItem("new", refreshToken);
+		if (debugMode) {
+			console.log('Debug Mode')
 			linkedYNABAccount = true;
-        }
+		} else {
+			const urlSearchParams = new URLSearchParams(window.location.search);
+			window.history.pushState({}, document.title, "/"); //Removes query strings for cleaner look
+			const params = Object.fromEntries(urlSearchParams.entries());
+			accessToken = params.token;
+			let refreshToken = params.refresh
+			if (accessToken != null) {
+				localStorage.setItem("new", refreshToken);
+				linkedYNABAccount = true;
+			}
+		}
     }
 	linkedCheck();
 </script>
@@ -47,7 +53,7 @@
 		{#if linkedYNABAccount === false}
 			<LandingPage/>
 		{:else}
-			<ReportPage {accessToken}/>	
+			<ReportPage {accessToken} {debugMode}/>	
 		{/if}
 
 	</main>

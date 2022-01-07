@@ -14,6 +14,7 @@
 	import CurrencyInfoStore from '../stores/currencyInfoStore';
 
 	export let accessToken;
+	export let debugMode;
 
     let activeTab = 'Yearly';
 
@@ -21,8 +22,6 @@
     let mounted = false;
     let transactionsLoaded = false;
     let ynabAPI;
-
-    let budgetID;
 
     //Once the component mounts, it will run the main function if the YNAB API js file has downloaded.
 
@@ -49,13 +48,20 @@
 	 */
 	async function main() {
 		var ynab = window.ynab;
+		if (debugMode) {
+			accessToken = await getPersonalToken();
+		}
 		ynabAPI = await new ynab.API(accessToken);
 		const budgetsFetched = await getBudgets();
 		const budgetID = await initBudgets(budgetsFetched);
 
 		await getBudgetInfo(budgetID);
 		storeTransactionsMain(); 
-		console.timeEnd('main')
+	}
+	async function getPersonalToken () {
+		const response = await fetch('.vscode/accessToken.txt');
+		const accessToken = await response.text();
+		return accessToken;
 	}
 	/**
 	 * Fetches all of the budget info (Categories, Accounts, Payees, Currency Info, & Transactions).
@@ -151,9 +157,9 @@
 		if(budgetsFetched.default_budget === null) {
 			budgetID = 'last-used';
 		} else {
-			budgetID = 'default';
+			budgetID = budgetsFetched.default_budget.id;
 		}
-		$HeatmapSettingsStore.selectedBudget.Id = budgetsFetched.default_budget.id;
+		$HeatmapSettingsStore.selectedBudget.Id = budgetID;
 
 		for(let budget of budgetsFetched.budgets) {
 			let budgetList = {Id: budget.id, Name: budget.name};
