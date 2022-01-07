@@ -2,6 +2,7 @@
     import Navbar from "./Navbar.svelte";
 	import Content from "./Content.svelte";
 	import Loading from "./Loading.svelte";
+	import ErrorPage from "./ErrorPage.svelte";
 	import { onMount } from 'svelte';
 	import HeatmapSettingsStore from '../stores/heatmapSettingsStore';
 	import navOptionsStore from '../stores/navOptionsStore';
@@ -21,6 +22,9 @@
     let ynabAPIReady = false;
     let mounted = false;
     let transactionsLoaded = false;
+	let loadingError = false;
+	let loadingLog = [];
+	let errorStatus;
     let ynabAPI;
 
     //Once the component mounts, it will run the main function if the YNAB API js file has downloaded.
@@ -55,10 +59,14 @@
 			accessToken = await getPersonalToken();
 		}
 		ynabAPI = await new ynab.API(accessToken);
+		loadingLog.push('API Loaded');
 		const budgetsFetched = await getBudgets();
+		loadingLog.push('Budgets Fetched');
 		const budgetID = await initBudgets(budgetsFetched);
+		loadingLog.push('Budgets Loaded');
 
 		await getBudgetInfo(budgetID);
+		loadingLog.push('Budget Info Fetched');
 		storeTransactionsMain(); 
 	}
 	/**
@@ -76,15 +84,23 @@
 	 */
 	async function getBudgetInfo (budgetID) {
 		const categoriesFetched = getCategories(budgetID);
+		loadingLog.push('Categories Fetched');
 		const accountsFetched = getAccounts(budgetID);
+		loadingLog.push('Accounts Fetched');
 		const payeesFetched = getPayees(budgetID);
+		loadingLog.push('Payees Fetched');
 		const currencyInfo = getCurrencyInfo(budgetID);
+		loadingLog.push('Currency Fetched');
 		const transactionsFetch = getTransactions(budgetID);
+		loadingLog.push('Transactions Fetched');
 
 		let fetchedValues = await Promise.all([categoriesFetched, accountsFetched, payeesFetched, currencyInfo, transactionsFetch]);
 		initCategories(fetchedValues[0]);
+		loadingLog.push('Categories Initialized');
 		initAccounts(fetchedValues[1]);
+		loadingLog.push('Accounts Initialized');
 		initPayees(fetchedValues[2]);
+		loadingLog.push('Payees Initialized');
 		$CurrencyInfoStore = fetchedValues[3];
 		$AllTransactionsStore = fetchedValues[4];
 	}
@@ -101,7 +117,13 @@
 	 * @return {Array of Objects} Budget Objects
 	 */
 	async function getBudgets() {
-		const budgetResponse = await ynabAPI.budgets.getBudgets();
+		let budgetResponse;
+		try {
+			budgetResponse = await ynabAPI.budgets.getBudgets();
+		} catch (error) {
+			errorStatus = error;
+			loadingError = true;
+		}
 		return budgetResponse.data;
 	}
 	/**
@@ -110,7 +132,13 @@
 	 * @returns {Array of Objects} Category Objects 
 	 */
 	async function getCategories(budgetID) {
-  		const categoryResponse = await ynabAPI.categories.getCategories(budgetID);
+		let categoryResponse;
+  		try {
+			categoryResponse = await ynabAPI.categories.getCategories(budgetID);
+		} catch (error) {
+			errorStatus = error;
+			loadingError = true;
+		}
   		return categoryResponse.data.category_groups;
 	}
 	/**
@@ -119,7 +147,13 @@
 	 * @returns {Array of Objects} Account Objects 
 	 */
 	async function getAccounts(budgetID) {
-  		const accountResponse = await ynabAPI.accounts.getAccounts(budgetID);
+		let accountResponse;
+  		try {
+			accountResponse = await ynabAPI.accounts.getAccounts(budgetID);
+		} catch (error) {
+			errorStatus = error;
+			loadingError = true;
+		}
   		return accountResponse.data.accounts;
 	}
 	/**
@@ -128,7 +162,13 @@
 	 * @returns {Array of Objects} Payee Objects
 	 */
 	async function getPayees(budgetID) {
-		const payeeResponse = await ynabAPI.payees.getPayees(budgetID);
+		let payeeResponse;
+		try {
+			payeeResponse = await ynabAPI.payees.getPayees(budgetID);
+		} catch (error) {
+			errorStatus = error;
+			loadingError = true;
+		}
 		return payeeResponse.data.payees;
 	}
 	/**
@@ -137,7 +177,13 @@
 	 * @returns {Array of Objects} Transaction Objects
 	 */
 	async function getTransactions(budgetID) {
-		const transactionResponse = await ynabAPI.transactions.getTransactions(budgetID);
+		let transactionResponse;
+		try {
+			transactionResponse = await ynabAPI.transactions.getTransactions(budgetID);
+		} catch (error) {
+			errorStatus = error;
+			loadingError = true;
+		}
 		return transactionResponse.data.transactions;
 	}
 	/**
@@ -146,12 +192,18 @@
 	 * @returns {Object} User's Setting Object
 	 */
 	async function getCurrencyInfo(budgetID) {
-  		const currencyResponse = await ynabAPI.budgets.getBudgetSettingsById(budgetID);
-		const currencySettings = currencyResponse.data.settings.currency_format;
-		let currencyInfo = {Decimals: currencySettings.decimal_digits, decimalSeparator: currencySettings.decimal_separator, 
+		let currencyInfo;
+		try {
+  			const currencyResponse = await ynabAPI.budgets.getBudgetSettingsById(budgetID);
+			const currencySettings = currencyResponse.data.settings.currency_format;
+			currencyInfo = {Decimals: currencySettings.decimal_digits, decimalSeparator: currencySettings.decimal_separator, 
 				            symbolFirst: currencySettings.symbol_first, Symbol: currencySettings.currency_symbol, 
 							displaySymbol: currencySettings.display_symbol, groupSeparator: currencySettings.group_separator, dateFormat: currencyResponse.data.settings.date_format.format};
-  		return currencyInfo;
+		} catch (error) {
+			errorStatus = error;
+			loadingError = true;
+		}
+		return currencyInfo;
 	}
 	/**
 	 * Initializes the budgets list and selected budget.
@@ -161,16 +213,21 @@
 	async function initBudgets (budgetsFetched) {
 		let budgetID;
 
-		if(budgetsFetched.default_budget === null) {
-			budgetID = 'last-used';
-		} else {
-			budgetID = budgetsFetched.default_budget.id;
-		}
-		$HeatmapSettingsStore.selectedBudget.Id = budgetID;
+		try {
+			if(budgetsFetched.default_budget === null) {
+				budgetID = 'last-used';
+			} else {
+				budgetID = budgetsFetched.default_budget.id;
+			}
+			$HeatmapSettingsStore.selectedBudget.Id = budgetID;
 
-		for(let budget of budgetsFetched.budgets) {
-			let budgetList = {Id: budget.id, Name: budget.name};
-			$HeatmapSettingsStore.Budgets.push(budgetList);
+			for(let budget of budgetsFetched.budgets) {
+				let budgetList = {Id: budget.id, Name: budget.name};
+				$HeatmapSettingsStore.Budgets.push(budgetList);
+			}
+		} catch (error) {
+			errorStatus = error;
+			loadingError = true;
 		}
 		
 		return budgetID;
@@ -183,20 +240,25 @@
   		let categorySections =  [];
 		let categoryLists = [];
 
-  		for(let category of categoriesFetched) {
-			//Skips the credit card payments category as its not included in YNAB reports.
-			if (category.name === 'Credit Card Payments') {
-				continue;
+		try {
+			for(let category of categoriesFetched) {
+				//Skips the credit card payments category as its not included in YNAB reports.
+				if (category.name === 'Credit Card Payments') {
+					continue;
+				}
+
+				let categorySection = {Id: category.id, Name: category.name, Checked: true};
+				categorySections.push(categorySection);
+
+				for(let subcategory of category.categories) {
+					let categoryList = {Id: category.id, subId: subcategory.id, subName: subcategory.name, Checked: true};
+					categoryLists.push(categoryList);
+				}
 			}
-
-			let categorySection = {Id: category.id, Name: category.name, Checked: true};
-			categorySections.push(categorySection);
-
-    		for(let subcategory of category.categories) {
-				let categoryList = {Id: category.id, subId: subcategory.id, subName: subcategory.name, Checked: true};
-				categoryLists.push(categoryList);
-    		}
-  		}
+		} catch (error) {
+			errorStatus = error;
+			loadingError = true;
+		}
 
 		$CategorySectionStore = categorySections;
 		$CategoryListStore = categoryLists;
@@ -208,19 +270,23 @@
 	function initAccounts(accountsFetched) {
 		let accountLists = [];
 
-  		for (let account of accountsFetched) {
-			let accountType;
-			if (account.closed) {
-				accountType = 'Closed Accounts';
-			} else if (!account.on_budget) {
-				accountType = 'Tracking Accounts';
-			} else {
-				accountType = 'On Budget Accounts';
+		try {
+			for (let account of accountsFetched) {
+				let accountType;
+				if (account.closed) {
+					accountType = 'Closed Accounts';
+				} else if (!account.on_budget) {
+					accountType = 'Tracking Accounts';
+				} else {
+					accountType = 'On Budget Accounts';
+				}
+				let accountList = {Id: account.id, Name: account.name, Type: accountType, Checked: true};
+				accountLists.push(accountList);
 			}
-			let accountList = {Id: account.id, Name: account.name, Type: accountType, Checked: true};
-			accountLists.push(accountList);
+		} catch (error) {
+			errorStatus = error;
+			loadingError = true;
 		}
-
 		$AccountListStore = accountLists;
  	}
 	/**
@@ -230,12 +296,17 @@
 	function initPayees(payeesFetched) {
 		let payeeLists = [];
 
-		for (let payee of payeesFetched) {
-			if (payee.deleted) {
-				continue;
+		try {
+			for (let payee of payeesFetched) {
+				if (payee.deleted) {
+					continue;
+				}
+				let payeeList = {Id: payee.id, Name: payee.name, Checked: true};
+				payeeLists.push(payeeList);
 			}
-			let payeeList = {Id: payee.id, Name: payee.name, Checked: true};
-			payeeLists.push(payeeList);
+		} catch (error) {
+			errorStatus = error;
+			loadingError = true;
 		}
 
 		//Sorts the payee list in alphabetical order
@@ -249,31 +320,37 @@
 	function storeTransactionsMain() {
 		let currentTransList = [];
 		let firstDateCheckSet = true;
-		for(let transaction of $AllTransactionsStore) {
-			if (firstDateCheckSet)  {
-				$navOptionsStore.firstDate = newNormalizedDate(transaction.date);
-				firstDateCheckSet = false;
-			}
-			//If there are subtransctions(which are just split transactions) then it loops through those
-			if(transaction.subtransactions.length > 0) {
-				for(let subtransaction of transaction.subtransactions) {
-					//Adds missing elements in the subtransaction from the main transaction.
-					subtransaction = {...subtransaction, ...{date: transaction.date}, ...{account_id: transaction.account_id}, ...{account_name: transaction.account_name}, ...{payee_id: transaction.payee_id}, ...{payee_name: transaction.payee_name}};
-					let transactionInfo = storeTransaction(subtransaction);
+		try {
+			for(let transaction of $AllTransactionsStore) {
+				if (firstDateCheckSet)  {
+					$navOptionsStore.firstDate = newNormalizedDate(transaction.date);
+					firstDateCheckSet = false;
+				}
+				//If there are subtransctions(which are just split transactions) then it loops through those
+				if(transaction.subtransactions.length > 0) {
+					for(let subtransaction of transaction.subtransactions) {
+						//Adds missing elements in the subtransaction from the main transaction.
+						subtransaction = {...subtransaction, ...{date: transaction.date}, ...{account_id: transaction.account_id}, ...{account_name: transaction.account_name}, ...{payee_id: transaction.payee_id}, ...{payee_name: transaction.payee_name}};
+						let transactionInfo = storeTransaction(subtransaction);
+						if(transactionInfo === undefined) {
+							continue;
+						}
+						currentTransList.push(transactionInfo);
+					}
+				} else { 
+					let transactionInfo = storeTransaction(transaction);
 					if(transactionInfo === undefined) {
 						continue;
 					}
 					currentTransList.push(transactionInfo);
 				}
-			} else { 
-				let transactionInfo = storeTransaction(transaction);
-				if(transactionInfo === undefined) {
-					continue;
-				}
-				currentTransList.push(transactionInfo);
 			}
+		} catch (error) {
+			errorStatus = error;
+			loadingError = true;
 		}
 		$CurrentTransactionsStore = currentTransList;
+		loadingLog.push('Transactions Stored.');
 		transactionsLoaded = true;
 	}
 	/**
@@ -479,10 +556,12 @@
 </svelte:head>
 
 <div>
-    {#if transactionsLoaded === true}
+    {#if transactionsLoaded === true & loadingError === false}
 		<Navbar bind:activeTab = {activeTab} on:filterChange={storeTransactionsMain} on:colorChange={storeTransactionsMain} on:budgetChange={budgetUpdate}/>
 		<Content {activeTab} {formatAmount} {formatDate} {dayToWeek} on:dateChange={storeTransactionsMain}/>
-    {:else}
+    {:else if loadingError === true}
+		<ErrorPage {loadingLog} {errorStatus}/>
+	{:else}
     	<Loading />	
     {/if}
 </div>
