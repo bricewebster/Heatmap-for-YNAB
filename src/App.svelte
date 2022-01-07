@@ -4,7 +4,7 @@
 	import ThemeContext from "./components/ThemeContext.svelte";
 
 	let linkedYNABAccount = false;
-	let debugMode = true;
+	let debugMode = false;
 	let accessToken;
 
 	/**
