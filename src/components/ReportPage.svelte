@@ -47,6 +47,9 @@
 	 * The main function that fetches all the information needed for the heatmap from the User's account.
 	 */
 	async function main() {
+		if (localStorage.getItem("customColorsFlag") === 'Yes') {
+			setCustomColors();
+		}
 		var ynab = window.ynab;
 		if (debugMode) {
 			accessToken = await getPersonalToken();
@@ -58,6 +61,10 @@
 		await getBudgetInfo(budgetID);
 		storeTransactionsMain(); 
 	}
+	/**
+	 * Gets personal token when debug mode is enabled.
+	 * @return {String} personal access token
+	 */
 	async function getPersonalToken () {
 		const response = await fetch('.vscode/accessToken.txt');
 		const accessToken = await response.text();
@@ -429,6 +436,41 @@
 			zeroes = zeroes + '0';
 		}
 		return zeroes;
+	}
+	/**
+	 * Sets the colors to the custom colors stored in localstorage.
+	 */
+	function setCustomColors() {
+		$HeatmapSettingsStore.Colors.incomeHue = localStorage.getItem("incomeHue");
+		$HeatmapSettingsStore.Colors.incomeSat = localStorage.getItem("incomeSat");
+		$HeatmapSettingsStore.Colors.incomeLum = localStorage.getItem("incomeLum");
+		$HeatmapSettingsStore.Colors.expenseHue = localStorage.getItem("expenseHue");
+		$HeatmapSettingsStore.Colors.expenseSat = localStorage.getItem("expenseSat");
+		$HeatmapSettingsStore.Colors.expenseLum = localStorage.getItem("expenseLum");
+		$HeatmapSettingsStore.Colors.incomeTopHue = localStorage.getItem("incomeTopHue");
+		$HeatmapSettingsStore.Colors.incomeTopSat = localStorage.getItem("incomeTopSat");
+		$HeatmapSettingsStore.Colors.incomeTopLum = localStorage.getItem("incomeTopLum");
+		$HeatmapSettingsStore.Colors.incomeHighHue = localStorage.getItem("incomeHighHue");
+		$HeatmapSettingsStore.Colors.incomeHighSat = localStorage.getItem("incomeHighSat");
+		$HeatmapSettingsStore.Colors.incomeHighLum = localStorage.getItem("incomeHighLum");
+		$HeatmapSettingsStore.Colors.incomeLowHue = localStorage.getItem("incomeLowHue");
+		$HeatmapSettingsStore.Colors.incomeLowSat = localStorage.getItem("incomeLowSat");
+		$HeatmapSettingsStore.Colors.incomeLowLum = localStorage.getItem("incomeLowLum");
+		$HeatmapSettingsStore.Colors.incomeBottomHue = localStorage.getItem("incomeBottomHue");
+		$HeatmapSettingsStore.Colors.incomeBottomSat = localStorage.getItem("incomeBottomSat");
+		$HeatmapSettingsStore.Colors.incomeBottomLum = localStorage.getItem("incomeBottomLum");
+		$HeatmapSettingsStore.Colors.expenseTopHue = localStorage.getItem("expenseTopHue");
+		$HeatmapSettingsStore.Colors.expenseTopSat = localStorage.getItem("expenseTopSat");
+		$HeatmapSettingsStore.Colors.expenseTopLum = localStorage.getItem("expenseTopLum");
+		$HeatmapSettingsStore.Colors.expenseHighHue = localStorage.getItem("expenseHighHue");
+		$HeatmapSettingsStore.Colors.expenseHighSat = localStorage.getItem("expenseHighSat");
+		$HeatmapSettingsStore.Colors.expenseHighLum = localStorage.getItem("expenseHighLum");
+		$HeatmapSettingsStore.Colors.expenseLowHue = localStorage.getItem("expenseLowHue");
+		$HeatmapSettingsStore.Colors.expenseLowSat = localStorage.getItem("expenseLowSat");
+		$HeatmapSettingsStore.Colors.expenseLowLum = localStorage.getItem("expenseLowLum");
+		$HeatmapSettingsStore.Colors.expenseBottomHue = localStorage.getItem("expenseBottomHue");
+		$HeatmapSettingsStore.Colors.expenseBottomSat = localStorage.getItem("expenseBottomSat");
+		$HeatmapSettingsStore.Colors.expenseBottomLum = localStorage.getItem("expenseBottomLum");
 	}
 </script>
 
