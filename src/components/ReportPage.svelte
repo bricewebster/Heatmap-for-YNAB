@@ -380,7 +380,7 @@
 	 */
 	function transactionSkipCheck(transaction, transactionDate) {
 		let withinYearCheck = !(transactionDate >= $navOptionsStore.startDate & transactionDate <= $navOptionsStore.endDate);
-		let transferAccountCheck = transaction.transfer_account_id !== null;
+		let transferAccountCheck = (transaction.transfer_account_id !== null & transferAccountTypeCheck(transaction));
 		let categorySelectedFind = $CategoryListStore.find(item => item.subId === transaction.category_id);
 		let categorySelectedCheck = categorySelectedFind === undefined ? true : !categorySelectedFind.Checked;
 		let accountSelectedFind = $AccountListStore.find(item => item.Id=== transaction.account_id);
@@ -394,7 +394,24 @@
 			return false;
 		}
 	}
-
+	/**
+	 * Checks if transaction account is an account to ignore or not. The ignored accounts are the 'Budget Accounts' when adding a new account type.
+	 * @param {Object} transaction transaction to check the account on
+	 * @return {boolean} true if its an account to skip otherwise false
+	 */
+	function transferAccountTypeCheck(transaction) {
+		for (let account of $AccountListStore) {
+			if (account.id === transaction.account_id) {
+				if (account.type === 'checking' || account.type === 'savings' || account.type === 'creditcard' || account.type === 'cash' || account.type === 'lineOfCredit') {
+					return true;
+				} else {
+					return false;
+				}
+			}
+			continue;		
+		}
+		return false;
+	}
 	/**
 	 * Normalize the supplied date so there isn't an offset issue with timezones
 	 * @param {Date} date The date being normalized
