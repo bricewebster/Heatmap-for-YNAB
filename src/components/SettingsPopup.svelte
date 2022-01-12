@@ -308,7 +308,7 @@
         width: 500px;
         height: 425px;
 
-        background-color: white;
+        background-color: var(--theme-popup);
         border-radius: 5px;
         box-shadow: 0 16px 64px rgba(0, 0, 0, 0.2);
 
@@ -331,16 +331,23 @@
 
         border-width: 15px;
         border-style: solid;
-        border-color: transparent transparent white transparent;
+        border-color: transparent transparent var(--theme-popup) transparent;
     }
     .title {
         margin: 15px 15px 5px 15px;
         
         border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-        color: #383e41;
+        color: var(--theme-header);
 
         font-size: 1em;
         font-weight: 700;
+    }
+    .option {
+        color:  var(--theme-secondarytext);
+    }
+    input {
+        background: var(--theme-popup);
+        border: 2px solid var(--theme-border);
     }
     .option-twocolumn {
         display: flex;
@@ -374,10 +381,21 @@
     .option-section > label {
         cursor: pointer;
     }
+    select {
+        border: solid 2px var(--theme-border);
+        background: var(--theme-popup);
+        color: var(--theme-secondarytext);
+    }
     .option-grouping {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
         margin: 10px 0 10px 10px;
     }
     .option-grouping > label {
+        margin-top: 4px;
+
         cursor: pointer;
     }
     .option-grouping > input {
@@ -390,25 +408,25 @@
         cursor: pointer;
     }
     span {
-            display: inline-block;
+        display: inline-block;
 
-            margin: 3px 0px 0 4px;
-            padding: .2em .6em;
-            
-            background: none;
-            border-radius: 1000px;
-            color: var(--theme-primary);
+        margin: 3px 0px 0 4px;
+        padding: .2em .6em;
+        
+        background: none;
+        border-radius: 1000px;
+        color: var(--theme-secondarytext);
 
-            font-size: 13.5px;
+        font-size: 13.5px;
 
-            &:hover {
-                background-color: var(--theme-primary);
+        &:hover {
+            background-color: var(--theme-hover);
 
-                color: white;
+            color: var(--theme-primarytext);
 
-                cursor: pointer;
-            }
+            cursor: pointer;
         }
+    }
     .buttons {
         float: right;
 

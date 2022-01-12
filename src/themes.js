@@ -4,7 +4,16 @@ export const themeColors = [
       colors: {
         primary: '#FA4E5D',
         secondary: '#FF7A00',
-        tertiary: '#D52742'
+        tertiary: '#D52742',
+        primarytext: '#FFFFFF',
+        secondarytext: '#000000',
+        tertiarytext: '#636366',
+        header: '#1C2A3E',
+        background: '#FFFFFF',
+        border: '#DEE3E8',
+        popup: '#FFFFFF',
+        hover: '#FA4E5D',
+        primarybutton: '#FA4E5D',
       },
     },
     {
@@ -12,15 +21,34 @@ export const themeColors = [
       colors: {
         primary: '#009CC2',
         secondary: '#003440',
-        tertiary: '#00596F'
+        tertiary: '#00596F',
+        primarytext: '#FCFFFF',
+        secondarytext: '#383E41',
+        tertiarytext: '#636366',
+        header: '#1C2A3E',
+        background: '#F5F5FA',
+        border: '#D1D1D6',
+        popup: '#FFFFFF',
+        hover: '#009CC2',
+        primarybutton: '#009CC2',
+        secondarybutton: '',
       },
     },
     {
       name: 'YNAB Default',
       colors: {
         primary: '#244564',
-        secondary: '#009CC2',
-        tertiary: '#4495D7'
+        secondary: '#4495D7',
+        tertiary: '#0066A5',
+        primarytext: '#FCFFFF',
+        secondarytext: '#25384F',
+        tertiarytext: '#636366',
+        header: '#25384F',
+        background: '#F5F5FA',
+        border: '#D1D1D6',
+        popup: '#FFFFFF',
+        hover: '#4495D7',
+        primarybutton: '#009CC2',
       },
     },
     {
@@ -28,7 +56,16 @@ export const themeColors = [
       colors: {
         primary: '#1B1B1D',
         secondary: '#4495d7',
-        tertiary: '#3674A7'
+        tertiary: '#3674A7',
+        primarytext: '#FCFFFF',
+        secondarytext: '#FCFFFF',
+        tertiarytext: '#FCFFFF',
+        header: '#F9F8FB',
+        background: '#232325',
+        border: '#636366',
+        popup: '#2C2C2E',
+        hover: '#4495d7',
+        primarybutton: '#4495D7',
       },
     },
   ]

@@ -229,7 +229,7 @@
         width:  250px;
         height: 350px;
 
-        background-color: white;
+        background-color: var(--theme-popup);
         border-radius: 5px;
         box-shadow: 0 16px 64px rgba(0, 0, 0, 0.2);
 
@@ -238,7 +238,7 @@
     .title {
         margin: 15px 0 5px 15px;
 
-        color: #383e41;
+        color: var(--theme-header);
 
         font-size: 1em;
         font-weight: 700;
@@ -247,8 +247,8 @@
         margin: 5px 15px 0 15px;
         height: 35px;
 
-        border-top: 1px solid rgba(0, 0, 0, 0.15);
-        border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+        border-top: 1px solid var(--theme-border);
+        border-bottom: 1px solid var(--theme-border);
 
         & li {
             display: inline-block;
@@ -258,13 +258,13 @@
             
             background: none;
             border-radius: 1000px;
-            color: var(--theme-primary);
+            color: var(--theme-secondarytext);
 
             font-size: 13.5px;
     
             &:hover {
-                background-color: var(--theme-primary);
-                color: white;
+                background-color: var(--theme-hover);
+                color: var(--theme-primarytext);
 
                 cursor: pointer;
             }
@@ -274,6 +274,8 @@
         margin: 15px 0 0 15px;
         width: 220px;
         height: 200px;
+
+        color: var(--theme-secondarytext);
 
         font-size: .9rem;
 
@@ -342,7 +344,7 @@
 
         border-width: 15px;
         border-style: solid;
-        border-color: transparent transparent white transparent;
+        border-color: transparent transparent var(--theme-popup) transparent;
     }
     .showpopup {
         opacity: 1;

@@ -200,6 +200,8 @@
     .cal-year {
         display: inline-block;
 
+        color: var(--theme-secondarytext);
+
         font-size: 12px;
     }
     .day-list {
@@ -390,8 +392,8 @@
     }
     .amountPopup {
         position: relative;
-
         display: inline-block;
+
         width: 100%;
         height: 100%;
     }
@@ -403,10 +405,10 @@
         padding: 5px;
         width: auto;
 
-        background-color: white;
+        background-color: var(--theme-popup);
         border-radius: 5px;
         box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.2);
-        color: #636366;
+        color: var(--theme-tertiarytext);
 
         text-align: center;
         font-size: 12px;
@@ -424,7 +426,7 @@
 
         border-width: 5px;
         border-style: solid;
-        border-color: transparent white transparent transparent;
+        border-color: transparent var(--theme-popup) transparent transparent;
     }
     .amountPopup:hover .amountPopupText {
         visibility: visible;

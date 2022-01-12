@@ -184,7 +184,7 @@
         width:  600px;
         height: 350px;
 
-        background-color: white;
+        background-color: var(--theme-popup);
         border-radius: 5px;
         box-shadow: 0 5px 64px rgba(0, 0, 0, 0.2);
 
@@ -251,7 +251,7 @@
 
         border-width: 15px;
         border-style: solid;
-        border-color: transparent transparent white transparent;
+        border-color: transparent transparent var(--theme-popup) transparent;
     }
     .popup.yearly::after, .popup.dayofmonth::after {
         @media screen and (max-width: 1690px) {
@@ -269,7 +269,7 @@
     .title-container {
         display: flex;
 
-        color: #636366;
+        color: var(--theme-tertiarytext);
 
         font-weight: 400;
         font-size: 1.2em;
@@ -298,7 +298,7 @@
         padding: .25em 0;
         width: 16%;
 
-        color: #383e41;
+        color: var(--theme-secondarytext);
 
         font-size: .75em;
         letter-spacing: .05em;
@@ -329,13 +329,13 @@
     .column-header {
         display: flex;
 
-        border-top: 1px solid #d1d1d6;
-        border-bottom: 1px solid #d1d1d6;
+        border-top: 1px solid var(--theme-border);
+        border-bottom: 1px solid var(--theme-border);
 
         overflow-y: scroll;
             
         & th {
-            border-right: 1px solid #d1d1d6;
+            border-right: 1px solid var(--theme-border);
 
             text-transform: uppercase;
         }
@@ -345,16 +345,15 @@
 
         height: 220px;
 
-        border-bottom: 1px solid #d1d1d6;
+        border-bottom: 1px solid var(--theme-border);
 
         overflow-y: scroll;
         
         & tr {
             display: block;
             
-            border-bottom: 1px solid #d1d1d6;
+            border-bottom: 1px solid var(--theme-border);
         }
-
         & tr:last-child {
             border: none;
         }
@@ -369,5 +368,3 @@
         margin-top: 16px;
     }
 </style>
-
-<!-- markup (zero or more items) goes here -->

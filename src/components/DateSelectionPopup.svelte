@@ -245,7 +245,7 @@
         width:  465px;
         height: 180px;
 
-        background-color: white;
+        background-color: var(--theme-popup);
         border-radius: 5px;
         box-shadow: 0 16px 64px rgba(0, 0, 0, 0.2);
         color: #383e41;
@@ -262,13 +262,13 @@
 
         border-width: 15px;
         border-style: solid;
-        border-color: transparent transparent white transparent;
+        border-color: transparent transparent var(--theme-popup) transparent;
     }
     .title {
         margin: 15px 0 5px 15px;
         padding-top: 10px;
         
-        color: #383e41;
+        color: var(--theme-header);
 
         font-size: 1em;
         font-weight: 700;
@@ -276,8 +276,8 @@
     .selection {
         margin: 0px 15px;
     
-        border-top: 1px solid rgba(0, 0, 0, 0.15);
-        border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+        border-top: 1px solid var(--theme-border);
+        border-bottom: 1px solid var(--theme-border);
 
         & ul {
             margin: 6px 0;
@@ -291,13 +291,13 @@
             
             background: none;
             border-radius: 1000px;
-            color: var(--theme-primary);
+            color: var(--theme-tertiarytext);
 
             font-size: 12.6px;
 
             &:hover {
-                background-color: var(--theme-primary);
-                color: white;
+                background-color: var(--theme-hover);
+                color: var(--theme-primarytext);
 
                 cursor: pointer;
             }
@@ -317,12 +317,15 @@
             list-style: none;
         }
         & select {
-            border: 0.125rem solid #8e8e93;
+            background: var(--theme-popup);
+            border: 0.125rem solid var(--theme-border);
             border-radius: 0.25rem;
-            color: #383e41;
+            color: var(--theme-secondarytext);
         }
     }
     .label {
+        color: var(--theme-secondarytext);
+
         font-weight: 600;
         line-height: 1.5;
 
@@ -340,5 +343,3 @@
         width: 140px;
     }
 </style>
-
-<!-- markup (zero or more items) goes here -->

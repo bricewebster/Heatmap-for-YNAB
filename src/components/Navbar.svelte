@@ -66,7 +66,7 @@
     .title {
         padding-left: 5px;
 
-        color: white;
+        color: var(--theme-primarytext);
 
         font-size: 1.75em;
         font-weight: bold;
@@ -103,12 +103,12 @@
     .settings-text {
         margin-right: 5px;
 
-        color: white;
+        color: var(--theme-primarytext);
 
         transition: all 250ms ease-in;
     }
     .settings-icon{
-        color: white;
+        color: var(--theme-primarytext);
 
         transition: all 250ms ease-in;
     }

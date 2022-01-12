@@ -54,7 +54,7 @@
 
         margin-right: 50px;
 
-        color: white;
+        color: var(--theme-primarytext);
         
         cursor: pointer;
         transition: all 250ms ease-in;

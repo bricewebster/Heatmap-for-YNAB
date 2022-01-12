@@ -162,6 +162,8 @@
         vertical-align: top;
     }
     .title {
+        color: var(--theme-secondarytext);
+
         font-weight: bold;
         text-align: center;
     }
@@ -174,11 +176,16 @@
     .value-container {
         margin-top: 4px;
     }
+    .values > p {
+        color: var(--theme-secondarytext);
+    }
     .value {
         display: flex;
         align-items: center;
 
         margin-bottom: 5px;
+        
+        color: var(--theme-secondarytext);
     }
     .value p {
         display: inline-block;

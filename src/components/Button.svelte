@@ -19,22 +19,22 @@
     }
     .primary {
         border: 2px solid transparent;
-        background-color: var(--theme-primary);
+        background-color: var(--theme-primarybutton);
 
-        color: white;
+        color: var(--theme-primarytext);
 
         &:hover {
             border-color: var(--theme-tertiary);
             background-color: var(--theme-tertiary);
         }
     }
-    .secondary, .tertiary {
+    .secondary {
         padding: .3em .6em;
    
-        border: 2px solid #dee3e8;
+        border: 2px solid var(--theme-border);
         background-color: transparent;
 
-        color: var(--theme-primary);
+        color: var(--theme-secondary);
 
         &:hover {
             border-color: var(--theme-tertiary);
@@ -64,5 +64,3 @@
         }
     }
 </style>
-
-<!-- markup (zero or more items) goes here -->

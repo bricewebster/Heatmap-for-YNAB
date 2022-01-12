@@ -219,6 +219,8 @@
     .cal-date {
         float: left;
 
+        color: var(--theme-secondarytext);
+
         cursor: pointer;
     }
     .cal-date.yearly {
@@ -241,10 +243,10 @@
         margin-left: 35px;
     }
     .cal-date:hover {
-        color: var(--ynab-light-green);
+        color: var(--theme-secondary);
     }
     .cal-date:hover span {
-        color: var(--ynab-light-green);
+        color: var(--theme-secondary);
     }
     .cal-date-container {
         display: flex;

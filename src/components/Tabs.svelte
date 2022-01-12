@@ -34,7 +34,7 @@
   
         background: none;
         border: none;
-        color: white;
+        color: var(--theme-primarytext);
   
         font-size: 1.2em;
   
@@ -48,7 +48,7 @@
         }
       
         &.active {
-            background: white;
+            background: var(--theme-background);;
             border: 5px solid var(--theme-secondary);
             border-bottom: 5px solid transparent;
             border-top-left-radius: 5px;

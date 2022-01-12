@@ -17,11 +17,13 @@
 	export let accessToken;
 	export let debugMode;
 
+	let uiDebugMode = false;
+
     let activeTab = 'Yearly';
 
     let ynabAPIReady = false;
     let mounted = false;
-    let transactionsLoaded = false;
+    let transactionsLoaded = true;
 	let loadingError = false;
 	let loadingLog = [];
 	let errorStatus;
@@ -54,10 +56,14 @@
 		if (localStorage.getItem("customColorsFlag") === 'Yes') {
 			setCustomColors();
 		}
-		var ynab = window.ynab;
+		//Skips doing a bunch of API calls when tweaking the UI.
+		if (uiDebugMode) {
+			return;
+		}
 		if (debugMode) {
 			accessToken = await getPersonalToken();
 		}
+		var ynab = window.ynab;
 		ynabAPI = await new ynab.API(accessToken);
 		loadingLog.push('API Loaded');
 		const budgetsFetched = await getBudgets();

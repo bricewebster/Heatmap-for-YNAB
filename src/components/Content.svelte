@@ -360,9 +360,12 @@
 <style>
     .content {
         width: 100%;
+        height: calc(100vh - 90px);
 
         border-top: 5px solid var(--theme-secondary);
 
         line-height: normal;
+
+        background: var(--theme-background);
     }
 </style>
