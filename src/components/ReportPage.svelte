@@ -23,7 +23,7 @@
 
     let ynabAPIReady = false;
     let mounted = false;
-    let transactionsLoaded = true;
+    let transactionsLoaded = false;
 	let loadingError = false;
 	let loadingLog = [];
 	let errorStatus;
