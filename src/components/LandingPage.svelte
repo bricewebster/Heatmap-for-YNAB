@@ -1,15 +1,19 @@
 <script>
     import LandingPageContent from "./LandingPageContent.svelte";
     import PrivacyPageContent from "./PrivacyPageContent.svelte";
+    import ScreenshotPageContent from "./ScreenshotPageContent.svelte";
 
     let privacyPage = 0;
+    let screenshotPage = 0;
     let currentYear = new Date().getFullYear();
 </script>
 <div class="content">
     {#if privacyPage}
         <PrivacyPageContent bind:privacyPage = {privacyPage}/>
+    {:else if screenshotPage}
+        <ScreenshotPageContent bind:screenshotPage = {screenshotPage}/>
     {:else}
-        <LandingPageContent />
+        <LandingPageContent bind:screenshotPage = {screenshotPage}/>
     {/if}
     <div class="footer">
         <div class="copyright-section">
@@ -41,12 +45,12 @@
         width: 1000px;
     }
     .copyright-section a {
-        color: var(--theme-secondary);
+        color: #FF7A00;
 
         text-decoration: none;
     }
     .links small {
-        color: var(--theme-secondary);
+        color: #FF7A00;
 
         font-weight: bold;
         
@@ -55,9 +59,7 @@
     .links .privacy {
         padding-right: 5px;
 
-        border-right: 2px solid var(--theme-secondary);
+        border-right: 2px solid #FF7A00;
     }
  
 </style>
-
-<!-- markup (zero or more items) goes here -->

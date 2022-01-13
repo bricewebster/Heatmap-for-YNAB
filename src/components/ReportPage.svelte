@@ -58,6 +58,7 @@
 		}
 		//Skips doing a bunch of API calls when tweaking the UI.
 		if (uiDebugMode) {
+			transactionsLoaded = true;
 			return;
 		}
 		if (debugMode) {

@@ -33,7 +33,7 @@
         width: 1000px;
     }
     .title {
-        color: var(--theme-primary);
+        color: #FA4E5D;
 
         font-size: 3em;
         font-weight: bold;
@@ -58,5 +58,3 @@
         cursor: pointer;
     }
 </style>
-
-<!-- markup (zero or more items) goes here -->

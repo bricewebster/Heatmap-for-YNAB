@@ -46,9 +46,9 @@
         padding: .3em .6em;
         width: 175px;
 
-        border: 5px solid var(--theme-primary);
+        border: 5px solid #FA4E5D;
         background-color: transparent;
-        color: var(--theme-primary);
+        color: #FA4E5D;
         
         font-weight: bold;
         font-size: 1.2em;
@@ -56,8 +56,8 @@
         transition: all 250ms ease-in;
 
         &:hover {
-            border-color: var(--theme-primary);
-            background-color: var(--theme-primary);
+            border-color: #FA4E5D;
+            background-color: #FA4E5D;
             color: white;
 
             transition: all 250ms ease-in;

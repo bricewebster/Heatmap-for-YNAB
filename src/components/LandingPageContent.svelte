@@ -1,6 +1,8 @@
 <script>
     import Button from "./Button.svelte";
 
+    export let screenshotPage;
+
     let url;
     let token = localStorage.getItem("new");
     let authButtonText;
@@ -21,6 +23,7 @@
 <img class="example" alt="HeatmapExample" src="/images/heatmapExample.PNG">
 <div class="main-buttons">
     <a href="https://www.youneedabudget.com"><img  alt="WorksWithYNAB" src="/images/works_with_ynab.svg"></a>
+    <Button type="tertiary" on:click={() => screenshotPage = 1}>Screenshots</Button>
     <Button type="tertiary" on:click={() => window.location.href = `${url}`}>{authButtonText}</Button>
 </div>
 <div class="section">
@@ -98,7 +101,7 @@
     .title {
         padding-left: 5px;
 
-        color: var(--theme-primary);
+        color: #FA4E5D;
 
         font-size: 3em;
         font-weight: bold;
@@ -164,7 +167,7 @@
         height: 5px;
         content: '';
 
-        background: var(--theme-secondary);
+        background: #FF7A00;
     }
     .section-title::after {
         position: absolute;
@@ -175,7 +178,7 @@
         height: 5px;
         content: '';
 
-        background: var(--theme-secondary);
+        background: #FF7A00;
     }
     .list-container {
         display: inline-block;
@@ -210,6 +213,6 @@
         font-weight: bold;
     }
     .sub-list > li::before {
-        color: var(--theme-secondary);
+        color: #FF7A00;
     }
 </style>
