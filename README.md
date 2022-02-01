@@ -33,7 +33,7 @@ The report is hosted at the link above but can be ran locally if desired. Below 
 
     This enables debug mode
 5. Next you will need a personal access token to access your account through the report. **Please note that this is saved only locally on your computer. I won't gain access to your token.
-   * Created a folder in the root of the Heatmap folder named .vscode and in that folder create a file named accessToken.txt. This is where your Access Token will go once you have it.
+   * Created a folder in the root of the public folder named .vscode and in that folder create a file named accessToken.txt. This is where your Access Token will go once you have it.
    * Login to your YNAB account.
    * Click on the top left corner to open the menu and go to 'Account Settings'.
    * Scroll down to 'Developer Settings' and click on it.
