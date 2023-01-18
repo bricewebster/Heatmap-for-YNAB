@@ -5,7 +5,7 @@ const { request } = require('http');
 
 const clientID = process.env.clientID;
 const clientSecret = process.env.clientSecret;
-const redirectURI = encodeURI('https://heatmap-for-ynab.herokuapp.com/oauth/token');
+const redirectURI = encodeURI('https://heatmap-for-ynab.cyclic.app/oauth/token');
 
 const app = express();
 const port = process.env.PORT || 3000;
