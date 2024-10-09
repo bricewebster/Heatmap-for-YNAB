@@ -5,7 +5,7 @@ const { request } = require('http');
 
 const clientID = process.env.clientID;
 const clientSecret = process.env.clientSecret;
-const redirectURI = encodeURI('https://heatmap-for-ynab.onrender.com');
+const redirectURI = encodeURI('https://heatmap-for-ynab.onrender.com/oauth/token');
 
 const app = express();
 const port = process.env.PORT || 3000;

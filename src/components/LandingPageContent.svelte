@@ -9,10 +9,10 @@
     //If the refresh token isn't present it'll authenticate with YNAB, otherwise it uses the refresh token to get an auth code.
     if (token === "undefined" || token === null) {
         authButtonText = 'Authorize Heatmap';
-        url = 'https://heatmap-for-ynab.cyclic.app/oauth/redirect/';
+        url = 'https://heatmap-for-ynab.onrender.com/oauth/redirect/';
     } else {
         authButtonText = 'Open Heatmap';
-        url = `https://heatmap-for-ynab.cyclic.app/oauth/token?code=${token}&refresh=1`;
+        url = `https://heatmap-for-ynab.onrender.com/oauth/token?code=${token}&refresh=1`;
     }
 </script>
 <div class="title-container">
